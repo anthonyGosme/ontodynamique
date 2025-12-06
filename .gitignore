@@ -1,0 +1,7 @@
+.idea
+bq-result*.*
+*.parquet
+venv
+src/cache_phi_raw/*.json
+src/old/cache_phi_raw/*.json
+.env
