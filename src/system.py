@@ -9,7 +9,7 @@ import seaborn as sns
 from itertools import product
 import pandas as pd
 import seaborn as sns
-import numpy as np
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import bisect
@@ -2050,7 +2050,8 @@ def run_complementary_tests(all_dataframes, logistic_params):
 
 def plot_bimodality_histogram(all_dfs):
     """
-    VERSION ANGLAISE : Figure 1.
+    VERSION ANGLAISE : Figure 1 (Corrigée).
+    Couvre l'intégralité des régimes bas (<0.4) et haut (>0.7).
     """
     try:
         plt.style.use('seaborn-v0_8-whitegrid')
@@ -2066,24 +2067,36 @@ def plot_bimodality_histogram(all_dfs):
     fig, ax = plt.subplots(figsize=(10, 6))
 
     # Histogramme
-    ax.hist(all_gamma_values, bins=50, density=True, color='#3498db', alpha=0.7, edgecolor='black')
+    # On utilise edgecolor pour bien voir les barres individuelles, notamment à 0 et 1
+    ax.hist(all_gamma_values, bins=50, density=True, color='#3498db', alpha=0.7, edgecolor='black', linewidth=0.5)
 
     # Titres et Labels (Anglais)
-    ax.set_title("Figure 1: Empirical Distribution of Metabolic Efficiency ($\\Gamma$)", fontsize=14, fontweight='bold',
+    ax.set_title("Empirical Distribution of Metabolic Efficiency ($\\Gamma$)", fontsize=14, fontweight='bold',
                  pad=15)
     ax.set_xlabel(r"Metabolic Efficiency ($\Gamma$)", fontsize=12)
     ax.set_ylabel("Probability Density", fontsize=12)
 
-    # Zones colorées (Anglais)
-    ax.axvspan(0.2, 0.4, color='#e74c3c', alpha=0.1, label='Exploratory Regime (Low $\\Gamma$)')
-    ax.axvspan(0.7, 0.9, color='#2ecc71', alpha=0.1, label='Sedimented Regime (High $\\Gamma$)')
+    # --- CORRECTION DES ZONES ---
+    # Zone Rouge : De 0.0 à 0.4 (Inclut le pic à 0)
+    ax.axvspan(0.0, 0.4, color='#e74c3c', alpha=0.15, label='Exploratory Regime ($\\Gamma < 0.4$)')
 
-    ax.legend(loc='upper left', frameon=True)
+    # Zone de Transition (Optionnel : on peut laisser blanc ou griser légèrement)
+    # ax.axvspan(0.4, 0.7, color='gray', alpha=0.05)
+
+    # Zone Verte : De 0.7 à 1.0 (Inclut le pic à 1)
+    ax.axvspan(0.7, 1.0, color='#2ecc71', alpha=0.15, label='Sedimented Regime ($\\Gamma > 0.7$)')
+
+    # Ajout d'une ligne verticale pour marquer la frontière nette si besoin
+    ax.axvline(0.4, color='#e74c3c', linestyle=':', alpha=0.5)
+    ax.axvline(0.7, color='#2ecc71', linestyle=':', alpha=0.5)
+
+    ax.set_xlim(0, 1.0)
+    ax.legend(loc='upper center', frameon=True, ncol=2)  # Légende en haut au centre
     plt.tight_layout()
 
     filename = "omega_v34_bimodality_histogram.png"
     plt.savefig(filename, dpi=300)
-    print(f"✅ Figure 1 (Bimodality) saved in English: {filename}")
+    print(f"✅  (Bimodality) saved (CORRECTED ZONES): {filename}")
     plt.close(fig)
 
 
@@ -3992,7 +4005,7 @@ def plot_causal_crossover(name, results):
     ax1.fill_between(dates, s_ag, s_ga, where=(s_ag > s_ga), color='#3498db', alpha=0.1, interpolate=True)
 
     ax1.set_ylabel('Causal Strength (1 - p-value)', fontsize=11)
-    ax1.set_title(f"Figure 3: Causal Crossover in the {name} Ecosystem", fontsize=14, fontweight='bold')
+    ax1.set_title(f"Causal Crossover in the {name} Ecosystem", fontsize=14, fontweight='bold')
     ax1.legend(loc='lower left', frameon=True, fontsize=10)
     ax1.grid(True, alpha=0.3)
 
@@ -4184,7 +4197,7 @@ class RobustnessValidator:
             # Green = High Confidence (Low p-value), Red = Low Confidence.
             ax = sns.heatmap(1 - pivot, annot=True, cmap='RdYlGn', vmin=0.9, vmax=1.0, fmt=".3f")
 
-            plt.title('Figure 4: Robustness Landscape\n(Bimodality Confidence $1-p$)', fontsize=12, fontweight='bold',
+            plt.title('Robustness Landscape\n(Bimodality Confidence $1-p$)', fontsize=12, fontweight='bold',
                       pad=15)
             plt.ylabel(r'Relocation Penalty ($\lambda$)', fontsize=11)
             plt.xlabel('High Regime Threshold', fontsize=11)
@@ -4192,7 +4205,7 @@ class RobustnessValidator:
             plt.tight_layout()
             plt.savefig("omega_v37_sensitivity_heatmap.png", dpi=300)
             plt.close()
-            print("✅ Figure 4 (Heatmap) saved in English.")
+            print("✅ (Heatmap) saved in English.")
         except Exception as e:
             print(f"⚠️ Error plotting Heatmap: {e}")
 
@@ -4326,12 +4339,9 @@ def plot_phase_space_academic(all_dataframes, crossover_results):
     Génère la Figure 2 : Portrait de Phase (Densité + Trajectoire).
     Version : Publication Ready (English Labels).
     """
-    print("\nGenerating Figure 2: Phase Portrait (Academic/English)...")
+    print("\nGenerating : Phase Portrait (Academic/English)...")
 
-    import seaborn as sns
-    import matplotlib.pyplot as plt
-    import pandas as pd
-    import numpy as np
+
 
     # 1. Extraction et Alignement des données
     x_gamma = []
@@ -4420,7 +4430,7 @@ def plot_phase_space_academic(all_dataframes, crossover_results):
     ax.set_xlabel(r"Structural Maturity ($\Gamma$)", fontsize=12)
     ax.set_ylabel("Causal Authority Index\n(>0: Structure-driven | <0: Activity-driven)", fontsize=11)
 
-    ax.set_title("Figure 2: Sociotechnical Phase Space & Convergence Trajectory", fontsize=14, pad=15)
+    ax.set_title("Sociotechnical Phase Space & Convergence Trajectory", fontsize=14, pad=15)
 
     ax.legend(loc='upper left', frameon=True)
 
