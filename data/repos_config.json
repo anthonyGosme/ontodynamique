@@ -1,0 +1,310 @@
+{
+  "LINUX": {
+    "url": "https://github.com/torvalds/linux",
+    "branch": "master",
+    "core_paths": ["kernel/", "mm/", "fs/", "sched/"],
+    "ignore_paths": ["drivers/", "arch/", "tools/", "Documentation/", "samples/"]
+  },
+  "KUBERNETES": {
+    "url": "https://github.com/kubernetes/kubernetes",
+    "branch": "master",
+    "core_paths": ["pkg/", "cmd/", "staging/"],
+    "ignore_paths": ["test/", "docs/", "vendor/"]
+  },
+  "FREEBSD": {
+    "url": "https://github.com/freebsd/freebsd-src",
+    "branch": "main",
+    "core_paths": ["sys/kern/", "sys/vm/", "sys/sys/"],
+    "ignore_paths": ["sys/dev/", "contrib/", "tests/"]
+  },
+  "POSTGRES": {
+    "url": "https://github.com/postgres/postgres",
+    "branch": "master",
+    "core_paths": ["src/backend/"],
+    "ignore_paths": ["src/test/", "doc/"]
+  },
+  "REDIS": {
+    "url": "https://github.com/redis/redis",
+    "branch": "unstable",
+    "core_paths": ["src/"],
+    "ignore_paths": ["tests/", "deps/"]
+  },
+  "SQLITE": {
+    "url": "https://github.com/sqlite/sqlite",
+    "branch": "master",
+    "core_paths": ["src/"],
+    "ignore_paths": ["test/", "tool/"]
+  },
+  "NGINX": {
+    "url": "https://github.com/nginx/nginx",
+    "branch": "master",
+    "core_paths": ["src/core/", "src/http/", "src/event/"],
+    "ignore_paths": ["docs/", "misc/"]
+  },
+  "HTTPD_APACHE": {
+    "url": "https://github.com/apache/httpd",
+    "branch": "trunk",
+    "core_paths": ["server/", "modules/http/"],
+    "ignore_paths": ["docs/", "test/"]
+  },
+  "GCC": {
+    "url": "https://github.com/gcc-mirror/gcc",
+    "branch": "master",
+    "core_paths": ["gcc/"],
+    "ignore_paths": ["libgo/", "libjava/", "gcc/testsuite/"]
+  },
+  "LLVM": {
+    "url": "https://github.com/llvm/llvm-project",
+    "branch": "main",
+    "core_paths": ["llvm/lib/", "clang/lib/"],
+    "ignore_paths": ["llvm/test/", "clang/test/", "lldb/"]
+  },
+  "CPYTHON": {
+    "url": "https://github.com/python/cpython",
+    "branch": "main",
+    "core_paths": ["Python/", "Objects/", "Lib/"],
+    "ignore_paths": ["Doc/", "Tools/", "Lib/test/"]
+  },
+  "GO": {
+    "url": "https://github.com/golang/go",
+    "branch": "master",
+    "core_paths": ["src/runtime/", "src/cmd/compile/"],
+    "ignore_paths": ["test/", "doc/"]
+  },
+  "RUST": {
+    "url": "https://github.com/rust-lang/rust",
+    "branch": "master",
+    "core_paths": ["compiler/", "library/std/"],
+    "ignore_paths": ["src/test/", "tests/"]
+  },
+  "PHP": {
+    "url": "https://github.com/php/php-src",
+    "branch": "master",
+    "core_paths": ["Zend/", "main/", "ext/standard/"],
+    "ignore_paths": ["tests/", "docs/"]
+  },
+  "NODE": {
+    "url": "https://github.com/nodejs/node",
+    "branch": "main",
+    "core_paths": ["src/", "lib/"],
+    "ignore_paths": ["test/", "doc/"]
+  },
+  "PYTORCH": {
+    "url": "https://github.com/pytorch/pytorch",
+    "branch": "main",
+    "core_paths": ["torch/csrc/", "aten/src/"],
+    "ignore_paths": ["test/", "docs/"]
+  },
+  "TENSORFLOW": {
+    "url": "https://github.com/tensorflow/tensorflow",
+    "branch": "master",
+    "core_paths": ["tensorflow/core/"],
+    "ignore_paths": ["tensorflow/examples/", "third_party/"]
+  },
+  "SCIPY": {
+    "url": "https://github.com/scipy/scipy",
+    "branch": "main",
+    "core_paths": ["scipy/"],
+    "ignore_paths": ["doc/", "benchmarks/"]
+  },
+  "OCTAVE": {
+    "url": "https://github.com/gnu-octave/octave",
+    "branch": "default",
+    "core_paths": ["libinterp/", "liboctave/"],
+    "ignore_paths": ["test/", "doc/"]
+  },
+  "MATPLOTLIB": {
+    "url": "https://github.com/matplotlib/matplotlib",
+    "branch": "main",
+    "core_paths": ["lib/matplotlib/", "src/"],
+    "ignore_paths": ["doc/", "examples/"]
+  },
+  "REACT": {
+    "url": "https://github.com/facebook/react",
+    "branch": "main",
+    "core_paths": ["packages/react/", "packages/react-reconciler/"],
+    "ignore_paths": ["fixtures/", "scripts/"]
+  },
+  "VUE": {
+    "url": "https://github.com/vuejs/core",
+    "branch": "main",
+    "core_paths": ["packages/runtime-core/"],
+    "ignore_paths": ["packages/docs/"]
+  },
+  "ANGULAR": {
+    "url": "https://github.com/angular/angular",
+    "branch": "main",
+    "core_paths": ["packages/core/"],
+    "ignore_paths": ["aio/", "devtools/"]
+  },
+  "RAILS": {
+    "url": "https://github.com/rails/rails",
+    "branch": "main",
+    "core_paths": ["activerecord/", "actionpack/"],
+    "ignore_paths": ["guides/", "activestorage/"]
+  },
+  "DJANGO": {
+    "url": "https://github.com/django/django",
+    "branch": "main",
+    "core_paths": ["django/core/", "django/db/"],
+    "ignore_paths": ["docs/", "tests/"]
+  },
+  "FASTAPI": {
+    "url": "https://github.com/tiangolo/fastapi",
+    "branch": "master",
+    "core_paths": ["fastapi/"],
+    "ignore_paths": ["docs/", "tests/"]
+  },
+  "METEOR": {
+    "url": "https://github.com/meteor/meteor",
+    "branch": "devel",
+    "core_paths": ["packages/", "tools/"],
+    "ignore_paths": ["examples/", "docs/"]
+  },
+  "GIT_SCM": {
+    "url": "https://github.com/git/git",
+    "branch": "master",
+    "core_paths": ["builtin/", "xdiff/"],
+    "ignore_paths": ["t/", "Documentation/"]
+  },
+  "VSCODE": {
+    "url": "https://github.com/microsoft/vscode",
+    "branch": "main",
+    "core_paths": ["src/vs/"],
+    "ignore_paths": ["test/", "extensions/"]
+  },
+  "FFMPEG": {
+    "url": "https://github.com/FFmpeg/FFmpeg",
+    "branch": "master",
+    "core_paths": ["libavcodec/", "libavformat/"],
+    "ignore_paths": ["doc/", "tests/"]
+  },
+  "CURL": {
+    "url": "https://github.com/curl/curl",
+    "branch": "master",
+    "core_paths": ["lib/", "src/"],
+    "ignore_paths": ["tests/", "docs/"]
+  },
+  "GIMP": {
+    "url": "https://gitlab.gnome.org/GNOME/gimp",
+    "branch": "master",
+    "core_paths": ["app/", "libgimp/"],
+    "ignore_paths": ["po/", "icons/"]
+  },
+  "WORDPRESS": {
+    "url": "https://github.com/WordPress/wordpress-develop",
+    "branch": "trunk",
+    "core_paths": ["src/wp-includes/", "src/wp-admin/"],
+    "ignore_paths": ["tests/", "tools/"]
+  },
+  "LIBREOFFICE": {
+    "url": "https://github.com/LibreOffice/core",
+    "branch": "master",
+    "core_paths": ["sw/", "sc/", "sal/", "vcl/"],
+    "ignore_paths": ["solenv/", "translations/", "instdir/"]
+  },
+  "MEDIAWIKI": {
+    "url": "https://github.com/wikimedia/mediawiki",
+    "branch": "master",
+    "core_paths": ["includes/", "languages/"],
+    "ignore_paths": ["tests/", "docs/"]
+  },
+  "EMACS": {
+    "url": "https://github.com/emacs-mirror/emacs",
+    "branch": "master",
+    "core_paths": ["src/", "lisp/"],
+    "ignore_paths": ["doc/", "test/"]
+  },
+  "SUBVERSION": {
+    "url": "https://github.com/apache/subversion",
+    "branch": "trunk",
+    "core_paths": ["subversion/libsvn_client/", "subversion/libsvn_wc/"],
+    "ignore_paths": ["subversion/tests/", "doc/"]
+  },
+  "WIRESHARK": {
+    "url": "https://gitlab.com/wireshark/wireshark",
+    "branch": "master",
+    "core_paths": ["epan/", "wiretap/"],
+    "ignore_paths": ["doc/", "test/"]
+  },
+  "GODOT": {
+    "url": "https://github.com/godotengine/godot",
+    "branch": "master",
+    "core_paths": ["core/", "scene/", "servers/"],
+    "ignore_paths": ["doc/", "tests/"]
+  },
+  "BITCOIN": {
+    "url": "https://github.com/bitcoin/bitcoin",
+    "branch": "master",
+    "core_paths": ["src/"],
+    "ignore_paths": ["doc/", "test/"]
+  },
+  "GECKO_FIREFOX": {
+    "url": "https://github.com/nicedoc/gecko-dev",
+    "branch": "master",
+    "core_paths": ["dom/", "js/src/", "layout/"],
+    "ignore_paths": ["testing/", "python/", "third_party/"]
+  },
+  "WEBKIT": {
+    "url": "https://github.com/nicedoc/WebKit",
+    "branch": "main",
+    "core_paths": ["Source/WebCore/", "Source/JavaScriptCore/"],
+    "ignore_paths": ["LayoutTests/", "ManualTests/"]
+  },
+  "ANGULAR_JS_LEGACY": {
+    "url": "https://github.com/angular/angular.js",
+    "branch": "master",
+    "core_paths": ["src/"],
+    "ignore_paths": ["test/", "docs/"],
+    "status": "dead"
+  },
+  "PY_MINI_PROJECTS": {
+    "url": "https://github.com/Python-World/python-mini-projects",
+    "branch": "master",
+    "core_paths": ["projects/"],
+    "ignore_paths": ["docs/", "Notebooks/"],
+    "status": "dead"
+  },
+  "WENYAN_LANG": {
+    "url": "https://github.com/wenyan-lang/wenyan",
+    "branch": "master",
+    "core_paths": ["src/", "lib/", "tools/"],
+    "ignore_paths": ["examples/", "documentation/"],
+    "status": "dead"
+  },
+  "TSDX": {
+    "url": "https://github.com/jaredpalmer/tsdx",
+    "branch": "master",
+    "core_paths": ["src/", "templates/", "test/"],
+    "ignore_paths": ["website/"],
+    "status": "dead"
+  },
+  "ZY_PLAYER": {
+    "url": "https://github.com/Hunlongyu/ZY-Player",
+    "branch": "master",
+    "core_paths": ["src/"],
+    "ignore_paths": ["build/", "docs/"],
+    "status": "dead"
+  },
+  "SNOWPACK": {
+    "url": "https://github.com/FredKSchott/snowpack",
+    "branch": "main",
+    "core_paths": ["snowpack/", "esinstall/", "plugins/"],
+    "ignore_paths": ["docs/", "examples/"],
+    "status": "dead"
+  },
+  "DALLE_MINI": {
+    "url": "https://github.com/borisdayma/dalle-mini",
+    "branch": "main",
+    "core_paths": ["src/", "app/", "tools/"],
+    "ignore_paths": ["Docker/", "img/"],
+    "status": "dead"
+  },
+  "GENERIC_TOOLS": {
+    "url": "https://github.com/nicedoc/tools",
+    "branch": "main",
+    "core_paths": ["crates/", "xtask/"],
+    "ignore_paths": ["website/", "rfcs/"],
+    "status": "dead"
+  }
+}
