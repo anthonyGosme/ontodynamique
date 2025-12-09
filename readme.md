@@ -15,7 +15,7 @@ Code for "The Emergence of Sociotechnical Autonomy" (Nature Communications, 2025
 ## Citation
 If you use this code, please cite:
 > anthony Gosme
-
-For a phylosophical related contend to this article you could see https://www.ontodynamique.com/
+publié https://zenodo.org/records/17849053
+Other interst, phylosophy  https://www.ontodynamique.com/
 ## License
 MIT
