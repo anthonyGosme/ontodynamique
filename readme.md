@@ -15,8 +15,10 @@ Code for "The Emergence of Sociotechnical Autonomy" (Nature Communications, 2025
 ## Citation
 If you use this code, please cite:
 > anthony Gosme
-publié https://zenodo.org/records/17849053
+
 > 
-Other interest of the auther, philosophy :  https://www.ontodynamique.com/
+- publish https://zenodo.org/records/17849053
+- arXiv
+- Other interest of the auther, philosophy :  https://www.ontodynamique.com/
 ## License
 MIT
