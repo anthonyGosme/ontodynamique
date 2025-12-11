@@ -1,6 +1,6 @@
 Project,Domain,Duration (months),Status,Commits analyzed,Final Γ
-NGINX,Server,276,Alive,7846,1.0
 REDIS,Database,199,Alive,11347,1.0
+NGINX,Server,276,Alive,7846,1.0
 SUBVERSION,VCS,304,Alive,53519,1.0
 ZY_PLAYER,Software,29,Dead,1384,1.0
 EMACS,IDE,451,Alive,169264,1.0
