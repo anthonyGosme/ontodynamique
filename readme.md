@@ -19,6 +19,5 @@ If you use this code, please cite:
 > 
 - publish https://zenodo.org/records/17849053
 - arXiv
-- Other interest of the auther, philosophy :  https://www.ontodynamique.com/
 ## License
 MIT
