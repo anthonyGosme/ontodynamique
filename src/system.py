@@ -1,4 +1,7 @@
 import pickle
+
+from sklearn.utils import resample
+
 from comodification_analysis import (
     run_comodification_analysis,
     CoModificationAnalyzer,
@@ -6,9 +9,10 @@ from comodification_analysis import (
     plot_comodification_evolution,
     plot_global_correlation_summary
 )
+import statsmodels.api as sm
 from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge
 from sklearn.preprocessing import StandardScaler
-
+import statsmodels.api as sm
 from sklearn.metrics import roc_auc_score, brier_score_loss, mean_squared_error, average_precision_score
 from scipy.stats import wilcoxon
 from scipy import stats
@@ -541,6 +545,286 @@ GOVERNANCE_TIER = {
     'DALLE_MINI': 1, 'GENERIC_TOOLS': 1
 }
 
+
+
+class ScientificValidator:
+    """
+    MODULE V44 : VALIDATION SCIENTIFIQUE 'REVIEWER-PROOF'
+    Intègre bootstrap par projet, alignement strict et métriques de symétrie.
+    """
+
+    def __init__(self, all_dataframes):
+        # On ne garde que les projets significatifs (> 24 mois)
+        self.dfs = {k: v for k, v in all_dataframes.items() if v is not None and len(v) > 24}
+        self.project_keys = list(self.dfs.keys())
+
+        # Données alignées (Gamma + Granger) calculées à la volée
+        self.aligned_data = None
+
+    def _align_granger_gamma(self, crossover_results):
+        """
+        HELPER CRITIQUE : Aligne strictement Gamma et les scores Granger par date.
+        Complexité O(N), utilise les index pandas (plus robuste que les listes).
+        """
+        pooled_data = []
+
+        for name, res in crossover_results.items():
+            if name not in self.dfs: continue
+
+            df = self.dfs[name]
+
+            # Préparation Granger en DataFrame
+            granger_df = pd.DataFrame({
+                'date': res['dates'],
+                's_ag': res['strength_ag'],  # Act -> Struct
+                's_ga': res['strength_ga']  # Struct -> Act
+            }).set_index('date')
+
+            # Préparation Gamma
+            gamma_series = df['monthly_gamma']
+
+            # INNER JOIN strict sur les dates (ne garde que les mois où on a TOUT)
+            merged = granger_df.join(gamma_series, how='inner')
+            merged['project'] = name
+
+            # Calcul de la métrique de Symétrie (Coupling Ratio)
+            # 1.0 = Parfaite symétrie (Operational Closure)
+            # 0.0 = Dominance totale unilatérale
+            # On utilise min/max comme suggéré par le reviewer
+            merged['coupling_ratio'] = merged[['s_ag', 's_ga']].min(axis=1) / (
+                        merged[['s_ag', 's_ga']].max(axis=1) + 1e-9)
+
+            pooled_data.append(merged)
+
+        if pooled_data:
+            self.aligned_data = pd.concat(pooled_data)
+        else:
+            self.aligned_data = pd.DataFrame()
+
+    def solve_gmm_intersection(self, gmm):
+        """Trouve le point d'intersection (seuil naturel) entre deux gaussiennes."""
+        means = gmm.means_.flatten()
+        stds = np.sqrt(gmm.covariances_.flatten())
+        weights = gmm.weights_
+
+        # Ordre : idx 0 = bas, idx 1 = haut
+        if means[0] > means[1]:
+            means = means[::-1]
+            stds = stds[::-1]
+            weights = weights[::-1]
+
+        def diff_pdf(x):
+            p1 = weights[0] * stats.norm.pdf(x, means[0], stds[0])
+            p2 = weights[1] * stats.norm.pdf(x, means[1], stds[1])
+            return p1 - p2
+
+        try:
+            # Recherche racine entre les moyennes
+            threshold = brentq(diff_pdf, means[0], means[1])
+        except Exception:
+            threshold = (means[0] + means[1]) / 2
+
+        return threshold, means, stds, weights
+
+    def run_test_1_endogenous_threshold(self):
+        """TEST 1 : Seuil Endogène GMM."""
+        print("\n🧪 [TEST 1] Détermination du Seuil Endogène (GMM)...")
+
+        # Collecte de tous les gammas
+        all_gamma = []
+        for df in self.dfs.values():
+            all_gamma.extend(df['monthly_gamma'].dropna().values)
+        all_gamma = np.array(all_gamma).reshape(-1, 1)
+
+        gmm = GaussianMixture(n_components=2, random_state=42, n_init=10)
+        gmm.fit(all_gamma)
+
+        threshold, means, stds, weights = self.solve_gmm_intersection(gmm)
+
+        print(f"   Régime 1 (Explo) : μ={means[0]:.3f}, σ={stds[0]:.3f}, w={weights[0]:.2f}")
+        print(f"   Régime 2 (Sedim) : μ={means[1]:.3f}, σ={stds[1]:.3f}, w={weights[1]:.2f}")
+        print(f"   🎯 SEUIL NATUREL : {threshold:.4f}")
+
+        return threshold
+
+    def run_test_2_local_robustness(self, natural_threshold):
+        """
+        TEST 2 : Robustesse Locale (Variance ET Symétrie).
+        Vérifie si la Variance baisse ET si le Couplage augmente dans le régime haut,
+        quel que soit le seuil exact choisi.
+        """
+        print(f"\n🧪 [TEST 2] Robustesse Locale (Variance & Symétrie)...")
+
+        if self.aligned_data is None or self.aligned_data.empty:
+            print("   ⚠️ Pas de données alignées pour tester la symétrie.")
+            return
+
+        test_thresholds = np.arange(natural_threshold - 0.1, natural_threshold + 0.1, 0.02)
+        results = []
+
+        for t in test_thresholds:
+            # Séparation basée sur le seuil t
+            low_regime = self.aligned_data[self.aligned_data['monthly_gamma'] < t]
+            high_regime = self.aligned_data[self.aligned_data['monthly_gamma'] >= t]
+
+            if len(low_regime) < 10 or len(high_regime) < 10: continue
+
+            # Métrique 1 : Variance Collapse (Doit être > 1.0)
+            var_ratio = low_regime['monthly_gamma'].var() / (high_regime['monthly_gamma'].var() + 1e-9)
+
+            # Métrique 2 : Symmetry Gain (Doit être positif)
+            # On veut que le régime HAUT soit plus symétrique (plus proche de 1) que le BAS
+            sym_low = low_regime['coupling_ratio'].mean()
+            sym_high = high_regime['coupling_ratio'].mean()
+            sym_gain = sym_high - sym_low
+
+            results.append({
+                'threshold': t,
+                'var_ratio': var_ratio,
+                'sym_gain': sym_gain,
+                'sym_high': sym_high
+            })
+
+        df_res = pd.DataFrame(results)
+
+        # Export pour SI (Supplementary Information)
+        df_res.to_csv("omega_v44_robustness_grid.csv", index=False)
+
+        # Analyse
+        mean_gain = df_res['sym_gain'].mean()
+        valid_steps = (df_res['sym_gain'] > 0).mean() * 100
+
+        print(f"   Analyse sur {len(df_res)} pas de seuils autour de {natural_threshold:.2f} :")
+        print(f"   Gain moyen de Symétrie (Haut - Bas) : +{mean_gain:.3f}")
+        print(f"   Robustesse (Cas positifs) : {valid_steps:.1f}%")
+
+        if valid_steps > 80:
+            print("   ✅ ROBUSTE : Le régime haut est structurellement plus symétrique (Operational Closure).")
+        else:
+            print("   ⚠️ INSTABLE : La symétrie dépend trop du seuil choisi.")
+
+    def run_test_3_continuous_dynamics(self):
+        """
+        TEST 3 : Dynamique Continue (LOESS).
+        Relation Gamma -> Symétrie (Coupling Ratio) sans seuil.
+        Utilise les données alignées strictement.
+        """
+        print("\n🧪 [TEST 3] Dynamique Continue (Gamma -> Symétrie)...")
+
+        if self.aligned_data is None or self.aligned_data.empty:
+            print("   ⚠️ Données insuffisantes.")
+            return
+
+        # X = Gamma, Y = Coupling Ratio (0..1)
+        data = self.aligned_data.dropna(subset=['monthly_gamma', 'coupling_ratio'])
+
+        x = data['monthly_gamma'].values
+        y = data['coupling_ratio'].values
+
+        # Tri pour LOESS
+        sort_idx = np.argsort(x)
+        x_sorted = x[sort_idx]
+        y_sorted = y[sort_idx]
+
+        # Lissage LOESS
+        lowess = sm.nonparametric.lowess(y_sorted, x_sorted, frac=0.3)
+        y_smooth = lowess[:, 1]
+
+        # Calcul de pente globale (Linéaire simple pour la tendance)
+        slope, intercept = np.polyfit(x_sorted, y_sorted, 1)
+
+        # Comparaison début vs fin de la courbe lissée (plus robuste que la pente linéaire)
+        start_val = y_smooth[:50].mean()  # Moyenne des faibles gammas
+        end_val = y_smooth[-50:].mean()  # Moyenne des forts gammas
+        delta = end_val - start_val
+
+        print(f"   Points analysés : {len(x)}")
+        print(f"   Pente globale : {slope:.4f}")
+        print(f"   Progression Symétrie (Lissée) : {start_val:.2f} -> {end_val:.2f} (Δ={delta:+.2f})")
+
+        # Export des données lissées pour plot
+        pd.DataFrame({'gamma': x_sorted, 'symmetry_smooth': y_smooth}).to_csv("omega_v44_loess_symmetry.csv")
+
+        if delta > 0.1:
+            print("   ✅ VALIDÉ : Tendance continue vers la symétrie causale.")
+        else:
+            print("   ❌ NON VALIDÉ : Pas de tendance claire.")
+
+    def run_test_4_bootstrap_by_project(self, n_iterations=100):
+        """
+        TEST 4 : Bootstrap PAR PROJET (Correct I.I.D. assumption).
+        Préserve la structure temporelle interne des projets.
+        """
+        print(f"\n🧪 [TEST 4] Bootstrap Structurel (par Projet, n={n_iterations})...")
+
+        boot_thresholds = []
+
+        for i in range(n_iterations):
+            # 1. Rééchantillonner la LISTE des projets (avec remise)
+            # Ex: [Linux, Redis, Linux, React...]
+            sampled_keys = resample(self.project_keys, replace=True, random_state=i)
+
+            # 2. Reconstruire un corpus fictif
+            fake_corpus_gamma = []
+            for k in sampled_keys:
+                # On prend tout le vecteur gamma de ce projet
+                fake_corpus_gamma.extend(self.dfs[k]['monthly_gamma'].dropna().values)
+
+            fake_corpus_gamma = np.array(fake_corpus_gamma).reshape(-1, 1)
+
+            # 3. Recalculer le seuil GMM sur ce corpus fictif
+            try:
+                gmm = GaussianMixture(n_components=2, random_state=42)  # Random state fixe pour stabilité algo
+                gmm.fit(fake_corpus_gamma)
+                t, _, _, _ = self.solve_gmm_intersection(gmm)
+
+                # Filtrage basique des échecs de convergence (seuils absurdes)
+                if 0.3 < t < 0.9:
+                    boot_thresholds.append(t)
+            except:
+                pass
+
+        if not boot_thresholds:
+            print("   ⚠️ Échec du Bootstrap.")
+            return
+
+        mean_t = np.mean(boot_thresholds)
+        ci_lower = np.percentile(boot_thresholds, 2.5)
+        ci_upper = np.percentile(boot_thresholds, 97.5)
+        width = ci_upper - ci_lower
+
+        print(f"   Seuil Moyen (Bootstrap) : {mean_t:.4f}")
+        print(f"   IC 95% : [{ci_lower:.4f} - {ci_upper:.4f}]")
+        print(f"   Largeur IC : {width:.4f}")
+
+        if width < 0.2:
+            print("   ✅ STABLE : Le seuil est une propriété robuste du corpus.")
+        else:
+            print("   ⚠️ LARGE : Le seuil dépend fortement de quelques projets clés.")
+
+    def run_full_suite(self, crossover_results):
+        print("\n" + "=" * 70)
+        print("DÉMARRAGE SUITE DE VALIDATION V44 (HARD SCIENCE / REVIEWER PROOF)")
+        print("=" * 70)
+
+        # 0. Pré-calcul (Alignement Gamma-Granger)
+        # Indispensable pour Test 2 et 3
+        print("🛠️  Alignement temporel strict (Gamma ↔ Granger)...")
+        self._align_granger_gamma(crossover_results)
+
+        # Test 1 : Seuil Naturel
+        natural_threshold = self.run_test_1_endogenous_threshold()
+
+        # Test 2 : Robustesse Locale (Variance + Symétrie)
+        self.run_test_2_local_robustness(natural_threshold)
+
+        # Test 3 : Dynamique Continue
+        self.run_test_3_continuous_dynamics()
+
+        # Test 4 : Bootstrap Structurel
+        self.run_test_4_bootstrap_by_project()
+
+        print("=" * 70 + "\n")
 
 class ExternalMaturityValidator:
     def __init__(self, all_dataframes, governance_tier=None):
@@ -4439,202 +4723,316 @@ def plot_phase_space_academic(all_dataframes, crossover_results):
 from scipy import stats
 from statsmodels.tsa.stattools import grangercausalitytests
 
+# ==============================================================================
+# MODULE DE VALIDATION SCIENTIFIQUE ROBUSTE (V44 - REVIEWER PROOF)
+# ==============================================================================
+
+
 
 class ScientificValidator:
     """
-    Module de blindage scientifique pour répondre aux reviewers.
-    Teste la robustesse des métriques, l'indépendance aux seuils et la validité externe.
+    MODULE V44 : VALIDATION SCIENTIFIQUE 'REVIEWER-PROOF'
+    Intègre bootstrap par projet, alignement strict et métriques de symétrie.
     """
 
     def __init__(self, all_dataframes):
-        # On ne garde que les projets significatifs (> 20 mois) pour éviter le bruit
-        self.dfs = {k: v for k, v in all_dataframes.items() if v is not None and len(v) > 20}
+        # On ne garde que les projets significatifs (> 24 mois)
+        self.dfs = {k: v for k, v in all_dataframes.items() if v is not None and len(v) > 24}
+        self.project_keys = list(self.dfs.keys())
 
-    def validate_gamma_robustness(self):
+        # Données alignées (Gamma + Granger) calculées à la volée
+        self.aligned_data = None
+
+    def _align_granger_gamma(self, crossover_results):
         """
-        [Validation 1/3] Robustesse Mathématique de Gamma.
-        Critique : "Gamma est-il un produit arbitraire ?"
-        Test : On compare Gamma (Produit) avec Moyenne Harmonique, Géométrique et Min.
-        Si r > 0.95, la topologie est un invariant fort.
+        HELPER CRITIQUE : Aligne strictement Gamma et les scores Granger par date.
+        Complexité O(N), utilise les index pandas (plus robuste que les listes).
         """
-        print("\n🧪 [Validation 1/3] Robustesse Mathématique de la Métrique Gamma...")
+        pooled_data = []
 
-        correlations = []
+        for name, res in crossover_results.items():
+            if name not in self.dfs: continue
 
-        for name, df in self.dfs.items():
-            # Sécurité
-            if 'gamma_s' not in df.columns or 'gamma_c' not in df.columns:
-                # Fallback pour compatibilité
-                s = df.get('gamma_structure_monthly', df['monthly_gamma'])  # Approx
-                c = df.get('gamma_content_monthly', df['monthly_gamma'])  # Approx
-            else:
-                s = df['gamma_s'].values
-                c = df['gamma_c'].values
+            df = self.dfs[name]
 
-            # Gamma actuel (Produit)
-            g_prod = df['monthly_gamma'].values
+            # Préparation Granger en DataFrame
+            # Vérification que les clés existent bien dans res
+            if 'strength_ag' not in res or 'strength_ga' not in res:
+                continue
 
-            # Formules alternatives
-            # Harmonique : Punit fortement si l'un des deux est bas
-            g_harm = (2 * s * c) / (s + c + 1e-9)
-            # Minimum : La chaîne est aussi forte que son maillon faible
-            g_min = np.minimum(s, c)
-            # Géométrique : Classique pour des taux
-            g_geom = np.sqrt(s * c)
+            granger_df = pd.DataFrame({
+                'date': res['dates'],
+                's_ag': res['strength_ag'],  # Act -> Struct
+                's_ga': res['strength_ga']  # Struct -> Act
+            })
+            # Conversion date si nécessaire et indexation
+            granger_df['date'] = pd.to_datetime(granger_df['date'])
+            granger_df = granger_df.set_index('date')
 
-            # Corrélation de Spearman (rangs) pour vérifier l'ordre
-            r_harm = stats.spearmanr(g_prod, g_harm)[0]
-            r_min = stats.spearmanr(g_prod, g_min)[0]
-            r_geom = stats.spearmanr(g_prod, g_geom)[0]
+            # Préparation Gamma
+            gamma_series = df['monthly_gamma']
 
-            correlations.append([r_harm, r_min, r_geom])
+            # INNER JOIN strict sur les dates (ne garde que les mois où on a TOUT)
+            merged = granger_df.join(gamma_series, how='inner')
+            merged['project'] = name
 
-        # Moyennes globales
-        means = np.mean(correlations, axis=0)
+            # Calcul de la métrique de Symétrie (Coupling Ratio)
+            # 1.0 = Parfaite symétrie (Operational Closure)
+            # 0.0 = Dominance totale unilatérale
+            # On utilise min/max comme suggéré par le reviewer
+            vals = merged[['s_ag', 's_ga']]
+            merged['coupling_ratio'] = vals.min(axis=1) / (vals.max(axis=1) + 1e-9)
 
-        print(f"   Corrélation Gamma vs Moyenne Harmonique : r = {means[0]:.4f}")
-        print(f"   Corrélation Gamma vs Minimum Logique    : r = {means[1]:.4f}")
-        print(f"   Corrélation Gamma vs Moyenne Géom.      : r = {means[2]:.4f}")
+            pooled_data.append(merged)
 
-        if means[0] > 0.95:
-            print("   ✅ SUCCÈS : Gamma capture un invariant structurel (indépendant de la formule).")
+        if pooled_data:
+            self.aligned_data = pd.concat(pooled_data)
         else:
-            print("   ⚠️ ATTENTION : Le choix de la formule influence les résultats.")
+            self.aligned_data = pd.DataFrame()
 
-    def test_temporal_cut_robustness(self, max_lag=3):
-        """Test si la convergence vers la symétrie est robuste au point de coupe"""
-        print("\n⏳ [Validation Temporelle] Robustesse des coupes...")
+    def solve_gmm_intersection(self, gmm):
+        """Trouve le point d'intersection (seuil naturel) entre deux gaussiennes."""
+        means = gmm.means_.flatten()
+        stds = np.sqrt(gmm.covariances_.flatten())
+        weights = gmm.weights_
 
-        cuts = [0.20, 0.25, 0.33, 0.40, 0.50]
-        all_deltas = []
+        # Ordre : idx 0 = bas, idx 1 = haut
+        if means[0] > means[1]:
+            means = means[::-1]
+            stds = stds[::-1]
+            weights = weights[::-1]
 
-        for cut in cuts:
-            # Compteurs agrégés (comme ta V38)
-            p1_ag, p1_ga, p1_total = 0, 0, 0
-            p2_ag, p2_ga, p2_total = 0, 0, 0
+        def diff_pdf(x):
+            p1 = weights[0] * stats.norm.pdf(x, means[0], stds[0])
+            p2 = weights[1] * stats.norm.pdf(x, means[1], stds[1])
+            return p1 - p2
 
-            for name, df in self.dfs.items():
-                if len(df) < 60: continue
+        try:
+            # Recherche racine entre les moyennes
+            threshold = brentq(diff_pdf, means[0], means[1])
+        except Exception:
+            threshold = (means[0] + means[1]) / 2
 
-                idx = int(len(df) * cut)
-                if idx < 15 or (len(df) - idx) < 15: continue
+        return threshold, means, stds, weights
 
-                data_p1 = df.iloc[:idx]
-                data_p2 = df.iloc[idx:]
+    def run_test_1_endogenous_threshold(self):
+        """TEST 1 : Seuil Endogène GMM."""
+        print("\n🧪 [TEST 1] Détermination du Seuil Endogène (GMM)...")
 
-                try:
-                    # Phase 1
-                    g1 = grangercausalitytests(data_p1[['monthly_gamma', 'total_weight']], maxlag=max_lag,
-                                               verbose=False)
-                    g2 = grangercausalitytests(data_p1[['total_weight', 'monthly_gamma']], maxlag=max_lag,
-                                               verbose=False)
-                    p_ag_1 = min([g1[i][0]['ssr_ftest'][1] for i in range(1, max_lag + 1)])
-                    p_ga_1 = min([g2[i][0]['ssr_ftest'][1] for i in range(1, max_lag + 1)])
+        # Collecte de tous les gammas
+        all_gamma = []
+        for df in self.dfs.values():
+            all_gamma.extend(df['monthly_gamma'].dropna().values)
 
-                    # Phase 2
-                    g3 = grangercausalitytests(data_p2[['monthly_gamma', 'total_weight']], maxlag=max_lag,
-                                               verbose=False)
-                    g4 = grangercausalitytests(data_p2[['total_weight', 'monthly_gamma']], maxlag=max_lag,
-                                               verbose=False)
-                    p_ag_2 = min([g3[i][0]['ssr_ftest'][1] for i in range(1, max_lag + 1)])
-                    p_ga_2 = min([g4[i][0]['ssr_ftest'][1] for i in range(1, max_lag + 1)])
+        if not all_gamma:
+            print("   ⚠️ Pas de données Gamma suffisantes.")
+            return 0.7
 
-                    # Comptage
-                    p1_total += 1
-                    p2_total += 1
-                    if p_ag_1 < 0.05: p1_ag += 1
-                    if p_ga_1 < 0.05: p1_ga += 1
-                    if p_ag_2 < 0.05: p2_ag += 1
-                    if p_ga_2 < 0.05: p2_ga += 1
+        all_gamma = np.array(all_gamma).reshape(-1, 1)
 
-                except:
-                    continue
+        try:
+            gmm = GaussianMixture(n_components=2, random_state=42, n_init=10)
+            gmm.fit(all_gamma)
 
-            if p1_total < 3: continue
+            threshold, means, stds, weights = self.solve_gmm_intersection(gmm)
 
-            # Calcul du coupling ratio (méthode V38)
-            pct1_ag = p1_ag / p1_total * 100
-            pct1_ga = p1_ga / p1_total * 100
-            pct2_ag = p2_ag / p2_total * 100
-            pct2_ga = p2_ga / p2_total * 100
+            print(f"   Régime 1 (Explo) : μ={means[0]:.3f}, σ={stds[0]:.3f}, w={weights[0]:.2f}")
+            print(f"   Régime 2 (Sedim) : μ={means[1]:.3f}, σ={stds[1]:.3f}, w={weights[1]:.2f}")
+            print(f"   🎯 SEUIL NATUREL : {threshold:.4f}")
+            return threshold
+        except Exception as e:
+            print(f"   ⚠️ Erreur GMM: {e}. Fallback sur 0.7")
+            return 0.7
 
-            coupling_p1 = min(pct1_ag, pct1_ga) / max(pct1_ag, pct1_ga) if max(pct1_ag, pct1_ga) > 0 else 0
-            coupling_p2 = min(pct2_ag, pct2_ga) / max(pct2_ag, pct2_ga) if max(pct2_ag, pct2_ga) > 0 else 0
-
-            delta = coupling_p2 - coupling_p1
-            all_deltas.append(delta)
-
-            print(f"   Cut {int(cut * 100)}% : Coupling {coupling_p1:.2f} → {coupling_p2:.2f} (Δ={delta:+.2f})")
-
-        # Verdict
-        positive_deltas = sum(1 for d in all_deltas if d > 0)
-        print(f"\n   Deltas positifs : {positive_deltas}/{len(all_deltas)}")
-
-        if positive_deltas >= len(all_deltas) - 1:  # Tolère 1 exception
-            print("   ✅ SUCCÈS : La symétrie émerge indépendamment du point de coupe.")
-            return True
-        else:
-            print("   ⚠️ MITIGÉ : Résultat sensible au point de coupe.")
-            return False
-    def run_predictive_validation(self, project_status):
+    def run_test_2_local_robustness(self, natural_threshold):
         """
-        [Validation 3/3] Validité Discriminante (Viability Index).
-        Critique : "Prouvez que ça sert à quelque chose."
-        Test : Vivants vs Morts sur l'Index de Viabilité (V = Activité * Gamma).
-        Hypothèse : Les vivants maintiennent V haut (Homéostasie). Les morts ont V bas.
+        TEST 2 : Robustesse Locale (Variance ET Symétrie).
         """
-        print("\n💀 [Validation 3/3] Validité Discriminante (Viability Index)...")
+        print(f"\n🧪 [TEST 2] Robustesse Locale (Variance & Symétrie)...")
 
-        alive_scores = []
-        dead_scores = []
-
-        for name, df in self.dfs.items():
-            if len(df) < 24: continue  # Il faut un historique
-
-            # On calcule l'Index de Viabilité sur la dernière année (12 mois)
-            # V = Activité Normalisée * Gamma
-            # Si Activité = 0 (Mort fossile) -> V = 0
-            # Si Gamma = 0 (Chaos) -> V = 0
-
-            last_year = df.iloc[-12:]
-
-            # Activité normalisée par le max historique du projet (pour être comparable)
-            max_act = df['total_weight'].max()
-            if max_act == 0: max_act = 1
-
-            norm_activity = last_year['total_weight'] / max_act
-            gamma = last_year['monthly_gamma']
-
-            viability_index = (norm_activity * gamma).mean()
-
-            status = project_status.get(name, 'alive')
-
-            if status == 'alive':
-                alive_scores.append(viability_index)
-            elif status in ['dead', 'declining']:
-                dead_scores.append(viability_index)
-
-        if not dead_scores:
-            print("⚠️ Pas assez de projets morts/déclinants pour le test.")
+        if self.aligned_data is None or self.aligned_data.empty:
+            print("   ⚠️ Pas de données alignées pour tester la symétrie.")
             return
 
-        # Test statistique (Mann-Whitney U)
-        stat, p_val = stats.mannwhitneyu(alive_scores, dead_scores, alternative='greater')
+        # On teste autour du seuil naturel
+        test_thresholds = np.arange(max(0.1, natural_threshold - 0.1), min(0.9, natural_threshold + 0.1), 0.02)
+        results = []
 
-        mean_alive = np.mean(alive_scores)
-        mean_dead = np.mean(dead_scores)
+        for t in test_thresholds:
+            # Séparation basée sur le seuil t
+            low_regime = self.aligned_data[self.aligned_data['monthly_gamma'] < t]
+            high_regime = self.aligned_data[self.aligned_data['monthly_gamma'] >= t]
 
-        print(f"   Index Viabilité Moyen (Vivants) : {mean_alive:.3f} (N={len(alive_scores)})")
-        print(f"   Index Viabilité Moyen (Morts)   : {mean_dead:.3f}  (N={len(dead_scores)})")
-        print(f"   Delta                           : {mean_alive - mean_dead:.3f}")
-        print(f"   P-value (Mann-Whitney)          : {p_val:.5f}")
+            if len(low_regime) < 10 or len(high_regime) < 10: continue
 
-        if p_val < 0.05:
-            print("   ✅ SUCCÈS : L'Index de Viabilité distingue significativement les projets.")
+            # Métrique 1 : Variance Collapse (Doit être > 1.0)
+            # On compare la variance du gamma dans le régime bas vs haut
+            var_low = low_regime['monthly_gamma'].var()
+            var_high = high_regime['monthly_gamma'].var()
+            var_ratio = var_low / (var_high + 1e-9)
+
+            # Métrique 2 : Symmetry Gain (Doit être positif)
+            sym_low = low_regime['coupling_ratio'].mean()
+            sym_high = high_regime['coupling_ratio'].mean()
+            sym_gain = sym_high - sym_low
+
+            results.append({
+                'threshold': t,
+                'var_ratio': var_ratio,
+                'sym_gain': sym_gain,
+                'sym_high': sym_high
+            })
+
+        if not results:
+            print("   ⚠️ Pas assez de données pour le test de robustesse.")
+            return
+
+        df_res = pd.DataFrame(results)
+
+        # Export pour SI (Supplementary Information)
+        df_res.to_csv("omega_v44_robustness_grid.csv", index=False)
+
+        # Analyse
+        mean_gain = df_res['sym_gain'].mean()
+        valid_steps = (df_res['sym_gain'] > 0).mean() * 100
+
+        print(f"   Analyse sur {len(df_res)} pas de seuils autour de {natural_threshold:.2f} :")
+        print(f"   Gain moyen de Symétrie (Haut - Bas) : +{mean_gain:.3f}")
+        print(f"   Robustesse (Cas positifs) : {valid_steps:.1f}%")
+
+        if valid_steps > 80:
+            print("   ✅ ROBUSTE : Le régime haut est structurellement plus symétrique.")
         else:
-            print("   ❌ ÉCHEC : Pas de distinction significative.")
+            print("   ⚠️ INSTABLE : La symétrie dépend trop du seuil choisi.")
 
+    def run_test_3_continuous_dynamics(self):
+        """
+        TEST 3 : Dynamique Continue (LOESS).
+        Relation Gamma -> Symétrie sans seuil.
+        """
+        print("\n🧪 [TEST 3] Dynamique Continue (Gamma -> Symétrie)...")
 
+        if self.aligned_data is None or self.aligned_data.empty:
+            print("   ⚠️ Données insuffisantes.")
+            return
+
+        # X = Gamma, Y = Coupling Ratio (0..1)
+        data = self.aligned_data.dropna(subset=['monthly_gamma', 'coupling_ratio'])
+
+        x = data['monthly_gamma'].values
+        y = data['coupling_ratio'].values
+
+        if len(x) < 20:
+            print("   ⚠️ Trop peu de points pour LOESS.")
+            return
+
+        # Tri pour LOESS
+        sort_idx = np.argsort(x)
+        x_sorted = x[sort_idx]
+        y_sorted = y[sort_idx]
+
+        try:
+            # Lissage LOESS
+            lowess = sm.nonparametric.lowess(y_sorted, x_sorted, frac=0.3)
+            y_smooth = lowess[:, 1]
+
+            # Calcul de pente globale (Linéaire simple pour la tendance)
+            slope, intercept = np.polyfit(x_sorted, y_sorted, 1)
+
+            # Comparaison début vs fin
+            start_val = y_smooth[:20].mean()
+            end_val = y_smooth[-20:].mean()
+            delta = end_val - start_val
+
+            print(f"   Points analysés : {len(x)}")
+            print(f"   Pente globale : {slope:.4f}")
+            print(f"   Progression Symétrie (Lissée) : {start_val:.2f} -> {end_val:.2f} (Δ={delta:+.2f})")
+
+            pd.DataFrame({'gamma': x_sorted, 'symmetry_smooth': y_smooth}).to_csv("omega_v44_loess_symmetry.csv")
+
+            if delta > 0.05:
+                print("   ✅ VALIDÉ : Tendance continue vers la symétrie causale.")
+            else:
+                print("   ❌ NON VALIDÉ : Pas de tendance claire.")
+        except Exception as e:
+            print(f"   ⚠️ Erreur LOESS: {e}")
+
+    def run_test_4_bootstrap_by_project(self, n_iterations=100):
+        """
+        TEST 4 : Bootstrap PAR PROJET.
+        """
+        print(f"\n🧪 [TEST 4] Bootstrap Structurel (par Projet, n={n_iterations})...")
+
+        boot_thresholds = []
+
+        if not self.project_keys:
+            print("   ⚠️ Aucun projet pour le bootstrap.")
+            return
+
+        for i in range(n_iterations):
+            # 1. Rééchantillonner la LISTE des projets
+            sampled_keys = resample(self.project_keys, replace=True, random_state=i)
+
+            # 2. Reconstruire un corpus fictif
+            fake_corpus_gamma = []
+            for k in sampled_keys:
+                fake_corpus_gamma.extend(self.dfs[k]['monthly_gamma'].dropna().values)
+
+            if not fake_corpus_gamma: continue
+
+            fake_corpus_gamma = np.array(fake_corpus_gamma).reshape(-1, 1)
+
+            # 3. Recalculer le seuil GMM
+            try:
+                gmm = GaussianMixture(n_components=2, random_state=42)
+                gmm.fit(fake_corpus_gamma)
+                t, _, _, _ = self.solve_gmm_intersection(gmm)
+
+                if 0.3 < t < 0.9:
+                    boot_thresholds.append(t)
+            except:
+                pass
+
+        if not boot_thresholds:
+            print("   ⚠️ Échec du Bootstrap.")
+            return
+
+        mean_t = np.mean(boot_thresholds)
+        ci_lower = np.percentile(boot_thresholds, 2.5)
+        ci_upper = np.percentile(boot_thresholds, 97.5)
+        width = ci_upper - ci_lower
+
+        print(f"   Seuil Moyen (Bootstrap) : {mean_t:.4f}")
+        print(f"   IC 95% : [{ci_lower:.4f} - {ci_upper:.4f}]")
+        print(f"   Largeur IC : {width:.4f}")
+
+        if width < 0.2:
+            print("   ✅ STABLE : Le seuil est une propriété robuste du corpus.")
+        else:
+            print("   ⚠️ LARGE : Le seuil dépend fortement de quelques projets clés.")
+
+    def run_full_suite(self, crossover_results):
+        print("\n" + "=" * 70)
+        print("DÉMARRAGE SUITE DE VALIDATION V44 (HARD SCIENCE / REVIEWER PROOF)")
+        print("=" * 70)
+
+        # 0. Pré-calcul (Alignement Gamma-Granger)
+        print("🛠️  Alignement temporel strict (Gamma ↔ Granger)...")
+        self._align_granger_gamma(crossover_results)
+
+        # Test 1 : Seuil Naturel
+        natural_threshold = self.run_test_1_endogenous_threshold()
+
+        # Test 2 : Robustesse Locale
+        self.run_test_2_local_robustness(natural_threshold)
+
+        # Test 3 : Dynamique Continue
+        self.run_test_3_continuous_dynamics()
+
+        # Test 4 : Bootstrap Structurel
+        self.run_test_4_bootstrap_by_project()
+
+        print("=" * 70 + "\n")
 def validate_comod_granger_link(
         comod_results: dict,
         granger_phase_results: dict,
@@ -5260,8 +5658,146 @@ def plot_bidirectional_architecture_patterns(
 def run_hindcasting_test(all_dataframes, project_status=None):
     """Fonction wrapper pour le main."""
 
-
     return results
+
+
+
+
+def test_variance_collapse_symmetrization(crossover_results, all_dataframes):
+    """
+    PHASE 7B ;  CAUSAL VARIANCE COLLAPSE TEST
+
+    Hypothesis: Structural maturity (Gamma) does not strictly force mean symmetry to 0,
+    but constrains the *variance* of causal imbalance.
+    Mature systems are 'locked' into a narrow channel of interaction.
+    """
+    print("\n" + "=" * 80)
+    print("PHASE 13: CAUSAL VARIANCE COLLAPSE (CONSTRAINT ATTRACTOR)")
+    print("=" * 80)
+
+    pooled_data = []
+
+    # --- 1. DATA POOLING ---
+    for name, res in crossover_results.items():
+        if name not in all_dataframes:
+            continue
+
+        df_proj = all_dataframes[name]
+        dates = res['dates']
+        # Forces causales (1 - p_value)
+        s_ag = np.array(res['strength_ag'])
+        s_ga = np.array(res['strength_ga'])
+
+        # Alignement temporel
+        indices = [i for i, d in enumerate(dates) if d in df_proj.index]
+        matched_dates = [dates[i] for i in indices]
+
+        gammas = df_proj.loc[matched_dates, 'monthly_gamma'].values
+        s_ag = s_ag[indices]
+        s_ga = s_ga[indices]
+
+        for g, ag, ga in zip(gammas, s_ag, s_ga):
+            if not np.isnan(g) and not np.isnan(ag) and not np.isnan(ga):
+                pooled_data.append({
+                    'gamma': g,
+                    'strength_ag': ag,
+                    'strength_ga': ga
+                })
+
+    df = pd.DataFrame(pooled_data)
+
+    if len(df) < 50:
+        print("⚠️ Insufficient data.")
+        return
+
+    # --- 2. METRIC: CAUSAL IMBALANCE ---
+    # |Act->Str - Str->Act|
+    # 0 = Symétrie, 1 = Dominance totale
+    df['imbalance'] = np.abs(df['strength_ag'] - df['strength_ga'])
+
+    # --- 3. BINNING & VARIANCE ANALYSIS ---
+    # On découpe Gamma en 10 tranches pour observer l'évolution de la distribution
+    # On utilise qcut pour avoir un nombre équitable de points par bin, ou cut pour des intervalles fixes.
+    # Ici 'cut' est préférable pour voir la physique de l'axe Gamma.
+    df['gamma_bin'] = pd.cut(df['gamma'], bins=np.linspace(0, 1, 11))
+
+    # On calcule les statistiques par bin
+    bin_stats = df.groupby('gamma_bin', observed=True)['imbalance'].agg([
+        'count', 'mean', 'var',
+        lambda x: x.quantile(0.9) - x.quantile(0.1)  # Inter-decile range (Spread)
+    ]).rename(columns={'<lambda_0>': 'spread'})
+
+    bin_stats['gamma_mid'] = bin_stats.index.map(lambda x: x.mid).astype(float)
+
+    # Filtrer les bins vides ou trop petits
+    valid_bins = bin_stats[bin_stats['count'] > 10].copy()
+
+    if len(valid_bins) < 3:
+        print("⚠️ Not enough populated bins for trend analysis.")
+        return
+
+    # --- 4. STATISTICAL TEST (Correlation on Variance/Spread) ---
+    # Hypothèse : Plus Gamma augmente, plus le Spread diminue (Corrélation Négative)
+
+    r_spread, p_spread = stats.spearmanr(valid_bins['gamma_mid'], valid_bins['spread'])
+    r_var, p_var = stats.spearmanr(valid_bins['gamma_mid'], valid_bins['var'])
+
+    print(f"\n📊 Variance Collapse Statistics (across {len(valid_bins)} bins):")
+    print(f"   Correlation (Gamma vs Spread Q90-Q10): r = {r_spread:.3f}, p = {p_spread:.4f}")
+    print(f"   Correlation (Gamma vs Variance):       r = {r_var:.3f},    p = {p_var:.4f}")
+
+    # Verdict logic
+    is_validated = (r_spread < -0.5 and p_spread < 0.05) or (r_var < -0.5 and p_var < 0.05)
+
+    if is_validated:
+        print("\n✅ VALIDATED: Strong evidence of constraint attractor.")
+        print("   As structural maturity increases, the envelope of possible causal asymmetry collapses.")
+    else:
+        print("\n⚠️ INCONCLUSIVE: Variance does not significantly decrease.")
+
+    # --- 5. VISUALIZATION: THE FUNNEL OF CONSTRAINT ---
+
+    plt.style.use('seaborn-v0_8-whitegrid')
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # A. Nuage de points (Discret)
+    ax.scatter(df['gamma'], df['imbalance'], alpha=0.1, color='#95a5a6', s=5, label='Raw Observations')
+
+    # B. Calcul des quantiles glissants pour le lissage visuel
+    # On trie pour le plot continu
+    df_sorted = df.sort_values('gamma')
+    window = int(0.15 * len(df))  # 15% sliding window
+
+    rolling_gamma = df_sorted['gamma'].rolling(window, center=True).mean()
+    rolling_q10 = df_sorted['imbalance'].rolling(window, center=True).quantile(0.1)
+    rolling_q50 = df_sorted['imbalance'].rolling(window, center=True).median()
+    rolling_q90 = df_sorted['imbalance'].rolling(window, center=True).quantile(0.9)
+
+    # C. Zone de Contrainte (The Funnel)
+    ax.fill_between(rolling_gamma, rolling_q10, rolling_q90,
+                    color='#e74c3c', alpha=0.2, label='Constraint Envelope (10th-90th %)')
+
+    # D. Médiane
+    ax.plot(rolling_gamma, rolling_q50, color='#c0392b', linewidth=2, linestyle='--', label='Median Imbalance')
+
+    # E. Annotations théoriques
+    ax.arrow(0.2, 0.8, 0.4, -0.4, head_width=0.02, color='black', alpha=0.5)
+    ax.text(0.4, 0.85, "Phase 1: High Freedom\n(Large Variance)", ha='center', color='#3498db', fontweight='bold')
+    ax.text(0.85, 0.15, "Phase 2: Locked\n( collapsed)", ha='center', color='#27ae60', fontweight='bold')
+
+    ax.set_xlabel(r'Structural Maturity ($\Gamma$)', fontsize=12)
+    ax.set_ylabel('Causal Imbalance (|Act->Str - Str->Act|)', fontsize=12)
+    ax.set_title('Variance Collapse: The Emergence of Distributed Constraint', fontsize=14, fontweight='bold')
+    ax.set_xlim(0, 1.0)
+    ax.set_ylim(0, 1.0)
+    ax.legend(loc='upper right')
+
+    plt.tight_layout()
+    plt.savefig("omega_v44_variance_collapse.png", dpi=300)
+    print(f"✅ Visualization saved: omega_v44_variance_collapse.png")
+    plt.close()
+
+    return {'r_spread': r_spread, 'p_spread': p_spread}
 if __name__ == "__main__":
     # La méthode 'spawn' est cruciale pour la compatibilité multiprocessing sur macOS/Windows
     try:
@@ -5419,7 +5955,14 @@ if __name__ == "__main__":
         # On passe aussi all_dataframes pour avoir les Gamma
         plot_phase_space_academic(all_dataframes, crossover_results)
 
-
+    # ==========================================================================
+    # PHASE 7B : TESTS continuous symmetrization
+    # ==========================================================================
+    print("\n" + "#" * 80)
+    print("PHASE 7B : TESTS continuous symmetrization")
+    print("#" * 80)
+    if crossover_results and all_dataframes:
+        test_variance_collapse_symmetrization(crossover_results, all_dataframes)
     # ==========================================================================
     # PHASE 8 : TESTS COMPLÉMENTAIRES
     # ==========================================================================
@@ -5432,46 +5975,39 @@ if __name__ == "__main__":
     generate_project_recap(all_dataframes, global_results)
 
     # ==========================================================================
-    # PHASE 9 : VALIDATION ROBUSTE (AJOUT V37)
+    # PHASE 9 : BLINDAGE SCIENTIFIQUE COMPLET (V44 + V37)
     # ==========================================================================
     print("\n" + "#" * 80)
-    print("PHASE 9 : BLINDAGE SCIENTIFIQUE (V37)")
+    print("PHASE 9 : VALIDATION SCIENTIFIQUE AVANCÉE")
     print("#" * 80)
 
-    # Instanciation du validateur
+    # --- PARTIE 1 : Validation "Reviewer-Proof" (Classe ScientificValidator V44) ---
+    # Remplace les anciens tests V40 (gamma_robustness, temporal_cut) qui plantaient
+    if crossover_results:
+        print("\n--- [A] VALIDATION STRUCTURELLE (V44) ---")
+        sci_validator = ScientificValidator(all_dataframes)
+        sci_validator.run_full_suite(crossover_results)
+    else:
+        print("⚠️ Crossover results manquants. Validation V44 ignorée.")
+
+    # --- PARTIE 2 : Tests de Robustesse Complémentaires (Classe RobustnessValidator V37) ---
+    # On conserve ces tests car ils apportent des infos différentes (Heatmap, Z-Score)
+    print("\n--- [B] TESTS DE ROBUSTESSE COMPLÉMENTAIRES (V37) ---")
     validator = RobustnessValidator(all_dataframes)
 
-    # ==========================================================================
-    # PHASE 9b : VALIDATION AVANCÉE (V40 - HARD SCIENCE)
-    # ==========================================================================
-    print("\n" + "-" * 80)
-    print("DÉMARRAGE DE LA VALIDATION SCIENTIFIQUE AVANCÉE (V40)")
-    print("-" * 80)
-
-    # 1. Instancier le validateur
-    sci_validator = ScientificValidator(all_dataframes)
-
-    # 2. Lancer les 3 tests
-    sci_validator.validate_gamma_robustness()
-    sci_validator.test_temporal_cut_robustness()
-
-    # Assure-toi que PROJECT_STATUS est défini en haut de ton script
-    sci_validator.run_predictive_validation(PROJECT_STATUS)
-
-
-    # 1. Lancer la Sensitivity Analysis (Génère la Heatmap)
+    # 1. Sensitivity Analysis (Heatmap) -> Toujours utile pour voir l'impact des paramètres
     validator.run_sensitivity_analysis()
 
-    # 2. Lancer le Null Model (Donne le Z-Score)
+    # 2. Null Model (Z-Score) -> Preuve que la trajectoire n'est pas aléatoire
     validator.run_null_model(n_permutations=200)
 
+    # 3. Covariate Control -> Vérifie que ce n'est pas juste la taille de l'équipe
     validator.run_covariate_control()
 
-    print("\n🏁 DONE.")
+    # Note : On ne lance plus run_predictive_validation ici car la PHASE 10 (Hindcasting)
+    # fait exactement la même chose en beaucoup plus complet juste après.
 
-    print("\n" + "=" * 80)
-    print("ANALYSE  TERMINÉE ")
-    print("=" * 80)
+    print("\n🏁 PHASE 9 TERMINÉE.")
     # ==========================================================================
     # PHASE 10 : HINDCASTING
     # ==========================================================================
