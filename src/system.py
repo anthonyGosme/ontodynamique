@@ -1,7 +1,5 @@
 import pickle
-
 from sklearn.utils import resample
-
 from comodification_analysis import (
     run_comodification_analysis,
     CoModificationAnalyzer,
@@ -9,13 +7,13 @@ from comodification_analysis import (
     plot_comodification_evolution,
     plot_global_correlation_summary
 )
-import statsmodels.api as sm
 from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge
 from sklearn.preprocessing import StandardScaler
+from lifelines import KaplanMeierFitter, CoxPHFitter
+from lifelines.statistics import logrank_test
 import statsmodels.api as sm
 from sklearn.metrics import roc_auc_score, brier_score_loss, mean_squared_error, average_precision_score
 from scipy.stats import wilcoxon
-from scipy import stats
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -34,7 +32,7 @@ import concurrent.futures
 import multiprocessing
 import os
 import pygit2
-from scipy.optimize import curve_fit, OptimizeWarning
+from scipy.optimize import curve_fit, OptimizeWarning, brentq
 from sklearn.metrics import r2_score
 import warnings
 from tqdm import tqdm
@@ -53,8 +51,6 @@ except ImportError:
     def diptest(data):
         return 0, 1.0
 
-
-    print("⚠️ La librairie 'diptest' manque. Installez-la via 'pip install diptest' pour H_2.")
 
 # ==============================================================================
 # 1. CONFIGURATION
@@ -360,8 +356,8 @@ REPOS_CONFIGTOT = {
 
      'LIBREOFFICE': {         'path': BASE_PATH + 'libreoffice-core', 'branch': 'master',        'core_paths': ['sw/', 'sc/', 'sal/', 'vcl/'],  # Writer, Calc, System Abstraction, GUI
         'ignore_paths': ['solenv/', 'translations/', 'instdir/'],        'color': '#18a303'    },
-    'GECKO_FIREFOX': {        'path': BASE_PATH + 'gecko-dev', 'branch': 'master',        'core_paths': ['dom/', 'js/src/', 'layout/'],
-        'ignore_paths': ['testing/', 'python/', 'third_party/'],        'color': '#e66000'    },
+   # 'GECKO_FIREFOX': {        'path': BASE_PATH + 'gecko-dev', 'branch': 'master',        'core_paths': ['dom/', 'js/src/', 'layout/'],
+    #    'ignore_paths': ['testing/', 'python/', 'third_party/'],        'color': '#e66000'    },
     'WEBKIT': {        'path': BASE_PATH + 'WebKit', 'branch': 'main',        'core_paths': ['Source/WebCore/', 'Source/JavaScriptCore/'],
         'ignore_paths': ['LayoutTests/', 'ManualTests/'],        'color': '#8e44ad'    },
     'LLVM': {        'path': BASE_PATH + 'llvm-project', 'branch': 'main',        'core_paths': ['llvm/lib/', 'clang/lib/'],
@@ -439,54 +435,12 @@ REPOS_CONFIGTOT = {
 REPOS_CONFIGCACHE = {
 
 
-    'WORDPRESS': {  # Le web (PHP)
-        'path': BASE_PATH + 'wordpress-develop', 'branch': 'trunk',
-        'core_paths': ['src/wp-includes/', 'src/wp-admin/'],
-        'ignore_paths': ['tests/', 'tools/'],
-        'color': '#21759b'
-    },
-    'LIBREOFFICE': {
-        'path': BASE_PATH + 'libreoffice-core', 'branch': 'master',        'core_paths': ['sw/', 'sc/', 'sal/', 'vcl/'],  # Writer, Calc, System Abstraction, GUI
-        'ignore_paths': ['solenv/', 'translations/', 'instdir/'],        'color': '#18a303'    },
-
-
-
-    'MEDIAWIKI': { 'path': BASE_PATH + 'mediawiki', 'branch': 'master',
-        'core_paths': ['includes/', 'languages/'],        'ignore_paths': ['tests/', 'docs/'],        'color': '#eaecf0'    },
-
-    'MATPLOTLIB': {  # Python Science
-        'path': BASE_PATH + 'matplotlib', 'branch': 'main',
-        'core_paths': ['lib/matplotlib/', 'src/'],
-        'ignore_paths': ['doc/', 'examples/'],
-        'color': '#11557c'
-    },
-    'FASTAPI': {  # Python Moderne
-        'path': BASE_PATH + 'fastapi', 'branch': 'master',
-        'core_paths': ['fastapi/'],
-        'ignore_paths': ['docs/', 'tests/'],
-        'color': '#05998b'
-    },
-    'SUBVERSION': {  # L'ancêtre de Git (C)
-        'path': BASE_PATH + 'subversion', 'branch': 'trunk',
-        'core_paths': ['subversion/libsvn_client/', 'subversion/libsvn_wc/'],
-        'ignore_paths': ['subversion/tests/', 'doc/'],
-        'color': '#8e1917'
-    },
-    'ANGULAR_JS_LEGACY': {  # Pour la mort
-        'path': BASE_PATH + 'angular.js', 'branch': 'master',
-        'core_paths': ['src/'],
-        'ignore_paths': ['test/', 'docs/'],
-        'color': '#b52e31'
-    },
-
-    # --- 1. LES TITANS (OS & KERNELS) ---
-    'LINUX': {'path': BASE_PATH + 'linux', 'branch': 'master', 'core_paths': ['kernel/', 'mm/', 'fs/', 'sched/'],
-              'ignore_paths': ['drivers/', 'arch/', 'tools/', 'Documentation/', 'samples/'], 'color': '#000000'},
-    'KUBERNETES': {'path': BASE_PATH + 'kubernetes', 'branch': 'master', 'core_paths': ['pkg/', 'cmd/', 'staging/'],
-                   'ignore_paths': ['test/', 'docs/', 'vendor/'], 'color': '#326ce5'},
-    'FREEBSD': {     'path': BASE_PATH + 'freebsd-src', 'branch': 'main',
-       'core_paths': ['sys/kern/', 'sys/vm/', 'sys/sys/'],        'ignore_paths': ['sys/dev/', 'contrib/', 'tests/'],        'color': '#ab2b28'    },
-
+    'GECKO_FIREFOX': {        'path': BASE_PATH + 'gecko-dev', 'branch': 'master',        'core_paths': ['dom/', 'js/src/', 'layout/'],
+        'ignore_paths': ['testing/', 'python/', 'third_party/'],        'color': '#e66000'    },
+    'WEBKIT': {        'path': BASE_PATH + 'WebKit', 'branch': 'main',        'core_paths': ['Source/WebCore/', 'Source/JavaScriptCore/'],
+        'ignore_paths': ['LayoutTests/', 'ManualTests/'],        'color': '#8e44ad'    },
+    'LLVM': {        'path': BASE_PATH + 'llvm-project', 'branch': 'main',        'core_paths': ['llvm/lib/', 'clang/lib/'],
+         'ignore_paths': ['llvm/test/', 'clang/test/', 'lldb/'],        'color': '#2c3e50'    },
 
 }
 
@@ -1029,27 +983,10 @@ class HindcastingValidator:
             # Référence : Activité moyenne récente (12 derniers mois)
             recent_activity = df['total_weight'].rolling(12, min_periods=1).mean()
 
-            # Seuil de survie :
-            # 1. Seuil Relatif : Doit maintenir au moins 20% de l'activité récente
-            #    (Cela autorise une baisse de 80% ! C'est très tolérant pour la sédimentation)
-            threshold_relative = 0.20 * recent_activity
+            UNIVERSAL_ACTIVITY_THRESHOLD = 10.0  # Commits pondérés/mois minimum
 
-            # 2. Seuil Absolu Minimal : Doit avoir au moins 5 points de poids
-            #    (Pour filtrer le bruit de fond des projets zombies)
-            threshold_absolute = 5.0
-
-            # Un projet est viable s'il passe les deux tests
-            is_viable = (future_activity > threshold_relative) & (future_activity > threshold_absolute)
-
-
-            status = self.project_status.get(name, 'unknown')
-
-            if status == 'alive':
-                # Pour les vivants, on pardonne tout sauf l'arrêt total (seuil absolu)
-                df['target_viable'] = (future_activity > threshold_absolute).astype(float)
-            else:
-                # Pour les morts/inconnus, on applique la règle standard (relatif + absolu)
-                df['target_viable'] = is_viable.astype(float)
+            # Un projet est viable s'il maintient une activité minimale absolue
+            df['target_viable'] = (future_activity > UNIVERSAL_ACTIVITY_THRESHOLD).astype(float)
 
             df['target_gamma_future'] = df['gamma'].shift(-self.GAP)
             # Nettoyage
@@ -1401,6 +1338,195 @@ class HindcastingValidator:
         plt.close()
 
 
+
+class SurvivalAsymmetryValidator:
+    """
+    MODULE V46.1 (FINAL LOCK) : ANALYSE DE SURVIE DESCRIPTIVE
+    Approche : "Non-Contradiction Test".
+    Méthodologie :
+      1. Définition stricte de l'événement (pas de 'zombie pivot' artificiel).
+      2. Asymétrie cumulative (exposition temporelle).
+      3. Inférence conditionnelle (Cox uniquement si puissance suffisante).
+    """
+
+    def __init__(self, all_dataframes, crossover_results, project_status):
+        self.dfs = all_dataframes
+        self.crossover = crossover_results
+        self.status_dict = project_status
+        self.survival_df = None
+
+    def prepare_data(self):
+        """
+        Préparation du dataset (1 ligne par projet).
+        Variable : Exposition cumulée à l'asymétrie causale.
+        Événement : Inactivité totale (> 24 mois) ou statut déclaré mort.
+        """
+        rows = []
+        print("\n[Survival] Préparation du dataset (Approche Conservative)...")
+
+        # Fin de l'étude (date max du corpus)
+        all_dates = [df.index.max() for df in self.dfs.values() if df is not None and not df.empty]
+        if not all_dates: return
+        study_end_date = max(all_dates)
+
+        # Seuil d'arrêt strict : 24 mois sans activité
+        cutoff_threshold = pd.Timedelta(days=365 * 2)
+
+        for name, df in self.dfs.items():
+            if df is None or len(df) < 24: continue
+
+            # 1. Événement (E) : Approche stricte (Dead or Abandoned)
+            last_active_date = df.index.max()
+            is_inactive = (study_end_date - last_active_date) > cutoff_threshold
+            is_declared_dead = self.status_dict.get(name, 'alive') in ['dead', 'legacy']
+
+            E = 1 if (is_inactive or is_declared_dead) else 0
+
+            # 2. Temps (T)
+            T = len(df)
+
+            # 3. Asymétrie Cumulative (Exposition)
+            if name not in self.crossover: continue
+            res = self.crossover[name]
+            n_points = min(len(res['strength_ag']), len(res['strength_ga']))
+            if n_points < 12: continue
+
+            s_ag = np.array(res['strength_ag'][:n_points])
+            s_ga = np.array(res['strength_ga'][:n_points])
+
+            with np.errstate(divide='ignore', invalid='ignore'):
+                inst_ratios = np.minimum(s_ag, s_ga) / (np.maximum(s_ag, s_ga) + 1e-9)
+
+            # Seuil d'asymétrie conservateur (0.6)
+            # On mesure la fraction de la vie passée en déséquilibre
+            months_in_asymmetry = np.sum(inst_ratios < 0.6)
+            asym_exposure = months_in_asymmetry / n_points
+
+            # 4. Contrôles
+            avg_activity = df['total_weight'].mean()
+            size_proxy = df['files_touched'].sum()
+
+            rows.append({
+                'project': name,
+                'T': T,
+                'E': E,
+                'Asym_Exposure': asym_exposure,
+                'Log_Activity': np.log1p(avg_activity),
+                'Log_Size': np.log1p(size_proxy)
+            })
+
+        self.survival_df = pd.DataFrame(rows)
+        n_events = self.survival_df['E'].sum()
+        print(f"   Dataset prêt : {len(self.survival_df)} projets.")
+        print(f"   Événements terminaux (E=1) : {n_events} ({n_events / len(self.survival_df):.1%})")
+
+        if n_events < 5:
+            print("   ℹ️ NOTE : Faible nombre d'événements (High Resilience Corpus).")
+            print("             L'analyse sera purement descriptive.")
+
+    def run_kaplan_meier(self):
+        """
+        ANALYSE 1 : Kaplan-Meier Descriptif.
+        [CORRIGÉ] : Ajout de conversions de types explicites pour éviter l'erreur
+        "Values must be numeric".
+        """
+        if self.survival_df is None or self.survival_df.empty: return
+
+        df = self.survival_df.copy()
+
+        # --- FIX CRITIQUE : Conversion explicite des types ---
+        # Lifelines plante si ces colonnes sont de type 'object'
+        try:
+            df['T'] = pd.to_numeric(df['T'], errors='coerce')
+            df['E'] = pd.to_numeric(df['E'], errors='coerce')
+            df['Asym_Exposure'] = pd.to_numeric(df['Asym_Exposure'], errors='coerce')
+
+            # On supprime les lignes qui auraient des NaNs après conversion
+            df = df.dropna(subset=['T', 'E', 'Asym_Exposure'])
+        except Exception as e:
+            print(f"   ⚠️ Erreur de nettoyage des données : {e}")
+            return
+
+        # Tentative de groupement robuste (Tertiles)
+        try:
+            # On essaie de créer 3 groupes : Low, Mid, High exposure
+            df['Exposure_Group'] = pd.qcut(df['Asym_Exposure'], 3, labels=["Low Asym", "Mid", "High Asym"])
+            # On ne garde que les extrêmes pour le contraste
+            df_plot = df[df['Exposure_Group'].isin(["Low Asym", "High Asym"])].copy()
+            method = "Tertiles (Top vs Bottom 33%)"
+        except ValueError:
+            # Fallback Médiane si pas assez de variance (distribution trop plate)
+            median_val = df['Asym_Exposure'].median()
+            df['Exposure_Group'] = np.where(df['Asym_Exposure'] > median_val, 'High Asym', 'Low Asym')
+            df_plot = df.copy()
+            method = "Median Split"
+
+        print(f"\n📊 [Survival] Kaplan-Meier ({method})")
+
+        kmf = KaplanMeierFitter()
+        plt.figure(figsize=(10, 6))
+
+        # observed=True corrige le FutureWarning de Pandas
+        for name, grouped_df in df_plot.groupby('Exposure_Group', observed=True):
+            if len(grouped_df) == 0: continue
+
+            label = f"{name} (n={len(grouped_df)})"
+
+            try:
+                kmf.fit(grouped_df['T'], grouped_df['E'], label=label)
+                kmf.plot_survival_function(linewidth=2.5)
+            except Exception as e:
+                print(f"   ⚠️ Erreur lors du fit pour le groupe {name}: {e}")
+
+        plt.title(f'Survival Trajectories by Asymmetry Exposure ({method})', fontsize=12, fontweight='bold')
+        plt.xlabel('Duration (Months)')
+        plt.ylabel('Survival Probability')
+        plt.grid(True, alpha=0.3)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig("omega_v46_kaplan_meier.png", dpi=300)
+        print("   ✅ Courbe descriptive sauvegardée : omega_v46_kaplan_meier.png")
+
+        # Log-rank informatif
+        try:
+            g1 = df_plot[df_plot['Exposure_Group'] == 'High Asym']
+            g2 = df_plot[df_plot['Exposure_Group'] == 'Low Asym']
+
+            if len(g1) > 0 and len(g2) > 0:
+                res = logrank_test(g1['T'], g2['T'], event_observed_A=g1['E'], event_observed_B=g2['E'])
+                print(f"   Log-Rank p-value : {res.p_value:.4f}")
+            else:
+                print("   ⚠️ Pas assez de données dans les groupes pour le Log-Rank.")
+        except Exception:
+            pass
+
+    def run_cox_model(self):
+        """
+        ANALYSE 2 : Cox Proportional Hazards (Conditionnel).
+        Ne s'exécute QUE si la puissance statistique est suffisante (n_events >= 5).
+        Sinon, rapporte la limitation technique sans interprétation conceptuelle.
+        """
+        if self.survival_df is None or self.survival_df.empty: return
+
+        n_events = self.survival_df['E'].sum()
+
+        # SEUIL DE SÉCURITÉ SCIENTIFIQUE
+        if n_events < 5:
+            print("\n⚠️ [Survival] Cox Model SKIPPED")
+            print(f"   Reason : Insufficient events ({n_events}) for multivariate inference.")
+            print("   Action : Discussion of survivor bias deferred to manuscript.")
+            return
+
+        # Exécution standard si données suffisantes
+        data = self.survival_df[['T', 'E', 'Asym_Exposure', 'Log_Activity', 'Log_Size']]
+        print(f"\n📊 [Survival] Cox Proportional Hazards Model...")
+        try:
+            cph = CoxPHFitter()
+            cph.fit(data, duration_col='T', event_col='E')
+            cph.print_summary()
+        except Exception as e:
+            print(f"   ⚠️ Cox convergence failed: {e}")
+
 # ==============================================================================
 # 2. MOTEUR D'ANALYSE (Avec Cache)
 # ==============================================================================
@@ -1587,96 +1713,7 @@ class OmegaV34Engine:
         except Exception as e:
             return 0, 0
 
-        # MODIFICATION : Ajout de l'argument 'stats' à la fin
-        def calculate_hybrid_survival(self, commit, ref_commit, stats):
-            """
-            Calcule la survie hybride.
-            Optimisation : Utilise les 'stats' passées en argument.
-            """
-            # ON UTILISE DIRECTEMENT L'ARGUMENT, PLUS BESOIN DE CALCULER ICI
-            files_touched = list(stats.keys())
 
-            if not files_touched:
-                return None
-
-            # === Niveau 1 : Survie Structurelle (Fichiers) ===
-            files_survived = 0
-            surviving_files = []
-
-            # Vérification existence via arbre GitPython (rapide pour lookup)
-            try:
-                ref_tree = ref_commit.tree
-                for f in files_touched:
-                    try:
-                        ref_tree[f]
-                        files_survived += 1
-                        surviving_files.append(f)
-                    except KeyError:
-                        pass
-            except:
-                pass
-
-            gamma_structure = files_survived / len(files_touched)
-
-            # === Niveau 2 : Survie du Contenu (Lignes) ===
-            v2_total = 0
-            v3_total = 0
-
-            # Filtrer les fichiers de code
-            code_files = [f for f in surviving_files
-                          if os.path.splitext(f)[1].lower() in CODE_EXTENSIONS]
-
-            check_files = random.sample(code_files, min(len(code_files), BLAME_SAMPLE_SIZE)) if code_files else []
-
-            # Préparation pour PyGit2
-            target_sha_short = commit.hexsha[:12]
-            ref_sha_str = ref_commit.hexsha
-
-            for f in check_files:
-                try:
-                    # On récupère les insertions depuis 'stats' passé en argument
-                    file_stats = stats.get(f, {})
-                    lines_added = file_stats.get('insertions', 0)
-
-                    if lines_added == 0:
-                        continue
-
-                    # Blame PyGit2 (Optimisé C++)
-                    try:
-                        blame = self.repo_pygit2.blame(f, newest_commit=ref_sha_str)
-                    except:
-                        continue
-
-                    surviving_lines = 0
-                    for hunk in blame:
-                        if str(hunk.orig_commit_id).startswith(target_sha_short):
-                            surviving_lines += hunk.lines_in_hunk
-
-                    v2_total += min(surviving_lines, lines_added)
-                    v3_total += max(0, lines_added - surviving_lines)
-
-                except Exception:
-                    continue
-
-            # Calculs finaux (inchangés)
-            if v2_total + v3_total > 0:
-                gamma_content = v2_total / (v2_total + v3_total)
-            elif code_files:
-                gamma_content = gamma_structure
-            else:
-                gamma_content = gamma_structure
-
-            gamma_hybrid = gamma_structure * gamma_content
-
-            return {
-                'gamma_structure': gamma_structure,
-                'gamma_content': gamma_content,
-                'gamma_hybrid': gamma_hybrid,
-                'v2_lines': v2_total,
-                'v3_lines': v3_total,
-                'files_touched': len(files_touched),
-                'files_survived': files_survived
-            }
     # ==========================================================================
     # MÉTHODE run_analysis() MODIFIÉE
     # ==========================================================================
@@ -1788,7 +1825,7 @@ class OmegaV34Engine:
                             survival_factor = 1.0
                         # Niveau 2 : Identité Fonctionnelle (Renommé/Déplacé)
                         elif f_basename in self.head_filenames:
-                            survival_factor = 0.8  # Pénalité de réorganisation
+                            survival_factor = 0.95  # Pénalité de réorganisation
                         # Niveau 3 : Mort (Disparu)
                         else:
                             survival_factor = 0.0
@@ -1873,8 +1910,7 @@ class OmegaV34Engine:
         df['monthly_gamma'] = df['gamma_s'] * df['gamma_c']
 
         # Sécurité : Si pas de lignes analysées, on garde la structure
-        df['monthly_gamma'] = df['monthly_gamma'].fillna(df['gamma_s']).clip(0, 1)
-
+        df['monthly_gamma'] = df['monthly_gamma'].fillna(df['gamma_s']).clip(lower=0)
         # 4. Normalisation Robuste (Clipper à 99e percentile pour ignorer les imports massifs ponctuels)
         max_val_robust = df['total_smooth'].quantile(0.99)
         if max_val_robust == 0: max_val_robust = df['total_smooth'].max()
@@ -2766,31 +2802,50 @@ def run_residence_time_test(all_dataframes):
 def analyze_residence_time(all_dataframes):
     """
     TEST A : Analyse du Temps de Résidence
-
-    Si les modes sont des attracteurs, les systèmes passent plus de temps
-    DANS les modes que ENTRE les modes.
-
-    Retourne un dict avec toutes les statistiques.
+    V38: Pondération par projet pour éviter la pseudo-réplication.
     """
     print("\n" + "=" * 70)
     print("TEST A : TEMPS DE RÉSIDENCE (PREUVE DES ATTRACTEURS)")
     print("=" * 70)
 
-    # 1. Collecter toutes les valeurs de Γ (chaque point = 1 mois de vie)
+    # === CORRECTION V38 : Échantillonnage équilibré par projet ===
+    # Problème : Linux (300 mois) domine FastAPI (30 mois) dans le pooling naïf
+    # Solution : Prendre N points aléatoires par projet (pondération implicite)
+
+    SAMPLES_PER_PROJECT = 50  # Nombre max de mois par projet
+
     all_gamma = []
+    project_contributions = {}
+
     for name, df in all_dataframes.items():
-        if df is not None and not df.empty:
-            gamma_values = df['monthly_gamma'].dropna().values
-            all_gamma.extend(gamma_values)
+        if df is None or df.empty:
+            continue
+
+        gamma_values = df['monthly_gamma'].dropna().values
+
+        if len(gamma_values) == 0:
+            continue
+
+        # Sous-échantillonnage si le projet est trop long
+        if len(gamma_values) > SAMPLES_PER_PROJECT:
+            # Échantillonnage stratifié : on garde les extrêmes + random au milieu
+            indices = np.linspace(0, len(gamma_values) - 1, SAMPLES_PER_PROJECT, dtype=int)
+            gamma_sampled = gamma_values[indices]
+        else:
+            gamma_sampled = gamma_values
+
+        all_gamma.extend(gamma_sampled)
+        project_contributions[name] = len(gamma_sampled)
 
     all_gamma = np.array(all_gamma)
     n_total = len(all_gamma)
+    n_projects = len(project_contributions)
 
     if n_total < 100:
         print(f"❌ Données insuffisantes : {n_total} points (minimum 100)")
         return None
 
-    print(f"\n📊 Données : {n_total} mois-projets analysés")
+    print(f"\n📊 Données : {n_total} points de {n_projects} projets (max {SAMPLES_PER_PROJECT}/projet)")
 
     # 2. Définir les zones
     ZONE_BAS = (0.0, 0.4)  # Régime Exploration
@@ -3583,20 +3638,12 @@ def test_granger_causality(all_dataframes, max_lag=6):
 def run_granger_for_project(name, df, max_lag=6):
     """
     Exécute le test de Granger bidirectionnel pour un projet.
-
-    Retourne les p-values pour :
-    - Activité → Γ
-    - Γ → Activité
+    V38: Différenciation automatique si séries non-stationnaires.
     """
-    # Vérifier qu'on a assez de données
-    min_obs = max_lag * 3 + 10  # Règle empirique
+    min_obs = max_lag * 3 + 10
     if len(df) < min_obs:
         print(f"[{name}] Données insuffisantes ({len(df)} < {min_obs})")
         return None
-
-    # Préparer les séries
-    # Activité = poids total (intensité métabolique)
-    # Γ = taux de sédimentation
 
     activity = df['total_weight'].values
     gamma = df['monthly_gamma'].values
@@ -3609,16 +3656,26 @@ def run_granger_for_project(name, df, max_lag=6):
     if len(activity) < min_obs:
         return None
 
-    # Normaliser pour stabilité numérique
-    activity_norm = (activity - np.mean(activity)) / (np.std(activity) + 1e-8)
-    gamma_norm = (gamma - np.mean(gamma)) / (np.std(gamma) + 1e-8)
-
-    # Test de stationnarité (ADF) - informatif
-    adf_activity = adfuller(activity_norm, maxlag=max_lag)
-    adf_gamma = adfuller(gamma_norm, maxlag=max_lag)
+    # Test de stationnarité (ADF)
+    adf_activity = adfuller(activity, maxlag=max_lag)
+    adf_gamma = adfuller(gamma, maxlag=max_lag)
 
     activity_stationary = adf_activity[1] < 0.05
     gamma_stationary = adf_gamma[1] < 0.05
+
+    # === CORRECTION V38 : Différenciation si non-stationnaire ===
+    # On travaille sur les VARIATIONS (Δ) plutôt que les valeurs absolues
+    # Cela évite les faux positifs dus aux tendances communes
+
+    if not activity_stationary:
+        activity = np.diff(activity, prepend=activity[0])
+
+    if not gamma_stationary:
+        gamma = np.diff(gamma, prepend=gamma[0])
+
+    # Normaliser APRÈS différenciation
+    activity_norm = (activity - np.mean(activity)) / (np.std(activity) + 1e-8)
+    gamma_norm = (gamma - np.mean(gamma)) / (np.std(gamma) + 1e-8)
 
     # Créer le DataFrame pour Granger
     data = pd.DataFrame({
@@ -4442,7 +4499,7 @@ class RobustnessValidator:
             # SIMULATION: On ajuste Gamma proportionnellement pour éviter de relancer Git
             # Hypothèse : Gamma dépend linéairement de la pénalité λ
             gamma_sim = all_gamma_raw * (lam / 0.8)
-            gamma_sim = np.clip(gamma_sim, 0, 1)
+            gamma_sim = np.clip(gamma_sim, 0, None)
 
             # Test Dip (Bimodalité)
             try:
@@ -5963,6 +6020,38 @@ if __name__ == "__main__":
     print("#" * 80)
     if crossover_results and all_dataframes:
         test_variance_collapse_symmetrization(crossover_results, all_dataframes)
+
+        # ==========================================================================
+        # PHASE 7-TER : ANALYSE DE SURVIE (NATURE-READY)
+        # ==========================================================================
+        print("\n" + "#" * 80)
+        print("PHASE 7-TER : ANALYSE DE SURVIE (Asymmetry Exposure vs Survival)")
+        print("#" * 80)
+
+        if crossover_results and all_dataframes:
+            # On passe PROJECT_STATUS juste pour info, mais le calcul est indépendant
+            try:
+                survival_val = SurvivalAsymmetryValidator(all_dataframes, crossover_results, PROJECT_STATUS)
+                survival_val.prepare_data()  # Etape cruciale ajoutée
+                survival_val.run_kaplan_meier()
+                survival_val.run_cox_model()
+            except NameError:
+                print("⚠️ Erreur : SurvivalAsymmetryValidator ou lifelines manquant.")
+            except Exception as e:
+                print(f"⚠️ Erreur lors de l'analyse de survie : {e}")
+        else:
+            print("⚠️ Données insuffisantes pour l'analyse de survie (manque Granger ou Dataframes).")
+    print("\n" + "#" * 80)
+    print("PHASE 8A :causal_symmetry_diagnostic")
+    print("#" * 80)
+    # ==========================================================================
+    # PHASE 8A : CASUAL SIMETRY
+    # ==========================================================================
+    from causal_sim import run_causal_symmetry_diagnostic
+    diagnostic_results = run_causal_symmetry_diagnostic(
+        all_dataframes,
+        crossover_results
+    )
     # ==========================================================================
     # PHASE 8 : TESTS COMPLÉMENTAIRES
     # ==========================================================================
@@ -6166,7 +6255,35 @@ if __name__ == "__main__":
 
         combined_df[export_cols].to_csv("omega_v36_all_data.csv")
         print(f"   ✅ Données exportées : omega_v36_all_data.csv ({len(combined_df)} lignes)")
+        # ==========================================================================
+        # TEST DE VALIDITÉ PHYSIQUE (GAMMA <= 1.0)
+        # ==========================================================================
+        print("\n" + "=" * 80)
+        print("VÉRIFICATION : BORNAGE NATUREL DE GAMMA (SANS CLIP)")
+        print("=" * 80)
 
+        max_gamma_found = 0
+        projects_exceeding = []
+
+        for name, df in all_dataframes.items():
+            if df is not None and not df.empty:
+                local_max = df['monthly_gamma'].max()
+                if local_max > max_gamma_found:
+                    max_gamma_found = local_max
+
+                # On tolère une infime erreur de virgule flottante (1.00000001)
+                if local_max > 1.00001:
+                    projects_exceeding.append((name, local_max))
+
+        print(f"Gamma Maximum absolu observé : {max_gamma_found:.6f}")
+
+        if not projects_exceeding:
+            print("✅ SUCCÈS : Aucun projet ne dépasse naturellement 1.0.")
+            print("   La structure est physiquement conservatrice (Operational Closure validée).")
+        else:
+            print(f"⚠️ ATTENTION : {len(projects_exceeding)} projet(s) dépassent 1.0 :")
+            for p, v in projects_exceeding:
+                print(f"   - {p}: {v:.4f}")
     print("\n" + "=" * 80)
     print("ANALYSE V36 TERMINÉE")
     print("=" * 80)
