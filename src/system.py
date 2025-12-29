@@ -61,11 +61,16 @@ CACHE_DIR = BASE_PATH + "cache_v34/"
 #          'ignore_paths': ['drivers/', 'tools/'], 'color': '#2c3e50'},
 
 SURVIVAL_HORIZON_MONTHS = 6
-
+# bad git history :  angular-js   go  godot py-mini  gecko-firefox
 PROJECT_STATUS = {
     # --- TITANS & KERNELS ---
     'LINUX': 'alive', 'KUBERNETES': 'alive', 'FREEBSD': 'alive',
-
+# Ajoutez ceci à votre dictionnaire PROJECT_STATUS
+    "ANSIBLE": "alive",
+    "OPENCV": "alive",
+    "PANDAS": "alive",
+    "SCIKIT_LEARN": "alive",
+    "FLASK": "alive",
     # --- BROWSERS ---
     'GECKO_FIREFOX': 'alive', 'WEBKIT': 'alive',
 
@@ -164,12 +169,7 @@ REPOS_CONFIGTOT = {
         'ignore_paths': ['Doc/', 'Tools/', 'Lib/test/'],
         'color': '#3776ab'
     },
-    'GO': {
-        'path': BASE_PATH + 'go', 'branch': 'master',
-        'core_paths': ['src/runtime/', 'src/cmd/compile/'],
-        'ignore_paths': ['test/', 'doc/'],
-        'color': '#00add8'
-    },
+
     'RUST': {
         'path': BASE_PATH + 'rust', 'branch': 'master',
         'core_paths': ['compiler/', 'library/std/'],
@@ -283,12 +283,7 @@ REPOS_CONFIGTOT = {
         'ignore_paths': ['doc/', 'test/'],
         'color': '#1f5bff'
     },
-    'GODOT': {
-        'path': BASE_PATH + 'godot', 'branch': 'master',
-        'core_paths': ['core/', 'scene/', 'servers/'],
-        'ignore_paths': ['doc/', 'tests/'],
-        'color': '#478cbf'
-    },
+
     'EMACS': {        'path': BASE_PATH + 'emacs', 'branch': 'master',        'core_paths': ['src/', 'lisp/'],
         'ignore_paths': ['doc/', 'test/'],        'color': '#7f5ab6'    },
         # --- 7. LES OUBLIÉS MAJEURS (AJOUTS) ---
@@ -336,13 +331,31 @@ REPOS_CONFIGTOT = {
         'ignore_paths': ['subversion/tests/', 'doc/'],
         'color': '#8e1917'
     },
-    'ANGULAR_JS_LEGACY': {  # Pour la mort
-        'path': BASE_PATH + 'angular.js', 'branch': 'master',
-        'core_paths': ['src/'],
-        'ignore_paths': ['test/', 'docs/'],
-        'color': '#b52e31'
-    },
 
+    'ANSIBLE': {'path': BASE_PATH + 'ansible', 'branch': 'devel', 'core_paths': ['lib/ansible/'],
+                'ignore_paths': ['docs/', 'test/', 'tests/', 'examples/', 'packaging/', 'changelogs/'],
+                'color': '#EE0000'  # Rouge Ansible
+                },
+
+    'OPENCV': {'path': BASE_PATH + 'opencv', 'branch': '4.x',
+               'core_paths': ['modules/core/', 'modules/imgproc/', 'modules/features2d/', 'modules/calib3d/'],
+               'ignore_paths': ['samples/', 'doc/', 'data/', '3rdparty/', 'apps/', 'platforms/'], 'color': '#0000FF'
+               # Bleu OpenCV
+               },
+
+    'PANDAS': {'path': BASE_PATH + 'pandas', 'branch': 'main', 'core_paths': ['pandas/core/', 'pandas/_libs/'],
+               'ignore_paths': ['pandas/tests/', 'doc/', 'examples/', 'web/', 'ci/'], 'color': '#150458'
+               # Bleu foncé Pandas
+               },
+
+    'SCIKIT_LEARN': {'path': BASE_PATH + 'scikit-learn', 'branch': 'main', 'core_paths': ['sklearn/'],
+                     'ignore_paths': ['examples/', 'doc/', 'build_tools/', 'benchmarks/', 'sklearn/datasets/data/'],
+                     'color': '#F7931E'
+                     },
+
+    'FLASK': {'path': BASE_PATH + 'flask', 'branch': 'main', 'core_paths': ['src/flask/'],
+              'ignore_paths': ['docs/', 'examples/', 'tests/', 'artwork/'], 'color': '#7f8c8d'  # Gris (Logo Noir/Blanc)
+              },
     # --- 1. LES TITANS (OS & KERNELS) ---
 
     'KUBERNETES': {'path': BASE_PATH + 'kubernetes', 'branch': 'master', 'core_paths': ['pkg/', 'cmd/', 'staging/'],
@@ -356,8 +369,7 @@ REPOS_CONFIGTOT = {
 
      'LIBREOFFICE': {         'path': BASE_PATH + 'libreoffice-core', 'branch': 'master',        'core_paths': ['sw/', 'sc/', 'sal/', 'vcl/'],  # Writer, Calc, System Abstraction, GUI
         'ignore_paths': ['solenv/', 'translations/', 'instdir/'],        'color': '#18a303'    },
-   # 'GECKO_FIREFOX': {        'path': BASE_PATH + 'gecko-dev', 'branch': 'master',        'core_paths': ['dom/', 'js/src/', 'layout/'],
-    #    'ignore_paths': ['testing/', 'python/', 'third_party/'],        'color': '#e66000'    },
+
     'WEBKIT': {        'path': BASE_PATH + 'WebKit', 'branch': 'main',        'core_paths': ['Source/WebCore/', 'Source/JavaScriptCore/'],
         'ignore_paths': ['LayoutTests/', 'ManualTests/'],        'color': '#8e44ad'    },
     'LLVM': {        'path': BASE_PATH + 'llvm-project', 'branch': 'main',        'core_paths': ['llvm/lib/', 'clang/lib/'],
@@ -365,13 +377,7 @@ REPOS_CONFIGTOT = {
     'LINUX': {'path': BASE_PATH + 'linux', 'branch': 'master', 'core_paths': ['kernel/', 'mm/', 'fs/', 'sched/'],
               'ignore_paths': ['drivers/', 'arch/', 'tools/', 'Documentation/', 'samples/'], 'color': '#000000'},
 
-    'PY_MINI_PROJECTS': {
-        'path': BASE_PATH + 'python-mini-projects',
-        'branch': 'master',
-        'core_paths': ['projects/'],
-         'ignore_paths': ['docs/', 'Notebooks/', '.github/', 'requirementsALL.txt', 'CODE_OF_CONDUCT.md', 'LICENSE', 'README_TEMPLATE.md'],
-        'color': '#3498db'
-    },
+
 
     # 2. wenyan-lang/wenyan
     'WENYAN_LANG': {
@@ -434,14 +440,30 @@ REPOS_CONFIGTOT = {
 
 REPOS_CONFIGCACHE = {
 
+    'ANSIBLE': {'path': BASE_PATH + 'ansible', 'branch': 'devel', 'core_paths': ['lib/ansible/'],
+                'ignore_paths': ['docs/', 'test/', 'tests/', 'examples/', 'packaging/', 'changelogs/'],
+                'color': '#EE0000'  # Rouge Ansible
+                },
 
-    'GECKO_FIREFOX': {        'path': BASE_PATH + 'gecko-dev', 'branch': 'master',        'core_paths': ['dom/', 'js/src/', 'layout/'],
-        'ignore_paths': ['testing/', 'python/', 'third_party/'],        'color': '#e66000'    },
-    'WEBKIT': {        'path': BASE_PATH + 'WebKit', 'branch': 'main',        'core_paths': ['Source/WebCore/', 'Source/JavaScriptCore/'],
-        'ignore_paths': ['LayoutTests/', 'ManualTests/'],        'color': '#8e44ad'    },
-    'LLVM': {        'path': BASE_PATH + 'llvm-project', 'branch': 'main',        'core_paths': ['llvm/lib/', 'clang/lib/'],
-         'ignore_paths': ['llvm/test/', 'clang/test/', 'lldb/'],        'color': '#2c3e50'    },
+    'OPENCV': {'path': BASE_PATH + 'opencv', 'branch': '4.x',
+               'core_paths': ['modules/core/', 'modules/imgproc/', 'modules/features2d/', 'modules/calib3d/'],
+               'ignore_paths': ['samples/', 'doc/', 'data/', '3rdparty/', 'apps/', 'platforms/'], 'color': '#0000FF'
+               # Bleu OpenCV
+               },
 
+    'PANDAS': {'path': BASE_PATH + 'pandas', 'branch': 'main', 'core_paths': ['pandas/core/', 'pandas/_libs/'],
+               'ignore_paths': ['pandas/tests/', 'doc/', 'examples/', 'web/', 'ci/'], 'color': '#150458'
+               # Bleu foncé Pandas
+               },
+
+    'SCIKIT_LEARN': {'path': BASE_PATH + 'scikit-learn', 'branch': 'main', 'core_paths': ['sklearn/'],
+                     'ignore_paths': ['examples/', 'doc/', 'build_tools/', 'benchmarks/', 'sklearn/datasets/data/'],
+                     'color': '#F7931E'
+                     },
+
+    'FLASK': {'path': BASE_PATH + 'flask', 'branch': 'main', 'core_paths': ['src/flask/'],
+              'ignore_paths': ['docs/', 'examples/', 'tests/', 'artwork/'], 'color': '#7f8c8d'  # Gris (Logo Noir/Blanc)
+              },
 }
 
 REPOS_CONFIG =REPOS_CONFIGTOT

@@ -1,38 +1,38 @@
 Project,Domain,Duration (months),Status,Commits analyzed,Final Γ
-NGINX,Server,276,Alive,7846,1.0
 REDIS,Database,199,Alive,11347,1.0
+NGINX,Server,276,Alive,7846,1.0
+FLASK,Software,172,Alive,3535,1.0
 ZY_PLAYER,Software,29,Dead,1384,1.0
 SUBVERSION,VCS,304,Alive,53519,1.0
 EMACS,IDE,451,Alive,169264,1.0
-DALLE_MINI,Software,19,Dead,651,0.999
-ANGULAR_JS_LEGACY,Web Framework (Dead),133,Dead,6809,0.999
 SNOWPACK,Software,34,Dead,2693,0.999
-FASTAPI,Web Framework,78,Alive,1519,0.997
+DALLE_MINI,Software,19,Dead,651,0.999
 METEOR,Fullstack,169,Declining,38035,0.997
+FASTAPI,Web Framework,78,Alive,1519,0.997
+OPENCV,Software,188,Alive,31034,0.997
 MEDIAWIKI,CMS,271,Alive,123212,0.996
 KUBERNETES,Infrastructure,138,Alive,111344,0.995
 GCC,Compiler,337,Alive,142937,0.994
-DJANGO,Web Framework,243,Alive,21209,0.992
 WORDPRESS,CMS,269,Alive,48834,0.992
-GIMP,Graphics,337,Alive,51104,0.991
+DJANGO,Web Framework,243,Alive,21209,0.992
 LINUX,Kernel/OS,248,Alive,465711,0.991
+GIMP,Graphics,337,Alive,51104,0.991
 VUE,Web Framework,85,Alive,6835,0.99
 NODE,Language Runtime,202,Alive,32193,0.989
+PANDAS,Software,197,Alive,29612,0.989
 SCIPY,Scientific,297,Alive,33900,0.987
-HTTPD_APACHE,Server,320,Alive,22590,0.985
 MATPLOTLIB,Scientific,267,Alive,43798,0.985
-GODOT,Game Engine,144,Alive,73335,0.983
+HTTPD_APACHE,Server,320,Alive,22590,0.985
+OCTAVE,Scientific,383,Alive,31880,0.98
 WIRESHARK,Networking,326,Alive,94573,0.98
 TENSORFLOW,AI/ML,122,Alive,161031,0.98
-OCTAVE,Scientific,383,Alive,31880,0.98
 FFMPEG,Multimedia,293,Alive,112278,0.979
-RAILS,Web Framework,251,Alive,85035,0.975
 CPYTHON,Language Runtime,421,Alive,84819,0.975
-PHP,Language Runtime,319,Alive,137298,0.974
+RAILS,Web Framework,251,Alive,85035,0.975
 ANGULAR,Web Framework,135,Alive,29236,0.974
+PHP,Language Runtime,319,Alive,137298,0.974
 TSDX,Software,23,Dead,603,0.972
 LLVM,Compiler,292,Alive,473373,0.972
-GO,Language Runtime,215,Alive,58587,0.971
 POSTGRES,Database,352,Alive,47838,0.971
 GIT_SCM,VCS,246,Alive,61462,0.971
 BITCOIN,Blockchain,194,Alive,39116,0.966
@@ -42,9 +42,10 @@ WEBKIT,Browser,290,Alive,257082,0.949
 SQLITE,Database,308,Alive,30981,0.94
 LIBREOFFICE,Office Suite,303,Alive,484359,0.933
 FREEBSD,Kernel/OS,388,Alive,256776,0.927
+SCIKIT_LEARN,Software,192,Alive,25066,0.917
 REACT,Web Framework,151,Alive,20254,0.911
 VSCODE,IDE,122,Alive,127112,0.903
+ANSIBLE,Software,167,Alive,46836,0.902
 CURL,Networking,311,Alive,26477,0.894
-PY_MINI_PROJECTS,Software,15,Dead,901,0.871
 PYTORCH,AI/ML,164,Alive,87412,0.729
 WENYAN_LANG,Software,11,Dead,685,0.321
