@@ -58,103 +58,103 @@ OMEGA V36 - PARALLEL EXECUTION (6 Workers)
 ################################################################################
 PHASE 1 : EXTRACTION ET ANALYSE DES REPOSITORIES
 ################################################################################
-[SQLITE] ✅ Cache chargé[NGINX] ✅ Cache chargé
-[REDIS] ✅ Cache chargé[POSTGRES] ✅ Cache chargé[HTTPD_APACHE] ✅ Cache chargé
+[REDIS] ✅ Cache chargé[POSTGRES] ✅ Cache chargé
+
+[NGINX] ✅ Cache chargé[SQLITE] ✅ Cache chargé
+[HTTPD_APACHE] ✅ Cache chargé
 [GCC] ✅ Cache chargé
 
-
-
-✅ NGINX terminé (276 mois)
-[CPYTHON] ✅ Cache chargé
 ✅ HTTPD_APACHE terminé (320 mois)
 ✅ SQLITE terminé (308 mois)
-[GO] ✅ Cache chargé
-✅ REDIS terminé (199 mois)
+✅ NGINX terminé (276 mois)
+[CPYTHON] ✅ Cache chargé
 [RUST] ✅ Cache chargé
 [PHP] ✅ Cache chargé
-✅ GCC terminé (337 mois)
+✅ REDIS terminé (199 mois)
 [NODE] ✅ Cache chargé
-✅ POSTGRES terminé (352 mois)
+✅ GCC terminé (337 mois)
 [PYTORCH] ✅ Cache chargé
-✅ GO terminé (215 mois)
 [TENSORFLOW] ✅ Cache chargé
+✅ POSTGRES terminé (352 mois)
 ✅ PHP terminé (319 mois)
 ✅ RUST terminé (184 mois)
-[OCTAVE] ✅ Cache chargé
 [SCIPY] ✅ Cache chargé
-✅ NODE terminé (202 mois)
-✅ CPYTHON terminé (421 mois)
-[REACT] ✅ Cache chargé
-[VUE] ✅ Cache chargé
-✅ PYTORCH terminé (164 mois)
-[ANGULAR] ✅ Cache chargé
+[OCTAVE] ✅ Cache chargé
 ✅ TENSORFLOW terminé (122 mois)
+[REACT] ✅ Cache chargé
+✅ PYTORCH terminé (164 mois)
+[VUE] ✅ Cache chargé
+✅ NODE terminé (202 mois)
+[ANGULAR] ✅ Cache chargé
+✅ CPYTHON terminé (421 mois)
 [RAILS] ✅ Cache chargé
-✅ REACT terminé (151 mois)
-[DJANGO] ✅ Cache chargé
 ✅ ANGULAR terminé (135 mois)
+[DJANGO] ✅ Cache chargé
+✅ REACT terminé (151 mois)
 [METEOR] ✅ Cache chargé
-✅ VUE terminé (85 mois)
-[VSCODE] ✅ Cache chargé
-✅ SCIPY terminé (297 mois)
-[GIT_SCM] ✅ Cache chargé
-✅ OCTAVE terminé (383 mois)
-[FFMPEG] ✅ Cache chargé
 ✅ RAILS terminé (251 mois)
+[VSCODE] ✅ Cache chargé
+✅ VUE terminé (85 mois)
+[GIT_SCM] ✅ Cache chargé
+✅ SCIPY terminé (297 mois)
+[FFMPEG] ✅ Cache chargé
+✅ OCTAVE terminé (383 mois)
 [BITCOIN] ✅ Cache chargé
 ✅ DJANGO terminé (243 mois)
 [WIRESHARK] ✅ Cache chargé
-✅ VSCODE terminé (122 mois)
-✅ GIT_SCM terminé (246 mois)
-[GODOT] ✅ Cache chargé
-[EMACS] ✅ Cache chargé
 ✅ METEOR terminé (169 mois)
+[EMACS] ✅ Cache chargé
+✅ VSCODE terminé (122 mois)
 [CURL] ✅ Cache chargé
-✅ FFMPEG terminé (293 mois)
+✅ GIT_SCM terminé (246 mois)
 [GIMP] ✅ Cache chargé
-✅ BITCOIN terminé (194 mois)
+✅ FFMPEG terminé (293 mois)
 [WORDPRESS] ✅ Cache chargé
-✅ WIRESHARK terminé (326 mois)
+✅ BITCOIN terminé (194 mois)
 [MEDIAWIKI] ✅ Cache chargé
-✅ GODOT terminé (144 mois)
+✅ WIRESHARK terminé (326 mois)
 [MATPLOTLIB] ✅ Cache chargé
-✅ CURL terminé (311 mois)
-[FASTAPI] ✅ Cache chargé
 ✅ EMACS terminé (451 mois)
+[FASTAPI] ✅ Cache chargé
+✅ CURL terminé (311 mois)
 [SUBVERSION] ✅ Cache chargé
 ✅ GIMP terminé (337 mois)
-[ANGULAR_JS_LEGACY] ✅ Cache chargé
+[ANSIBLE] ✅ Cache chargé
 ✅ WORDPRESS terminé (269 mois)
-[KUBERNETES] ✅ Cache chargé
+[OPENCV] ✅ Cache chargé
 ✅ MEDIAWIKI terminé (271 mois)
-[FREEBSD] ✅ Cache chargé
-✅ FASTAPI terminé (78 mois)
-[LIBREOFFICE] ✅ Cache chargé
+[PANDAS] ✅ Cache chargé
 ✅ MATPLOTLIB terminé (267 mois)
-[GECKO_FIREFOX] ✅ Cache chargé
-✅ ANGULAR_JS_LEGACY terminé (133 mois)
-[WEBKIT] ✅ Cache chargé
+[SCIKIT_LEARN] ✅ Cache chargé
+✅ FASTAPI terminé (78 mois)
+[FLASK] ✅ Cache chargé
 ✅ SUBVERSION terminé (304 mois)
+[KUBERNETES] ✅ Cache chargé
+✅ ANSIBLE terminé (167 mois)
+[FREEBSD] ✅ Cache chargé
+✅ OPENCV terminé (188 mois)
+[LIBREOFFICE] ✅ Cache chargé
+✅ PANDAS terminé (197 mois)
+[WEBKIT] ✅ Cache chargé
+✅ SCIKIT_LEARN terminé (192 mois)
 [LLVM] ✅ Cache chargé
-✅ KUBERNETES terminé (138 mois)
+✅ FLASK terminé (172 mois)
 [LINUX] ✅ Cache chargé
-✅ LIBREOFFICE terminé (303 mois)
-[PY_MINI_PROJECTS] ✅ Cache chargé
-✅ GECKO_FIREFOX terminé (330 mois)
+✅ KUBERNETES terminé (138 mois)
 [WENYAN_LANG] ✅ Cache chargé
-✅ FREEBSD terminé (388 mois)
+✅ LIBREOFFICE terminé (303 mois)
 [TSDX] ✅ Cache chargé
-✅ WEBKIT terminé (290 mois)
+✅ FREEBSD terminé (388 mois)
 [ZY_PLAYER] ✅ Cache chargé
-✅ LLVM terminé (292 mois)
+✅ WEBKIT terminé (290 mois)
 [SNOWPACK] ✅ Cache chargé
-✅ LINUX terminé (248 mois)
+✅ LLVM terminé (292 mois)
 [DALLE_MINI] ✅ Cache chargé
-✅ PY_MINI_PROJECTS terminé (15 mois)
-[GENERIC_TOOLS] ✅ Cache chargé
 ✅ WENYAN_LANG terminé (11 mois)
-✅ ZY_PLAYER terminé (29 mois)
+[GENERIC_TOOLS] ✅ Cache chargé
+✅ LINUX terminé (248 mois)
 ✅ TSDX terminé (23 mois)
+✅ ZY_PLAYER terminé (29 mois)
 ✅ SNOWPACK terminé (34 mois)
 ✅ DALLE_MINI terminé (19 mois)
 ✅ GENERIC_TOOLS terminé (43 mois)
@@ -169,23 +169,23 @@ PHASE 2 : COMPARAISON DES MÉTRIQUES GAMMA (V36)
 COMPARAISON DES MÉTRIQUES GAMMA (V36)
 ======================================================================
 
-Points de données : 11042
+Points de données : 11121
 
 Métrique             | Moyenne    | Médiane    | Std
 -------------------------------------------------------
-Γ_structure (s)      | 0.735      | 0.784      | 0.218
-Γ_content (c)        | 0.720      | 0.795      | 0.260
-Γ_composite (Γ)      | 0.577      | 0.606      | 0.296
+Γ_structure (s)      | 0.757      | 0.805      | 0.208
+Γ_content (c)        | 0.742      | 0.829      | 0.259
+Γ_composite (Γ)      | 0.606      | 0.647      | 0.291
 
 --- CORRÉLATIONS ---
-Γ_s vs Γ_c : r = 0.844
-Γ_s vs Γ   : r = 0.924
-Γ_c vs Γ   : r = 0.948
+Γ_s vs Γ_c : r = 0.828
+Γ_s vs Γ   : r = 0.917
+Γ_c vs Γ   : r = 0.946
 
 --- TESTS DE BIMODALITÉ (Dip Test) ---
-Γ_structure     : dip = 0.0033, p = 0.6376 → ❌ Unimodal
-Γ_content       : dip = 0.0025, p = 0.9659 → ❌ Unimodal
-Γ_composite     : dip = 0.0059, p = 0.0126 → ✅ Bimodal
+Γ_structure     : dip = 0.0031, p = 0.7659 → ❌ Unimodal
+Γ_content       : dip = 0.0027, p = 0.9345 → ❌ Unimodal
+Γ_composite     : dip = 0.0068, p = 0.0014 → ✅ Bimodal
 
 ✅ Graphique de comparaison sauvegardé : omega_v36_gamma_comparison.png
 ✅ Histogramme isolé sauvegardé : omega_v36_gamma_composite_isolated.png
@@ -213,8 +213,8 @@ PHASE 4 : TESTS STATISTIQUES (HYPOTHÈSES H_2-H_5)
 [4.1] TEST H_2 : Bimodalité...
 
 --- TEST STATISTIQUE H_2 (Bimodalité - Hartigan's Dip Test) ---
-Statistique Dip : 0.0059
-P-value : 0.0126
+Statistique Dip : 0.0068
+P-value : 0.0014
 ✅ H_2 Validée (p < 0.05). La distribution est significativement non unimodale (bimodale).
 ----------------------------------------------------------------
 
@@ -224,48 +224,48 @@ P-value : 0.0126
 TEST A : TEMPS DE RÉSIDENCE (PREUVE DES ATTRACTEURS)
 ======================================================================
 
-📊 Données : 11042 mois-projets analysés
+📊 Données : 2359 points de 50 projets (max 50/projet)
 
 --- TEMPS DE RÉSIDENCE PAR ZONE ---
 Zone                 | Mois     | %        | Densité
 -------------------------------------------------------
-Régime BAS (0-0.4)   | 3343     | 30.3     | 75.7
-TRANSITION (0.4-0.7) | 3182     | 28.8     | 96.1
-Régime HAUT (0.7-1)  | 4517     | 40.9     | 136.4
+Régime BAS (0-0.4)   | 617      | 26.2     | 65.4
+TRANSITION (0.4-0.7) | 660      | 28.0     | 93.3
+Régime HAUT (0.7-1)  | 1082     | 45.9     | 152.9
 
 --- TEST DU CREUX (Bimodalité Symétrique) ---
-Ratio Densité Transition / Min(Bas,Haut) : 1.269
+Ratio Densité Transition / Min(Bas,Haut) : 1.426
 Creux significatif (< 0.7) : NON
 
 --- TEST GMM (Gaussian Mixture Model) ---
-BIC (1 composante) : 4444.0
-BIC (2 composantes) : 2443.6
-BIC (3 composantes) : 1674.4
-ΔBIC (1 vs 2) : 2000.4 (2 préféré)
+BIC (1 composante) : 1041.9
+BIC (2 composantes) : 586.4
+BIC (3 composantes) : 225.4
+ΔBIC (1 vs 2) : 455.5 (2 préféré)
 
    Centres des 2 modes détectés :
-   Mode 1 : μ = 0.318, σ = 0.185, poids = 0.48
-   Mode 2 : μ = 0.812, σ = 0.139, poids = 0.52
+   Mode 1 : μ = 0.818, σ = 0.145, poids = 0.58
+   Mode 2 : μ = 0.314, σ = 0.199, poids = 0.42
 
 --- TEST D'ASYMÉTRIE (Bimodalité Asymétrique) ---
-Mode HAUT : μ = 0.812, σ = 0.139
-Mode BAS  : μ = 0.318, σ = 0.185
-Ratio de concentration (σ_bas / σ_haut) : 1.33
+Mode HAUT : μ = 0.818, σ = 0.145
+Mode BAS  : μ = 0.314, σ = 0.199
+Ratio de concentration (σ_bas / σ_haut) : 1.38
 Asymétrie significative (ratio > 2 ET μ_haut > 0.7) : NON
 
 --- TEMPS DE TRAVERSÉE DE LA ZONE DE TRANSITION ---
-Nombre de traversées détectées : 1303
+Nombre de traversées détectées : 1370
 Durée médiane : 1.0 mois
 Durée moyenne : 2.4 mois
-Durée max : 51 mois
-Traversées < 3 mois : 961 (73.8%)
+Durée max : 40 mois
+Traversées < 3 mois : 1015 (74.1%)
 
 =======================================================
 VERDICT TEMPS DE RÉSIDENCE
 =======================================================
 ❌ Critère 1 : Ni creux ni asymétrie détectés
-✅ Critère 2 : GMM préfère 2 composantes (ΔBIC = 2000.4)
-✅ Critère 3 : Dip test significatif (p = 0.0126)
+✅ Critère 2 : GMM préfère 2 composantes (ΔBIC = 455.5)
+✅ Critère 3 : Dip test significatif (p = 0.0179)
 ✅ Critère 4 : Traversée rapide (médiane = 1.0 mois)
 
 🎯 SCORE FINAL : 3/4
@@ -284,227 +284,227 @@ VALIDATION DE LA COURBE DE CROISSANCE (AJUSTEMENT GLOBAL)
 ======================================================================
 SYNTHÈSE GLOBALE DES R² D'AJUSTEMENT (Meilleur ajustement = R² max)
 ======================================================================
-                   Logistique-L1  Logistique  Gompertz  Richards
-NGINX                      0.549       0.648     0.644     0.649
-HTTPD_APACHE               0.037       0.131     0.095     0.154
-SQLITE                     0.147       0.280     0.277     0.281
-REDIS                      0.753       0.768     0.781     0.781
-GCC                        0.704       0.706     0.706     0.706
-POSTGRES                   0.755       0.783     0.785     0.785
-GO                         0.780       0.787     0.777     0.797
-PHP                        0.624       0.672     0.685     0.685
-RUST                       0.880       0.897     0.905     0.906
-NODE                       0.718       0.721     0.722     0.723
-CPYTHON                   -0.301       0.521     0.601     0.601
-PYTORCH                    0.861       0.903     0.911     0.911
-TENSORFLOW                 0.620       0.620     0.622     0.622
-REACT                      0.702       0.719     0.726     0.727
-ANGULAR                    0.717       0.723     0.720     0.723
-VUE                        0.708       0.708     0.715     0.715
-SCIPY                      0.157       0.576     0.619     0.619
-OCTAVE                     0.443       0.634     0.710     0.710
-RAILS                      0.788       0.809     0.795     0.822
-DJANGO                     0.647       0.665     0.544     0.680
-VSCODE                     0.772       0.816     0.814     0.816
-GIT_SCM                    0.791       0.817     0.817     0.817
-METEOR                     0.804       0.841     0.836     0.842
-FFMPEG                     0.600       0.606     0.604     0.607
-BITCOIN                    0.798       0.799     0.803     0.803
-WIRESHARK                  0.605       0.648     0.675     0.675
-GODOT                      0.849       0.864     0.837     0.877
-CURL                       0.228       0.430     0.441     0.441
-EMACS                      0.199       0.123     0.124     0.124
-GIMP                       0.577       0.660     0.669     0.669
-WORDPRESS                  0.809       0.811     0.818     0.820
-MEDIAWIKI                  0.631       0.638     0.648     0.648
-FASTAPI                   -0.062       0.137     0.115     0.150
-MATPLOTLIB                 0.592       0.693     0.713     0.713
-ANGULAR_JS_LEGACY          0.552       0.608     0.613     0.613
-SUBVERSION                 0.609       0.634     0.641     0.641
-KUBERNETES                 0.851       0.852     0.844     0.854
-LIBREOFFICE                0.656       0.657     0.669     0.674
-GECKO_FIREFOX             -0.640       0.519     0.623     0.623
-FREEBSD                    0.380       0.619     0.642     0.642
-WEBKIT                    -0.331       0.571     0.665     0.665
-LLVM                       0.810       0.870     0.878     0.878
-LINUX                      0.878       0.887     0.883     0.890
-PY_MINI_PROJECTS          -0.742      -0.464    -1.279     0.004
-ZY_PLAYER                  0.503       0.504     0.508     0.508
-TSDX                       0.406       0.477     0.468     0.477
-SNOWPACK                   0.913       0.919     0.916     0.920
-DALLE_MINI                 0.942       0.942     0.926     0.947
-GENERIC_TOOLS              0.923       0.928     0.941     0.941
-MOYENNE                    0.535       0.647     0.637     0.671
+               Logistique-L1  Logistique  Gompertz  Richards
+HTTPD_APACHE           0.005       0.121     0.084     0.144
+SQLITE                 0.153       0.280     0.276     0.280
+NGINX                  0.583       0.662     0.659     0.664
+REDIS                  0.776       0.785     0.797     0.797
+GCC                    0.670       0.671     0.673     0.673
+POSTGRES               0.749       0.778     0.779     0.779
+PHP                    0.629       0.662     0.671     0.671
+RUST                   0.881       0.883     0.895     0.895
+TENSORFLOW             0.603       0.603     0.605     0.605
+PYTORCH                0.866       0.895     0.904     0.904
+NODE                   0.658       0.664     0.662     0.665
+CPYTHON               -0.237       0.527     0.605     0.605
+ANGULAR                0.693       0.696     0.699     0.699
+REACT                  0.736       0.736     0.738     0.742
+RAILS                  0.772       0.789     0.776     0.807
+VUE                    0.697       0.697     0.702     0.702
+SCIPY                  0.177       0.517     0.546     0.546
+OCTAVE                 0.541       0.628     0.664     0.664
+DJANGO                 0.421       0.425     0.334     0.550
+METEOR                 0.810       0.827     0.819     0.829
+VSCODE                 0.717       0.771     0.772     0.772
+GIT_SCM                0.781       0.803     0.802     0.803
+FFMPEG                 0.564       0.574     0.570     0.574
+BITCOIN                0.768       0.772     0.773     0.773
+WIRESHARK              0.536       0.537     0.545     0.549
+EMACS                  0.175       0.130     0.130     0.130
+CURL                   0.248       0.427     0.437     0.437
+GIMP                   0.589       0.657     0.664     0.664
+WORDPRESS              0.728       0.734     0.733     0.734
+MEDIAWIKI              0.613       0.614     0.620     0.620
+MATPLOTLIB             0.652       0.698     0.715     0.715
+FASTAPI               -0.314       0.054     0.025     0.071
+SUBVERSION             0.548       0.576     0.583     0.583
+ANSIBLE                0.677       0.790     0.791     0.791
+OPENCV                 0.797       0.814     0.801     0.818
+PANDAS                 0.825       0.837     0.827     0.844
+SCIKIT_LEARN           0.918       0.928     0.921     0.930
+FLASK                  0.124       0.124     0.124     0.124
+KUBERNETES             0.822       0.827     0.816     0.833
+LIBREOFFICE            0.642       0.647     0.645     0.655
+FREEBSD                0.556       0.627     0.648     0.648
+WEBKIT                -0.206       0.582     0.669     0.669
+LLVM                   0.830       0.858     0.865     0.865
+LINUX                  0.830       0.844     0.838     0.849
+TSDX                   0.432       0.513     0.503     0.514
+ZY_PLAYER              0.482       0.482     0.482     0.485
+SNOWPACK               0.895       0.901     0.901     0.901
+DALLE_MINI             0.906       0.906     0.885     0.914
+GENERIC_TOOLS          0.882       0.932     0.937     0.937
+MOYENNE                0.575       0.649     0.651     0.662
 
 Conclusion R² : Le modèle **Richards** a la meilleure performance descriptive moyenne.
 
 ======================================================================
 SYNTHÈSE GLOBALE AIC (Akaike) (Meilleur modèle = AIC min)
 ======================================================================
-                   Logistique-L1  Logistique  Gompertz  Richards
-NGINX                     -288.3      -354.9    -351.9    -354.0
-HTTPD_APACHE               -80.9      -111.9     -98.9    -118.3
-SQLITE                    -187.7      -238.0    -236.6    -236.2
-REDIS                     -216.0      -226.5    -238.1    -236.1
-GCC                       -346.5      -346.9    -347.8    -345.8
-POSTGRES                  -527.9      -569.2    -571.5    -569.5
-GO                        -238.3      -243.5    -234.0    -251.4
-PHP                       -263.0      -304.4    -317.6    -315.6
-RUST                      -420.0      -446.0    -461.3    -461.2
-NODE                      -271.1      -271.1    -271.6    -270.6
-CPYTHON                    130.3      -288.9    -365.3    -363.2
-PYTORCH                   -231.5      -287.7    -303.5    -301.5
-TENSORFLOW                -170.1      -168.2    -168.7    -166.7
-REACT                     -142.7      -149.8    -153.6    -152.2
-ANGULAR                   -124.2      -124.8    -123.7    -122.8
-VUE                        -84.7       -82.7     -84.6     -82.6
-SCIPY                       95.7      -106.6    -137.8    -135.8
-OCTAVE                     -36.0      -194.6    -284.2    -282.1
-RAILS                     -282.8      -306.7    -289.5    -322.8
-DJANGO                    -438.5      -449.1    -374.2    -458.3
-VSCODE                    -213.8      -237.8    -236.5    -236.0
-GIT_SCM                   -471.5      -502.1    -501.9    -500.2
-METEOR                    -213.8      -247.7    -242.2    -246.4
-FFMPEG                    -346.1      -349.0    -347.4    -347.2
-BITCOIN                   -300.2      -299.3    -302.6    -300.6
-WIRESHARK                 -290.5      -326.2    -351.9    -349.9
-GODOT                     -205.2      -218.7    -192.4    -230.5
-CURL                       -82.0      -174.6    -180.4    -178.4
-EMACS                       76.6       119.5     119.2     121.2
-GIMP                      -258.4      -330.0    -338.4    -336.4
-WORDPRESS                 -293.6      -294.1    -305.0    -305.6
-MEDIAWIKI                 -307.3      -310.3    -317.6    -315.6
-FASTAPI                    -24.8       -39.0     -37.0     -38.2
-MATPLOTLIB                -216.6      -290.8    -308.3    -306.3
-ANGULAR_JS_LEGACY          -13.7       -29.6     -31.3     -29.3
-SUBVERSION                -255.8      -274.3    -279.5    -277.5
-KUBERNETES                -202.9      -201.7    -195.1    -201.9
-LIBREOFFICE               -298.4      -298.0    -308.1    -311.2
-GECKO_FIREFOX              195.7      -207.1    -287.5    -285.4
-FREEBSD                   -314.6      -501.7    -525.6    -523.6
-WEBKIT                     163.5      -163.1    -234.3    -232.2
-LLVM                      -425.0      -532.7    -552.4    -550.4
-LINUX                     -677.7      -694.3    -685.6    -698.1
-PY_MINI_PROJECTS            -0.4        -1.0       5.6      -4.8
-ZY_PLAYER                  -16.4       -14.4     -14.6     -12.7
-TSDX                        -6.9        -7.8      -7.4      -5.8
-SNOWPACK                   -44.9       -45.4     -44.2     -43.5
-DALLE_MINI                 -34.2       -32.2     -27.8     -31.9
-GENERIC_TOOLS              -72.6       -73.4     -81.8     -79.8
-SOMME                    -9276.0    -11848.2  -12226.5  -12405.1
+               Logistique-L1  Logistique  Gompertz  Richards
+HTTPD_APACHE           -82.6      -120.3    -107.0    -126.9
+SQLITE                -186.3      -234.3    -232.9    -232.6
+NGINX                 -307.2      -363.4    -360.3    -362.6
+REDIS                 -236.1      -242.3    -254.1    -252.1
+GCC                   -316.9      -316.6    -317.9    -315.9
+POSTGRES              -530.0      -572.1    -572.9    -571.2
+PHP                   -257.6      -284.7    -293.6    -291.6
+RUST                  -406.3      -407.2    -427.5    -425.5
+TENSORFLOW            -170.7      -168.7    -169.4    -167.4
+PYTORCH               -231.4      -270.0    -283.9    -281.9
+NODE                  -256.4      -257.8    -256.9    -256.2
+CPYTHON                117.7      -285.5    -360.7    -358.6
+ANGULAR                -98.3       -97.7     -99.1     -97.1
+REACT                 -153.1      -151.2    -152.4    -152.2
+RAILS                 -286.0      -303.5    -287.6    -323.8
+VUE                    -84.4       -82.4     -83.9     -81.9
+SCIPY                   90.8       -65.4     -84.0     -82.0
+OCTAVE                -140.2      -219.1    -257.9    -255.9
+DJANGO                -418.9      -418.3    -382.7    -475.9
+METEOR                -223.1      -236.5    -229.2    -236.6
+VSCODE                -201.5      -225.5    -225.7    -223.7
+GIT_SCM               -473.1      -496.8    -496.5    -494.9
+FFMPEG                -345.9      -350.3    -347.9    -348.7
+BITCOIN               -283.2      -284.2    -285.2    -283.2
+WIRESHARK             -278.1      -276.9    -282.6    -283.9
+EMACS                   88.0       113.7     113.5     115.5
+CURL                   -88.9      -171.4    -176.8    -174.8
+GIMP                  -272.8      -331.9    -339.1    -337.1
+WORDPRESS             -251.9      -256.2    -255.2    -254.2
+MEDIAWIKI             -315.4      -313.9    -318.4    -316.4
+MATPLOTLIB            -244.8      -281.2    -295.9    -293.9
+FASTAPI                -19.8       -43.4     -41.1     -42.8
+SUBVERSION            -240.9      -258.5    -263.5    -261.5
+ANSIBLE                -95.5      -165.5    -166.6    -164.6
+OPENCV                -200.1      -214.0    -201.6    -215.9
+PANDAS                -258.8      -270.7    -259.4    -277.3
+SCIKIT_LEARN          -327.6      -351.0    -333.4    -355.1
+FLASK                   17.2        19.2      19.3      21.2
+KUBERNETES            -184.7      -186.9    -178.6    -189.5
+LIBREOFFICE           -301.0      -302.8    -301.8    -308.5
+FREEBSD               -379.0      -445.0    -467.4    -465.4
+WEBKIT                 135.7      -169.3    -237.6    -235.5
+LLVM                  -460.9      -512.1    -527.1    -525.1
+LINUX                 -639.8      -658.9    -649.6    -664.8
+TSDX                    -8.7       -10.3      -9.8      -8.3
+ZY_PLAYER              -16.9       -14.9     -14.9     -13.1
+SNOWPACK               -38.0       -38.2     -38.1     -36.2
+DALLE_MINI             -25.9       -23.9     -20.1     -23.6
+GENERIC_TOOLS          -48.4       -69.8     -73.1     -71.1
+SOMME                -9937.8    -11687.4  -11888.0  -12080.1
 
 Conclusion AIC : Le modèle **Richards** est préféré (pénalité de parcimonie).
 
 ======================================================================
 SYNTHÈSE GLOBALE BIC (Bayesian) (Meilleur modèle = BIC min)
 ======================================================================
-                   Logistique-L1  Logistique  Gompertz  Richards
-NGINX                     -281.1      -344.1    -341.0    -339.5
-HTTPD_APACHE               -73.4      -100.6     -87.6    -103.3
-SQLITE                    -180.2      -226.8    -225.4    -221.3
-REDIS                     -209.4      -216.6    -228.3    -223.0
-GCC                       -338.9      -335.4    -336.3    -330.5
-POSTGRES                  -520.2      -557.6    -559.9    -554.0
-GO                        -231.6      -233.4    -223.9    -237.9
-PHP                       -255.5      -293.1    -306.3    -300.5
-RUST                      -413.5      -436.4    -451.6    -448.3
-NODE                      -264.5      -261.2    -261.7    -257.4
-CPYTHON                    138.4      -276.8    -353.2    -347.0
-PYTORCH                   -225.3      -278.4    -294.2    -289.1
-TENSORFLOW                -164.4      -159.8    -160.3    -155.5
-REACT                     -136.7      -140.8    -144.6    -140.2
-ANGULAR                   -118.4      -116.1    -115.0    -111.2
-VUE                        -79.8       -75.4     -77.2     -72.8
-SCIPY                      103.1       -95.6    -126.8    -121.0
-OCTAVE                     -28.1      -182.7    -272.4    -266.3
-RAILS                     -275.8      -296.2    -278.9    -308.7
-DJANGO                    -431.6      -438.6    -363.7    -444.3
-VSCODE                    -208.2      -229.3    -228.0    -224.8
-GIT_SCM                   -464.5      -491.6    -491.3    -486.2
-METEOR                    -207.5      -238.3    -232.9    -233.9
-FFMPEG                    -338.7      -337.9    -336.3    -332.5
-BITCOIN                   -293.7      -289.5    -292.8    -287.5
-WIRESHARK                 -283.0      -314.8    -340.6    -334.7
-GODOT                     -199.3      -209.8    -183.4    -218.6
-CURL                       -74.5      -163.4    -169.2    -163.4
-EMACS                       84.9       131.8     131.5     137.6
-GIMP                      -250.8      -318.6    -326.9    -321.1
-WORDPRESS                 -286.4      -283.3    -294.2    -291.2
-MEDIAWIKI                 -300.0      -299.5    -306.8    -301.2
-FASTAPI                    -20.1       -31.9     -30.0     -28.8
-MATPLOTLIB                -209.5      -280.0    -297.5    -291.9
-ANGULAR_JS_LEGACY           -7.9       -20.9     -22.7     -17.8
-SUBVERSION                -248.3      -263.1    -268.4    -262.7
-KUBERNETES                -197.1      -192.9    -186.3    -190.2
-LIBREOFFICE               -291.0      -286.9    -297.0    -296.4
-GECKO_FIREFOX              203.3      -195.7    -276.1    -270.2
-FREEBSD                   -306.7      -489.8    -513.7    -507.8
-WEBKIT                     170.8      -152.1    -223.3    -217.6
-LLVM                      -417.7      -521.7    -541.4    -535.7
-LINUX                     -670.7      -683.7    -675.0    -684.1
-PY_MINI_PROJECTS             1.0         1.1       7.7      -2.0
-ZY_PLAYER                  -13.6       -10.3     -10.5      -7.2
-TSDX                        -4.6        -4.4      -4.0      -1.3
-SNOWPACK                   -41.8       -40.8     -39.6     -37.4
-DALLE_MINI                 -32.4       -29.4     -24.9     -28.2
-GENERIC_TOOLS              -69.1       -68.1     -76.5     -72.7
-SOMME                    -8964.0    -11380.2  -11758.5  -11781.2
+               Logistique-L1  Logistique  Gompertz  Richards
+HTTPD_APACHE           -75.1      -109.0     -95.7    -111.9
+SQLITE                -178.9      -223.2    -221.8    -217.7
+NGINX                 -299.9      -352.5    -349.4    -348.1
+REDIS                 -229.6      -232.4    -244.2    -238.9
+GCC                   -309.3      -305.2    -306.4    -300.6
+POSTGRES              -522.3      -560.5    -561.3    -555.7
+PHP                   -250.1      -273.4    -282.3    -276.5
+RUST                  -399.9      -397.5    -417.9    -412.6
+TENSORFLOW            -165.1      -160.3    -160.9    -156.1
+PYTORCH               -225.2      -260.7    -274.6    -269.5
+NODE                  -249.8      -247.9    -246.9    -243.0
+CPYTHON                125.8      -273.4    -348.6    -342.4
+ANGULAR                -92.5       -89.0     -90.4     -85.5
+REACT                 -147.1      -142.2    -143.3    -140.1
+RAILS                 -279.0      -292.9    -277.0    -309.7
+VUE                    -79.5       -75.1     -76.5     -72.1
+SCIPY                   98.2       -54.3     -72.9     -67.2
+OCTAVE                -132.3      -207.2    -246.1    -240.1
+DJANGO                -411.9      -407.8    -372.3    -461.9
+METEOR                -216.8      -227.1    -219.8    -224.1
+VSCODE                -195.9      -217.1    -217.3    -212.5
+GIT_SCM               -466.1      -486.3    -486.0    -480.9
+FFMPEG                -338.5      -339.3    -336.9    -334.0
+BITCOIN               -276.7      -274.4    -275.4    -270.2
+WIRESHARK             -270.6      -265.5    -271.2    -268.7
+EMACS                   96.3       126.1     125.9     132.0
+CURL                   -81.4      -160.2    -165.6    -159.8
+GIMP                  -265.2      -320.4    -327.6    -321.8
+WORDPRESS             -244.7      -245.4    -244.4    -239.8
+MEDIAWIKI             -308.2      -303.1    -307.6    -302.0
+MATPLOTLIB            -237.6      -270.4    -285.2    -279.6
+FASTAPI                -15.1       -36.3     -34.0     -33.4
+SUBVERSION            -233.5      -247.3    -252.4    -246.6
+ANSIBLE                -89.2      -156.1    -157.2    -152.1
+OPENCV                -193.6      -204.3    -191.9    -202.9
+PANDAS                -252.2      -260.8    -249.6    -264.2
+SCIKIT_LEARN          -321.1      -341.2    -323.7    -342.1
+FLASK                   23.5        28.6      28.7      33.8
+KUBERNETES            -178.9      -178.1    -169.8    -177.8
+LIBREOFFICE           -293.6      -291.6    -290.7    -293.6
+FREEBSD               -371.1      -433.1    -455.5    -449.5
+WEBKIT                 143.0      -158.2    -226.6    -220.8
+LLVM                  -453.6      -501.1    -516.1    -510.4
+LINUX                 -632.8      -648.3    -639.0    -650.8
+TSDX                    -6.5        -6.9      -6.4      -3.8
+ZY_PLAYER              -14.2       -10.8     -10.8      -7.6
+SNOWPACK               -35.0       -33.6     -33.6     -30.1
+DALLE_MINI             -24.0       -21.1     -17.3     -19.8
+GENERIC_TOOLS          -44.9       -64.6     -67.9     -64.1
+SOMME                -9621.2    -11212.5  -11413.1  -11446.9
 
 Conclusion BIC : Le modèle **Richards** est préféré (pénalité plus stricte).
 
 ======================================================================
 PARAMÈTRES OPTIMAUX DU MODÈLE CHOISI (Logistique-L1)
 ======================================================================
-                     L      k     t0  t0/T    v                           Interprétation
-NGINX              1.0  0.056   21.8  0.08  1.0  Maturité haute (L≈1); Inflexion précoce
-HTTPD_APACHE       1.0  0.009    0.0  0.00  1.0  Maturité haute (L≈1); Inflexion précoce
-SQLITE             1.0  0.014    0.0  0.00  1.0  Maturité haute (L≈1); Inflexion précoce
-REDIS              1.0  0.038   36.4  0.18  1.0  Maturité haute (L≈1); Inflexion précoce
-GCC                1.0  0.012   93.3  0.28  1.0  Maturité haute (L≈1); Inflexion précoce
-POSTGRES           1.0  0.014   59.9  0.17  1.0  Maturité haute (L≈1); Inflexion précoce
-GO                 1.0  0.021   93.4  0.43  1.0  Maturité haute (L≈1); Inflexion modérée
-PHP                1.0  0.009  100.0  0.31  1.0  Maturité haute (L≈1); Inflexion précoce
-RUST               1.0  0.018  100.0  0.54  1.0  Maturité haute (L≈1); Inflexion modérée
-NODE               1.0  0.015   88.8  0.44  1.0  Maturité haute (L≈1); Inflexion modérée
-CPYTHON            1.0  0.001  100.0  0.24  1.0  Maturité haute (L≈1); Inflexion précoce
-PYTORCH            1.0  0.039  100.0  0.61  1.0  Maturité haute (L≈1); Inflexion modérée
-TENSORFLOW         1.0  0.018   52.4  0.43  1.0  Maturité haute (L≈1); Inflexion modérée
-REACT              1.0  0.028  100.0  0.66  1.0  Maturité haute (L≈1); Inflexion tardive
-ANGULAR            1.0  0.028   79.3  0.59  1.0  Maturité haute (L≈1); Inflexion modérée
-VUE                1.0  0.057   16.8  0.20  1.0  Maturité haute (L≈1); Inflexion précoce
-SCIPY              1.0  0.007  100.0  0.34  1.0  Maturité haute (L≈1); Inflexion modérée
-OCTAVE             1.0  0.006  100.0  0.26  1.0  Maturité haute (L≈1); Inflexion précoce
-RAILS              1.0  0.023   79.8  0.32  1.0  Maturité haute (L≈1); Inflexion précoce
-DJANGO             1.0  0.017    0.0  0.00  1.0  Maturité haute (L≈1); Inflexion précoce
-VSCODE             1.0  0.023   51.2  0.42  1.0  Maturité haute (L≈1); Inflexion modérée
-GIT_SCM            1.0  0.012   67.4  0.27  1.0  Maturité haute (L≈1); Inflexion précoce
-METEOR             1.0  0.034   49.4  0.29  1.0  Maturité haute (L≈1); Inflexion précoce
-FFMPEG             1.0  0.010   48.6  0.17  1.0  Maturité haute (L≈1); Inflexion précoce
-BITCOIN            1.0  0.018   80.0  0.41  1.0  Maturité haute (L≈1); Inflexion modérée
-WIRESHARK          1.0  0.008  100.0  0.31  1.0  Maturité haute (L≈1); Inflexion précoce
-GODOT              1.0  0.035   78.1  0.54  1.0  Maturité haute (L≈1); Inflexion modérée
-CURL               1.0  0.005  100.0  0.32  1.0  Maturité haute (L≈1); Inflexion précoce
-EMACS              1.0  0.004  100.0  0.22  1.0  Maturité haute (L≈1); Inflexion précoce
-GIMP               1.0  0.008  100.0  0.30  1.0  Maturité haute (L≈1); Inflexion précoce
-WORDPRESS          1.0  0.019  100.0  0.37  1.0  Maturité haute (L≈1); Inflexion modérée
-MEDIAWIKI          1.0  0.009  100.0  0.37  1.0  Maturité haute (L≈1); Inflexion modérée
-FASTAPI            1.0  0.045    0.0  0.00  1.0  Maturité haute (L≈1); Inflexion précoce
-MATPLOTLIB         1.0  0.010  100.0  0.37  1.0  Maturité haute (L≈1); Inflexion modérée
-ANGULAR_JS_LEGACY  1.0  0.037   40.2  0.30  1.0  Maturité haute (L≈1); Inflexion précoce
-SUBVERSION         1.0  0.017   44.6  0.15  1.0  Maturité haute (L≈1); Inflexion précoce
-KUBERNETES         1.0  0.035   64.6  0.47  1.0  Maturité haute (L≈1); Inflexion modérée
-LIBREOFFICE        1.0  0.010  100.0  0.33  1.0  Maturité haute (L≈1); Inflexion modérée
-GECKO_FIREFOX      1.0  0.002  100.0  0.30  1.0  Maturité haute (L≈1); Inflexion précoce
-FREEBSD            1.0  0.004  100.0  0.26  1.0  Maturité haute (L≈1); Inflexion précoce
-WEBKIT             1.0  0.005  100.0  0.34  1.0  Maturité haute (L≈1); Inflexion modérée
-LLVM               1.0  0.013  100.0  0.34  1.0  Maturité haute (L≈1); Inflexion modérée
-LINUX              1.0  0.012   43.5  0.18  1.0  Maturité haute (L≈1); Inflexion précoce
-PY_MINI_PROJECTS   1.0  0.327    0.0  0.00  1.0  Maturité haute (L≈1); Inflexion précoce
-ZY_PLAYER          1.0  0.215    1.3  0.05  1.0  Maturité haute (L≈1); Inflexion précoce
-TSDX               1.0  0.175    1.0  0.04  1.0  Maturité haute (L≈1); Inflexion précoce
-SNOWPACK           1.0  0.476   19.3  0.57  1.0  Maturité haute (L≈1); Inflexion modérée
-DALLE_MINI         1.0  0.870    4.7  0.25  1.0  Maturité haute (L≈1); Inflexion précoce
-GENERIC_TOOLS      1.0  0.176   26.1  0.61  1.0  Maturité haute (L≈1); Inflexion modérée
+                 L      k     t0  t0/T    v                           Interprétation
+HTTPD_APACHE   1.0  0.009    0.0  0.00  1.0  Maturité haute (L≈1); Inflexion précoce
+SQLITE         1.0  0.014    0.0  0.00  1.0  Maturité haute (L≈1); Inflexion précoce
+NGINX          1.0  0.055   22.0  0.08  1.0  Maturité haute (L≈1); Inflexion précoce
+REDIS          1.0  0.038   35.9  0.18  1.0  Maturité haute (L≈1); Inflexion précoce
+GCC            1.0  0.012   83.2  0.25  1.0  Maturité haute (L≈1); Inflexion précoce
+POSTGRES       1.0  0.014   54.9  0.16  1.0  Maturité haute (L≈1); Inflexion précoce
+PHP            1.0  0.010  100.0  0.31  1.0  Maturité haute (L≈1); Inflexion précoce
+RUST           1.0  0.018   77.4  0.42  1.0  Maturité haute (L≈1); Inflexion modérée
+TENSORFLOW     1.0  0.018   40.3  0.33  1.0  Maturité haute (L≈1); Inflexion modérée
+PYTORCH        1.0  0.038  100.0  0.61  1.0  Maturité haute (L≈1); Inflexion modérée
+NODE           1.0  0.013   74.5  0.37  1.0  Maturité haute (L≈1); Inflexion modérée
+CPYTHON        1.0  0.001  100.0  0.24  1.0  Maturité haute (L≈1); Inflexion précoce
+ANGULAR        1.0  0.029   69.5  0.51  1.0  Maturité haute (L≈1); Inflexion modérée
+REACT          1.0  0.028  100.0  0.66  1.0  Maturité haute (L≈1); Inflexion tardive
+RAILS          1.0  0.022   72.6  0.29  1.0  Maturité haute (L≈1); Inflexion précoce
+VUE            1.0  0.059   14.8  0.17  1.0  Maturité haute (L≈1); Inflexion précoce
+SCIPY          1.0  0.007  100.0  0.34  1.0  Maturité haute (L≈1); Inflexion modérée
+OCTAVE         1.0  0.007  100.0  0.26  1.0  Maturité haute (L≈1); Inflexion précoce
+DJANGO         1.0  0.024    0.0  0.00  1.0  Maturité haute (L≈1); Inflexion précoce
+METEOR         1.0  0.039   41.2  0.24  1.0  Maturité haute (L≈1); Inflexion précoce
+VSCODE         1.0  0.021   42.2  0.35  1.0  Maturité haute (L≈1); Inflexion modérée
+GIT_SCM        1.0  0.012   62.7  0.26  1.0  Maturité haute (L≈1); Inflexion précoce
+FFMPEG         1.0  0.009   36.1  0.12  1.0  Maturité haute (L≈1); Inflexion précoce
+BITCOIN        1.0  0.017   71.9  0.37  1.0  Maturité haute (L≈1); Inflexion modérée
+WIRESHARK      1.0  0.007  100.0  0.31  1.0  Maturité haute (L≈1); Inflexion précoce
+EMACS          1.0  0.004   78.8  0.17  1.0  Maturité haute (L≈1); Inflexion précoce
+CURL           1.0  0.005  100.0  0.32  1.0  Maturité haute (L≈1); Inflexion précoce
+GIMP           1.0  0.008  100.0  0.30  1.0  Maturité haute (L≈1); Inflexion précoce
+WORDPRESS      1.0  0.016   83.9  0.31  1.0  Maturité haute (L≈1); Inflexion précoce
+MEDIAWIKI      1.0  0.009   92.0  0.34  1.0  Maturité haute (L≈1); Inflexion modérée
+MATPLOTLIB     1.0  0.011  100.0  0.37  1.0  Maturité haute (L≈1); Inflexion modérée
+FASTAPI        1.0  0.057    0.0  0.00  1.0  Maturité haute (L≈1); Inflexion précoce
+SUBVERSION     1.0  0.016   33.8  0.11  1.0  Maturité haute (L≈1); Inflexion précoce
+ANSIBLE        1.0  0.035  100.0  0.60  1.0  Maturité haute (L≈1); Inflexion modérée
+OPENCV         1.0  0.038   54.6  0.29  1.0  Maturité haute (L≈1); Inflexion précoce
+PANDAS         1.0  0.024   74.1  0.38  1.0  Maturité haute (L≈1); Inflexion modérée
+SCIKIT_LEARN   1.0  0.042  100.0  0.52  1.0  Maturité haute (L≈1); Inflexion modérée
+FLASK          1.0  0.008  100.0  0.58  1.0  Maturité haute (L≈1); Inflexion modérée
+KUBERNETES     1.0  0.033   57.7  0.42  1.0  Maturité haute (L≈1); Inflexion modérée
+LIBREOFFICE    1.0  0.010   99.7  0.33  1.0  Maturité haute (L≈1); Inflexion précoce
+FREEBSD        1.0  0.005  100.0  0.26  1.0  Maturité haute (L≈1); Inflexion précoce
+WEBKIT         1.0  0.006  100.0  0.34  1.0  Maturité haute (L≈1); Inflexion modérée
+LLVM           1.0  0.014  100.0  0.34  1.0  Maturité haute (L≈1); Inflexion modérée
+LINUX          1.0  0.011   22.3  0.09  1.0  Maturité haute (L≈1); Inflexion précoce
+TSDX           1.0  0.195    0.8  0.04  1.0  Maturité haute (L≈1); Inflexion précoce
+ZY_PLAYER      1.0  0.206    0.8  0.03  1.0  Maturité haute (L≈1); Inflexion précoce
+SNOWPACK       1.0  0.449   18.0  0.53  1.0  Maturité haute (L≈1); Inflexion modérée
+DALLE_MINI     1.0  0.830    4.4  0.23  1.0  Maturité haute (L≈1); Inflexion précoce
+GENERIC_TOOLS  1.0  0.192   23.6  0.55  1.0  Maturité haute (L≈1); Inflexion modérée
 
 L : Asymptote max de Gamma (Maturité finale). t₀/T : Proportion de la vie du projet pour atteindre l'inflexion.
 
@@ -521,67 +521,67 @@ TEST K : CAUSALITÉ DE GRANGER
 Hypothèse : Γ élevé est une CONSÉQUENCE de la survie, pas sa CAUSE
            (L'activité précède Γ, pas l'inverse)
 
-[NGINX          ] Act→Γ: p=0.0067 ✓         | Γ→Act: p=0.0000 ✓
-[HTTPD_APACHE   ] Act→Γ: p=0.0000 ✓         | Γ→Act: p=0.2621
-[SQLITE         ] Act→Γ: p=0.1062           | Γ→Act: p=0.1267
-[REDIS          ] Act→Γ: p=0.3227           | Γ→Act: p=0.1145
-[GCC            ] Act→Γ: p=0.0000 ✓         | Γ→Act: p=0.0000 ✓
-[POSTGRES       ] Act→Γ: p=0.5559           | Γ→Act: p=0.2066
-[GO             ] Act→Γ: p=0.0146 ✓         | Γ→Act: p=0.0150 ✓
-[PHP            ] Act→Γ: p=0.0977           | Γ→Act: p=0.0058 ✓
-[RUST           ] Act→Γ: p=0.0007 ✓         | Γ→Act: p=0.0000 ✓
-[NODE           ] Act→Γ: p=0.0389 ✓         | Γ→Act: p=0.0001 ✓
-[CPYTHON        ] Act→Γ: p=0.0001 ✓         | Γ→Act: p=0.0000 ✓
-[PYTORCH        ] Act→Γ: p=0.0004 ✓         | Γ→Act: p=0.0000 ✓
-[TENSORFLOW     ] Act→Γ: p=0.3099           | Γ→Act: p=0.3392
-[REACT          ] Act→Γ: p=0.0580           | Γ→Act: p=0.0220 ✓
-[ANGULAR        ] Act→Γ: p=0.3214           | Γ→Act: p=0.0039 ✓
-[VUE            ] Act→Γ: p=0.5854           | Γ→Act: p=0.0893
-[SCIPY          ] Act→Γ: p=0.0020 ✓         | Γ→Act: p=0.0002 ✓
-[OCTAVE         ] Act→Γ: p=0.0101 ✓         | Γ→Act: p=0.0002 ✓
-[RAILS          ] Act→Γ: p=0.0998           | Γ→Act: p=0.2523
-[DJANGO         ] Act→Γ: p=0.0498 ✓         | Γ→Act: p=0.0204 ✓
-[VSCODE         ] Act→Γ: p=0.0702           | Γ→Act: p=0.1181
-[GIT_SCM        ] Act→Γ: p=0.0018 ✓         | Γ→Act: p=0.1105
-[METEOR         ] Act→Γ: p=0.3630           | Γ→Act: p=0.7035
-[FFMPEG         ] Act→Γ: p=0.1695           | Γ→Act: p=0.2244
-[BITCOIN        ] Act→Γ: p=0.0001 ✓         | Γ→Act: p=0.0000 ✓
-[WIRESHARK      ] Act→Γ: p=0.2140           | Γ→Act: p=0.0065 ✓
-[GODOT          ] Act→Γ: p=0.0407 ✓         | Γ→Act: p=0.0087 ✓
-[CURL           ] Act→Γ: p=0.0000 ✓         | Γ→Act: p=0.0006 ✓
-[EMACS          ] Act→Γ: p=0.7132           | Γ→Act: p=0.6178
-[GIMP           ] Act→Γ: p=0.0568           | Γ→Act: p=0.0000 ✓
-[WORDPRESS      ] Act→Γ: p=0.0763           | Γ→Act: p=0.0139 ✓
-[MEDIAWIKI      ] Act→Γ: p=0.0020 ✓         | Γ→Act: p=0.0000 ✓
-[FASTAPI        ] Act→Γ: p=0.1049           | Γ→Act: p=0.0300 ✓
-[MATPLOTLIB     ] Act→Γ: p=0.0737           | Γ→Act: p=0.0015 ✓
-[ANGULAR_JS_LEGACY] Act→Γ: p=0.0706           | Γ→Act: p=0.0826
-[SUBVERSION     ] Act→Γ: p=0.0527           | Γ→Act: p=0.0054 ✓
-[KUBERNETES     ] Act→Γ: p=0.0275 ✓         | Γ→Act: p=0.0013 ✓
-[LIBREOFFICE    ] Act→Γ: p=0.2904           | Γ→Act: p=0.2852
-[GECKO_FIREFOX  ] Act→Γ: p=0.0017 ✓         | Γ→Act: p=0.0056 ✓
-[FREEBSD        ] Act→Γ: p=0.0319 ✓         | Γ→Act: p=0.0000 ✓
-[WEBKIT         ] Act→Γ: p=0.4180           | Γ→Act: p=0.0002 ✓
-[LLVM           ] Act→Γ: p=0.0000 ✓         | Γ→Act: p=0.0000 ✓
-[LINUX          ] Act→Γ: p=0.1379           | Γ→Act: p=0.0746
-[PY_MINI_PROJECTS] Données insuffisantes (15 < 28)
+[HTTPD_APACHE   ] Act→Γ: p=0.0000 ✓         | Γ→Act: p=0.2664
+[SQLITE         ] Act→Γ: p=0.1240           | Γ→Act: p=0.1362
+[NGINX          ] Act→Γ: p=0.0004 ✓         | Γ→Act: p=0.0225 ✓
+[REDIS          ] Act→Γ: p=0.3011           | Γ→Act: p=0.1166
+[GCC            ] Act→Γ: p=0.4569           | Γ→Act: p=0.7064
+[POSTGRES       ] Act→Γ: p=0.4906           | Γ→Act: p=0.1096
+[PHP            ] Act→Γ: p=0.1989           | Γ→Act: p=0.0020 ✓
+[RUST           ] Act→Γ: p=0.7058           | Γ→Act: p=0.4832
+[TENSORFLOW     ] Act→Γ: p=0.1487           | Γ→Act: p=0.2205
+[PYTORCH        ] Act→Γ: p=0.5399           | Γ→Act: p=0.4426
+[NODE           ] Act→Γ: p=0.0926           | Γ→Act: p=0.7646
+[CPYTHON        ] Act→Γ: p=0.3191           | Γ→Act: p=0.2699
+[ANGULAR        ] Act→Γ: p=0.4617           | Γ→Act: p=0.0018 ✓
+[REACT          ] Act→Γ: p=0.1621           | Γ→Act: p=0.0286 ✓
+[RAILS          ] Act→Γ: p=0.2308           | Γ→Act: p=0.1574
+[VUE            ] Act→Γ: p=0.3092           | Γ→Act: p=0.1025
+[SCIPY          ] Act→Γ: p=0.3191           | Γ→Act: p=0.4184
+[OCTAVE         ] Act→Γ: p=0.2333           | Γ→Act: p=0.3560
+[DJANGO         ] Act→Γ: p=0.3147           | Γ→Act: p=0.1748
+[METEOR         ] Act→Γ: p=0.6404           | Γ→Act: p=0.5338
+[VSCODE         ] Act→Γ: p=0.0921           | Γ→Act: p=0.0435 ✓
+[GIT_SCM        ] Act→Γ: p=0.0101 ✓         | Γ→Act: p=0.1382
+[FFMPEG         ] Act→Γ: p=0.1886           | Γ→Act: p=0.6505
+[BITCOIN        ] Act→Γ: p=0.2198           | Γ→Act: p=0.7366
+[WIRESHARK      ] Act→Γ: p=0.5101           | Γ→Act: p=0.6768
+[EMACS          ] Act→Γ: p=0.8453           | Γ→Act: p=0.5089
+[CURL           ] Act→Γ: p=0.0000 ✓         | Γ→Act: p=0.0004 ✓
+[GIMP           ] Act→Γ: p=0.0353 ✓         | Γ→Act: p=0.4629
+[WORDPRESS      ] Act→Γ: p=0.1289           | Γ→Act: p=0.3900
+[MEDIAWIKI      ] Act→Γ: p=0.1432           | Γ→Act: p=0.1574
+[MATPLOTLIB     ] Act→Γ: p=0.1732           | Γ→Act: p=0.0010 ✓
+[FASTAPI        ] Act→Γ: p=0.0798           | Γ→Act: p=0.0351 ✓
+[SUBVERSION     ] Act→Γ: p=0.0696           | Γ→Act: p=0.0099 ✓
+[ANSIBLE        ] Act→Γ: p=0.1976           | Γ→Act: p=0.4686
+[OPENCV         ] Act→Γ: p=0.4842           | Γ→Act: p=0.6384
+[PANDAS         ] Act→Γ: p=0.0196 ✓         | Γ→Act: p=0.1876
+[SCIKIT_LEARN   ] Act→Γ: p=0.8489           | Γ→Act: p=0.4639
+[FLASK          ] Act→Γ: p=0.2084           | Γ→Act: p=0.2209
+[KUBERNETES     ] Act→Γ: p=0.3076           | Γ→Act: p=0.3696
+[LIBREOFFICE    ] Act→Γ: p=0.4799           | Γ→Act: p=0.7912
+[FREEBSD        ] Act→Γ: p=0.4887           | Γ→Act: p=0.1782
+[WEBKIT         ] Act→Γ: p=0.2385           | Γ→Act: p=0.3294
+[LLVM           ] Act→Γ: p=0.5109           | Γ→Act: p=0.2956
 [WENYAN_LANG] Données insuffisantes (11 < 28)
-[ZY_PLAYER      ] Act→Γ: p=0.0502           | Γ→Act: p=0.0359 ✓
+[LINUX          ] Act→Γ: p=0.5014           | Γ→Act: p=0.6813
 [TSDX] Données insuffisantes (23 < 28)
-[SNOWPACK       ] Act→Γ: p=0.5784           | Γ→Act: p=0.1480
+[ZY_PLAYER      ] Act→Γ: p=0.0388 ✓         | Γ→Act: p=0.2009
+[SNOWPACK       ] Act→Γ: p=0.4487           | Γ→Act: p=0.4090
 [DALLE_MINI] Données insuffisantes (19 < 28)
-[GENERIC_TOOLS  ] Act→Γ: p=0.7048           | Γ→Act: p=0.1258
+[GENERIC_TOOLS  ] Act→Γ: p=0.7976           | Γ→Act: p=0.0789
 
 ======================================================================
 SYNTHÈSE GLOBALE - CAUSALITÉ DE GRANGER
 ======================================================================
 
-Projets analysés : 46
+Projets analysés : 47
 
 Direction causale                   | Projets    | %
 ------------------------------------------------------------
-Activité → Γ (attendu)              | 20         | 43.5      %
-Γ → Activité (non attendu)          | 29         | 63.0      %
+Activité → Γ (attendu)              | 7          | 14.9      %
+Γ → Activité (non attendu)          | 9          | 19.1      %
 
 ------------------------------------------------------------
 VERDICT :
@@ -601,58 +601,59 @@ Hypothèse Ontodynamique :
 
 Projet          | Split (Mois)    | Phase 1 (Émergence)       | Phase 2 (Maturité)
 -----------------------------------------------------------------------------------------
-[NGINX        ] | 91 /276 mois      | Γ->Act (p=0.115)          | Γ->Act (p=0.096)          ★
-[HTTPD_APACHE ] | 105/320 mois      | Act->Γ (p=0.037)          | Act->Γ (p=0.000)
-[SQLITE       ] | 101/308 mois      | - (p=0.539)               | Γ->Act (p=0.072)          ★
-[REDIS        ] | 65 /199 mois      | - (p=0.652)               | - (p=0.189)
-[GCC          ] | 111/337 mois      | Γ->Act (p=0.090)          | Act->Γ, Γ->Act (p=0.043)  ★
-[POSTGRES     ] | 116/352 mois      | - (p=0.864)               | Act->Γ (p=0.047)
-[GO           ] | 70 /215 mois      | - (p=0.084)               | - (p=0.086)
-[PHP          ] | 105/319 mois      | Γ->Act (p=0.196)          | Γ->Act (p=0.315)          ★
-[RUST         ] | 60 /184 mois      | Γ->Act (p=0.069)          | Act->Γ, Γ->Act (p=0.000)  ★
-[NODE         ] | 66 /202 mois      | - (p=0.162)               | - (p=0.421)
-[CPYTHON      ] | 138/421 mois      | - (p=0.153)               | - (p=0.194)
-[PYTORCH      ] | 54 /164 mois      | Γ->Act (p=0.230)          | Act->Γ, Γ->Act (p=0.031)  ★
-[TENSORFLOW   ] | 40 /122 mois      | Act->Γ, Γ->Act (p=0.014)  | Act->Γ (p=0.040)
-[REACT        ] | 49 /151 mois      | - (p=0.180)               | - (p=0.206)
-[ANGULAR      ] | 44 /135 mois      | Act->Γ (p=0.014)          | - (p=0.416)
-[VUE          ] | 28 /85  mois      | - (p=0.113)               | - (p=0.360)
-[SCIPY        ] | 98 /297 mois      | - (p=0.452)               | Act->Γ, Γ->Act (p=0.033)  ★
-[OCTAVE       ] | 126/383 mois      | - (p=0.648)               | - (p=0.056)
-[RAILS        ] | 82 /251 mois      | Γ->Act (p=0.131)          | - (p=0.743)
-[DJANGO       ] | 80 /243 mois      | - (p=0.088)               | Act->Γ, Γ->Act (p=0.011)  ★
-[VSCODE       ] | 40 /122 mois      | Act->Γ, Γ->Act (p=0.011)  | Γ->Act (p=0.091)          ★
-[GIT_SCM      ] | 81 /246 mois      | - (p=0.150)               | Act->Γ, Γ->Act (p=0.000)  ★
-[METEOR       ] | 55 /169 mois      | - (p=0.789)               | - (p=0.778)
-[FFMPEG       ] | 96 /293 mois      | - (p=0.091)               | Act->Γ, Γ->Act (p=0.011)  ★
-[BITCOIN      ] | 64 /194 mois      | Act->Γ, Γ->Act (p=0.001)  | - (p=0.083)
-[WIRESHARK    ] | 107/326 mois      | - (p=0.150)               | - (p=0.455)
-[GODOT        ] | 47 /144 mois      | Act->Γ (p=0.008)          | - (p=0.246)
-[CURL         ] | 102/311 mois      | - (p=0.263)               | Act->Γ, Γ->Act (p=0.001)  ★
-[EMACS        ] | 148/451 mois      | Act->Γ, Γ->Act (p=0.040)  | - (p=0.520)
-[GIMP         ] | 111/337 mois      | Γ->Act (p=0.134)          | Act->Γ (p=0.026)
-[WORDPRESS    ] | 88 /269 mois      | Act->Γ, Γ->Act (p=0.006)  | - (p=0.385)
-[MEDIAWIKI    ] | 89 /271 mois      | Γ->Act (p=0.129)          | - (p=0.120)
-[FASTAPI      ] | 25 /78  mois      | - (p=0.382)               | - (p=0.231)
-[MATPLOTLIB   ] | 88 /267 mois      | - (p=0.071)               | Γ->Act (p=0.468)          ★
-[ANGULAR_JS_LEGACY] | 43 /133 mois      | - (p=0.149)               | Act->Γ (p=0.032)
-[SUBVERSION   ] | 100/304 mois      | Γ->Act (p=0.204)          | Act->Γ (p=0.001)
-[KUBERNETES   ] | 45 /138 mois      | - (p=0.392)               | Act->Γ, Γ->Act (p=0.009)  ★
-[LIBREOFFICE  ] | 99 /303 mois      | - (p=0.225)               | Γ->Act (p=0.066)          ★
-[GECKO_FIREFOX] | 108/330 mois      | Act->Γ (p=0.025)          | Γ->Act (p=0.671)          ★
-[FREEBSD      ] | 128/388 mois      | Act->Γ, Γ->Act (p=0.011)  | - (p=0.457)
-[WEBKIT       ] | 95 /290 mois      | Act->Γ, Γ->Act (p=0.002)  | - (p=0.494)
+[HTTPD_APACHE ] | 105/320 mois      | Act->Γ (p=0.035)          | Act->Γ (p=0.000)
+[SQLITE       ] | 101/308 mois      | - (p=0.541)               | Γ->Act (p=0.073)          ★
+[NGINX        ] | 91 /276 mois      | Act->Γ, Γ->Act (p=0.029)  | Γ->Act (p=0.336)          ★
+[REDIS        ] | 65 /199 mois      | - (p=0.433)               | - (p=0.288)
+[GCC          ] | 111/337 mois      | Act->Γ, Γ->Act (p=0.045)  | Γ->Act (p=0.067)          ★
+[POSTGRES     ] | 116/352 mois      | - (p=0.813)               | - (p=0.060)
+[PHP          ] | 105/319 mois      | Γ->Act (p=0.150)          | Γ->Act (p=0.218)          ★
+[RUST         ] | 60 /184 mois      | Γ->Act (p=0.080)          | Act->Γ, Γ->Act (p=0.000)  ★
+[TENSORFLOW   ] | 40 /122 mois      | Act->Γ (p=0.038)          | Act->Γ (p=0.041)
+[PYTORCH      ] | 54 /164 mois      | Γ->Act (p=0.319)          | Act->Γ, Γ->Act (p=0.031)  ★
+[NODE         ] | 66 /202 mois      | - (p=0.314)               | - (p=0.194)
+[CPYTHON      ] | 138/421 mois      | - (p=0.171)               | - (p=0.175)
+[ANGULAR      ] | 44 /135 mois      | Act->Γ (p=0.050)          | - (p=0.560)
+[REACT        ] | 49 /151 mois      | - (p=0.065)               | - (p=0.307)
+[RAILS        ] | 82 /251 mois      | Γ->Act (p=0.213)          | - (p=0.791)
+[VUE          ] | 28 /85  mois      | - (p=0.110)               | - (p=0.385)
+[SCIPY        ] | 98 /297 mois      | - (p=0.840)               | Act->Γ, Γ->Act (p=0.040)  ★
+[OCTAVE       ] | 126/383 mois      | - (p=0.703)               | Act->Γ (p=0.050)
+[DJANGO       ] | 80 /243 mois      | - (p=0.104)               | Act->Γ, Γ->Act (p=0.006)  ★
+[METEOR       ] | 55 /169 mois      | - (p=0.649)               | - (p=0.673)
+[VSCODE       ] | 40 /122 mois      | Act->Γ, Γ->Act (p=0.044)  | Γ->Act (p=0.110)          ★
+[GIT_SCM      ] | 81 /246 mois      | - (p=0.057)               | Act->Γ, Γ->Act (p=0.000)  ★
+[FFMPEG       ] | 96 /293 mois      | - (p=0.129)               | Act->Γ (p=0.011)
+[BITCOIN      ] | 64 /194 mois      | Act->Γ, Γ->Act (p=0.000)  | - (p=0.093)
+[WIRESHARK    ] | 107/326 mois      | - (p=0.555)               | - (p=0.461)
+[EMACS        ] | 148/451 mois      | Act->Γ, Γ->Act (p=0.028)  | - (p=0.411)
+[CURL         ] | 102/311 mois      | - (p=0.268)               | Act->Γ, Γ->Act (p=0.001)  ★
+[GIMP         ] | 111/337 mois      | - (p=0.121)               | Act->Γ (p=0.034)
+[WORDPRESS    ] | 88 /269 mois      | Act->Γ, Γ->Act (p=0.006)  | - (p=0.282)
+[MEDIAWIKI    ] | 89 /271 mois      | Γ->Act (p=0.087)          | - (p=0.195)
+[MATPLOTLIB   ] | 88 /267 mois      | - (p=0.111)               | Γ->Act (p=0.547)          ★
+[FASTAPI      ] | 25 /78  mois      | - (p=0.260)               | - (p=0.246)
+[SUBVERSION   ] | 100/304 mois      | Γ->Act (p=0.297)          | Act->Γ (p=0.001)
+[ANSIBLE      ] | 55 /167 mois      | Γ->Act (p=0.196)          | Γ->Act (p=0.261)          ★
+[OPENCV       ] | 62 /188 mois      | - (p=0.418)               | - (p=0.323)
+[PANDAS       ] | 65 /197 mois      | Act->Γ (p=0.017)          | - (p=0.235)
+[SCIKIT_LEARN ] | 63 /192 mois      | - (p=0.562)               | - (p=0.228)
+[FLASK        ] | 56 /172 mois      | Γ->Act (p=0.075)          | - (p=0.067)
+[KUBERNETES   ] | 45 /138 mois      | - (p=0.539)               | Act->Γ, Γ->Act (p=0.003)  ★
+[LIBREOFFICE  ] | 99 /303 mois      | - (p=0.263)               | Act->Γ, Γ->Act (p=0.047)  ★
+[FREEBSD      ] | 128/388 mois      | Act->Γ (p=0.029)          | - (p=0.501)
+[WEBKIT       ] | 95 /290 mois      | Act->Γ, Γ->Act (p=0.003)  | - (p=0.345)
 [LLVM         ] | 96 /292 mois      | Act->Γ, Γ->Act (p=0.000)  | Act->Γ, Γ->Act (p=0.000)  ★
-[LINUX        ] | 81 /248 mois      | - (p=0.709)               | - (p=0.195)
+[LINUX        ] | 81 /248 mois      | - (p=0.857)               | - (p=0.243)
 
 ----------------------------------------------------------------------
 CRITÈRE V38 : SYMÉTRIE DU COUPLAGE CAUSAL
 ----------------------------------------------------------------------
-PHASE 1 (Émergence) : Act->Γ 27.9% vs Γ->Act 39.5%
-   ↳ Couplage : 0.71 (Asymétrique)
-PHASE 2 (Maturité)  : Act->Γ 37.2% vs Γ->Act 39.5%
+PHASE 1 (Émergence) : Act->Γ 29.5% vs Γ->Act 36.4%
+   ↳ Couplage : 0.81 (Asymétrique)
+PHASE 2 (Maturité)  : Act->Γ 34.1% vs Γ->Act 36.4%
    ↳ Couplage : 0.94 (Symétrique)
-   ↳ Δ Convergence : +0.24
+   ↳ Δ Convergence : +0.12
 
 ======================================================================
 ✅ OPERATIONAL CLOSURE VALIDÉE :
@@ -662,18 +663,17 @@ PHASE 2 (Maturité)  : Act->Γ 37.2% vs Γ->Act 39.5%
 --------------------------------------------------------------------------------
 RÉSUMÉ DES POURCENTAGES (TEMPOREL)
 --------------------------------------------------------------------------------
-PHASE 1 (Jeunesse) : Act->Γ: 27.9%  vs  Γ->Act: 39.5%
-PHASE 2 (Maturité) : Act->Γ: 37.2%  vs  Γ->Act: 39.5%
+PHASE 1 (Jeunesse) : Act->Γ: 29.5%  vs  Γ->Act: 36.4%
+PHASE 2 (Maturité) : Act->Γ: 34.1%  vs  Γ->Act: 36.4%
 
 [OK] Analyse Granger par phase sauvegardee : omega_v34_granger_by_phase.png
 
 ################################################################################
 PHASE 7 : DÉTECTION DU POINT Ω (ROLLING GRANGER)
 ################################################################################
-[PY_MINI_PROJECTS] Historique trop court (15 mois < 60)
 [WENYAN_LANG] Historique trop court (11 mois < 60)
-[ZY_PLAYER] Historique trop court (29 mois < 60)
 [TSDX] Historique trop court (23 mois < 60)
+[ZY_PLAYER] Historique trop court (29 mois < 60)
 [SNOWPACK] Historique trop court (34 mois < 60)
 [DALLE_MINI] Historique trop court (19 mois < 60)
 [GENERIC_TOOLS] Historique trop court (43 mois < 60)
@@ -684,6 +684,128 @@ GÉNÉRATION DE LA FIGURE UNIVERSELLE
 
 Generating : Phase Portrait (Academic/English)...
 ✅ Figure 2 (Phase Portrait) saved: omega_v38_phase_academic.png
+
+################################################################################
+PHASE 7B : TESTS continuous symmetrization
+################################################################################
+
+================================================================================
+PHASE 13: CAUSAL VARIANCE COLLAPSE (CONSTRAINT ATTRACTOR)
+================================================================================
+
+📊 Variance Collapse Statistics (across 10 bins):
+   Correlation (Gamma vs Spread Q90-Q10): r = -0.406, p = 0.2443
+   Correlation (Gamma vs Variance):       r = -0.273,    p = 0.4458
+
+⚠️ INCONCLUSIVE: Variance does not significantly decrease.
+✅ Visualization saved: omega_v44_variance_collapse.png
+
+################################################################################
+PHASE 7-TER : ANALYSE DE SURVIE (Asymmetry Exposure vs Survival)
+################################################################################
+
+[Survival] Préparation du dataset (Approche Conservative)...
+   Dataset prêt : 44 projets.
+   Événements terminaux (E=1) : 1 (2.3%)
+   ℹ️ NOTE : Faible nombre d'événements (High Resilience Corpus).
+             L'analyse sera purement descriptive.
+
+📊 [Survival] Kaplan-Meier (Tertiles (Top vs Bottom 33%))
+   ✅ Courbe descriptive sauvegardée : omega_v46_kaplan_meier.png
+   Log-Rank p-value : 1.0000
+
+⚠️ [Survival] Cox Model SKIPPED
+   Reason : Insufficient events (1) for multivariate inference.
+   Action : Discussion of survivor bias deferred to manuscript.
+
+################################################################################
+PHASE 8A :causal_symmetry_diagnostic
+################################################################################
+
+================================================================================
+DIAGNOSTIC: IS CAUSAL SYMMETRY REAL OR ARTIFACT?
+================================================================================
+
+------------------------------------------------------------
+TEST 1: TEMPORAL PERMUTATION (Null Model)
+------------------------------------------------------------
+H0: Coupling ratio is independent of temporal ordering
+If H0 rejected: Signal is real (temporal structure matters)
+
+Real Coupling Ratio (mean):  0.8627
+Null Coupling Ratio (mean):  0.6461
+Null Std Dev:                0.2462
+Z-Score:                     0.88
+P-value (real > null):       1.8943e-01
+
+❌ ARTIFACT SUSPECTED: Shuffling doesn't destroy the pattern
+
+------------------------------------------------------------
+TEST 2: PHASE SHIFT (Temporal Alignment)
+------------------------------------------------------------
+Real causality peaks at lag=0; artifacts are shift-invariant
+
+Shift (months)  | Coupling Ratio
+-----------------------------------
+-12             | 0.7799
+-6              | 0.8208
+-3              | 0.7927
+0               | 0.8542          ← PEAK
+3               | 0.7516
+6               | 0.7786
+12              | 0.7713
+
+Peaked at lag=0: True
+Average decay from peak: 0.0546
+
+✅ CAUSAL STRUCTURE: Coupling peaks at correct alignment
+
+------------------------------------------------------------
+TEST 3: P-VALUE SATURATION ANALYSIS
+------------------------------------------------------------
+Ceiling effect: both p << 0.01 → ratio ≈ 1 mechanically
+True symmetry: p_ag ≈ p_ga at moderate levels
+
+P-values saturated (< 0.01):
+  Activity → Gamma: 26.7%
+  Gamma → Activity: 46.7%
+  BOTH saturated:   22.2%
+
+Mean coupling ratio:     0.8542
+Mean ratio when BOTH saturated: 0.9984
+
+✅ NO CEILING EFFECT: P-values are in discriminative range
+
+------------------------------------------------------------
+TEST 4: RESIDUAL INDEPENDENCE (Partial Correlation)
+------------------------------------------------------------
+Regress out files_touched (common source) from both series
+If coupling persists in residuals → not purely circular
+
+Raw Coupling Ratio (mean):      0.8542
+Residual Coupling Ratio (mean): 0.6963
+Retention after partialing:     81.5%
+Paired t-test (raw vs resid):   t=3.97, p=0.0003
+
+✅ COUPLING PERSISTS: Not driven by shared commit source
+
+================================================================================
+FINAL DIAGNOSTIC VERDICT
+================================================================================
+
+Test Results Summary:
+  1. Temporal Permutation: ARTIFACT_SUSPECTED
+  2. Phase Shift:          CAUSAL_STRUCTURE_CONFIRMED
+  3. P-value Saturation:   NO_CEILING_EFFECT
+  4. Residual Independence:COUPLING_INDEPENDENT_OF_SOURCE
+
+OVERALL SCORE: 3/4
+
+✅ VERDICT: CAUSAL SYMMETRY IS LIKELY REAL
+   The coupling ratio reflects genuine bidirectional constraint.
+   However, consider reporting as 'near-symmetric' rather than 'exact'.
+
+✅ Diagnostic plot saved: causal_symmetry_diagnostic.png
 
 ################################################################################
 PHASE 8 : TESTS COMPLÉMENTAIRES (IRRÉVERSIBILITÉ, VARIANCE)
@@ -698,70 +820,70 @@ TEST EXPLORATOIRE : IRRÉVERSIBILITÉ (Non inclus dans hypothèses)
 ============================================================
 Projet          | Atteint Haut | Mois       | Régressé   | Date Régression
 ---------------------------------------------------------------------------
-NGINX           | Oui          | 10         | OUI        | 13
 HTTPD_APACHE    | Oui          | 0          | OUI        | 27
 SQLITE          | Oui          | 7          | OUI        | 16
+NGINX           | Oui          | 10         | OUI        | 13
 REDIS           | Oui          | 17         | OUI        | 22
 GCC             | Oui          | 1          | OUI        | 4
-POSTGRES        | Oui          | 49         | OUI        | 56
-GO              | Oui          | 91         | Non        | -
+POSTGRES        | Oui          | 37         | OUI        | 56
 PHP             | Oui          | 79         | Non        | -
-RUST            | Oui          | 155        | Non        | -
-NODE            | Oui          | 97         | Non        | -
-CPYTHON         | Oui          | 285        | OUI        | 351
-PYTORCH         | Oui          | 110        | Non        | -
-TENSORFLOW      | Oui          | 69         | Non        | -
-REACT           | Oui          | 103        | OUI        | 111
+RUST            | Oui          | 114        | Non        | -
+TENSORFLOW      | Oui          | 68         | Non        | -
+PYTORCH         | Oui          | 105        | Non        | -
+NODE            | Oui          | 91         | Non        | -
+CPYTHON         | Oui          | 203        | OUI        | 218
 ANGULAR         | Oui          | 75         | Non        | -
+REACT           | Oui          | 67         | OUI        | 78
+RAILS           | Oui          | 86         | Non        | -
 VUE             | Oui          | 15         | Non        | -
-SCIPY           | Oui          | 108        | OUI        | 113
-OCTAVE          | Oui          | 230        | OUI        | 358
-RAILS           | Oui          | 94         | Non        | -
+SCIPY           | Oui          | 19         | OUI        | 22
+OCTAVE          | Oui          | 59         | OUI        | 62
 DJANGO          | Oui          | 4          | Non        | -
-VSCODE          | Oui          | 73         | Non        | -
-GIT_SCM         | Oui          | 92         | Non        | -
-METEOR          | Oui          | 56         | Non        | -
-FFMPEG          | Oui          | 1          | OUI        | 4
-BITCOIN         | Oui          | 87         | Non        | -
-WIRESHARK       | Oui          | 180        | Non        | -
-GODOT           | Oui          | 0          | OUI        | 3
-CURL            | Oui          | 81         | OUI        | 90
+METEOR          | Oui          | 38         | Non        | -
+VSCODE          | Oui          | 56         | Non        | -
+GIT_SCM         | Oui          | 69         | Non        | -
+FFMPEG          | Oui          | 1          | OUI        | 5
+BITCOIN         | Oui          | 16         | OUI        | 19
+WIRESHARK       | Oui          | 27         | OUI        | 48
 EMACS           | Oui          | 14         | OUI        | 150
-GIMP            | Oui          | 142        | Non        | -
-WORDPRESS       | Oui          | 124        | Non        | -
-MEDIAWIKI       | Oui          | 57         | Non        | -
-FASTAPI         | Oui          | 4          | Non        | -
-MATPLOTLIB      | Oui          | 105        | OUI        | 110
-ANGULAR_JS_LEGACY | Oui          | 30         | Non        | -
-SUBVERSION      | Oui          | 56         | Non        | -
-KUBERNETES      | Oui          | 79         | Non        | -
-LIBREOFFICE     | Oui          | 38         | OUI        | 57
-GECKO_FIREFOX   | Oui          | 0          | OUI        | 3
-FREEBSD         | Oui          | 153        | OUI        | 183
+CURL            | Oui          | 81         | OUI        | 90
+GIMP            | Oui          | 143        | Non        | -
+WORDPRESS       | Oui          | 38         | OUI        | 42
+MEDIAWIKI       | Oui          | 53         | Non        | -
+MATPLOTLIB      | Oui          | 102        | OUI        | 110
+FASTAPI         | Oui          | 0          | Non        | -
+SUBVERSION      | Oui          | 30         | Non        | -
+ANSIBLE         | Oui          | 104        | Non        | -
+OPENCV          | Oui          | 57         | Non        | -
+PANDAS          | Oui          | 103        | Non        | -
+SCIKIT_LEARN    | Oui          | 118        | Non        | -
+FLASK           | Oui          | 5          | OUI        | 11
+KUBERNETES      | Oui          | 73         | Non        | -
+LIBREOFFICE     | Oui          | 36         | OUI        | 57
+FREEBSD         | Oui          | 13         | OUI        | 17
 WEBKIT          | Oui          | 250        | Non        | -
-LLVM            | Oui          | 115        | Non        | -
-LINUX           | Oui          | 110        | Non        | -
-PY_MINI_PROJECTS | Oui          | 0          | Non        | -
+LLVM            | Oui          | 103        | Non        | -
 WENYAN_LANG     | Oui          | 4          | Non        | -
-ZY_PLAYER       | Oui          | 4          | Non        | -
+LINUX           | Oui          | 86         | Non        | -
 TSDX            | Oui          | 3          | Non        | -
+ZY_PLAYER       | Oui          | 4          | Non        | -
 SNOWPACK        | Oui          | 19         | Non        | -
 DALLE_MINI      | Oui          | 6          | Non        | -
-GENERIC_TOOLS   | Oui          | 27         | Non        | -
+GENERIC_TOOLS   | Oui          | 22         | Non        | -
 ---------------------------------------------------------------------------
 📊 RÉSULTAT H_7 :
    Projets ayant atteint régime haut : 50
-   Projets ayant régressé : 18 (36.00%)
-   OBSERVATION : 36.0% de régression
+   Projets ayant régressé : 20 (40.00%)
+   OBSERVATION : 40.0% de régression
    NOTE : Taux > 20%, non retenu comme hypothèse publiable
 
 ============================================================
 TEST 3 : VARIANCE PAR RÉGIME (Stabilité Structurelle)
 ============================================================
 📊 RÉSULTAT :
-   Variance Régime BAS  (n=3343) : 0.0146
-   Variance Régime HAUT (n=4517) : 0.0083
-   Ratio (Bas/Haut) : 1.77 (Cible > 1.5)
+   Variance Régime BAS  (n=2871) : 0.0150
+   Variance Régime HAUT (n=5004) : 0.0082
+   Ratio (Bas/Haut) : 1.83 (Cible > 1.5)
    P-value (F-test) : 1.1102e-16
    VERDICT : ✅ VALIDÉ
 
@@ -775,116 +897,119 @@ TEST H_4 : TRAJECTOIRE UNIVERSELLE (High Gamma Reach)
 ================================================================================
 TABLEAU RÉCAPITULATIF DES PROJETS
 ================================================================================
-| Project           | Domain               |   Duration (months) | Status    |   Commits analyzed |   Final Γ |
-|:------------------|:---------------------|--------------------:|:----------|-------------------:|----------:|
-| NGINX             | Server               |                 276 | Alive     |               7846 |     1     |
-| REDIS             | Database             |                 199 | Alive     |              11347 |     1     |
-| SUBVERSION        | VCS                  |                 304 | Alive     |              53519 |     1     |
-| ZY_PLAYER         | Software             |                  29 | Dead      |               1384 |     1     |
-| EMACS             | IDE                  |                 451 | Alive     |             169264 |     1     |
-| SNOWPACK          | Software             |                  34 | Dead      |               2693 |     0.999 |
-| DALLE_MINI        | Software             |                  19 | Dead      |                651 |     0.999 |
-| ANGULAR_JS_LEGACY | Web Framework (Dead) |                 133 | Dead      |               6809 |     0.999 |
-| FASTAPI           | Web Framework        |                  78 | Alive     |               1519 |     0.997 |
-| MEDIAWIKI         | CMS                  |                 271 | Alive     |             123212 |     0.995 |
-| GCC               | Compiler             |                 337 | Alive     |             142937 |     0.993 |
-| KUBERNETES        | Infrastructure       |                 138 | Alive     |             111344 |     0.992 |
-| DJANGO            | Web Framework        |                 243 | Alive     |              21209 |     0.992 |
-| WORDPRESS         | CMS                  |                 269 | Alive     |              48834 |     0.991 |
-| LINUX             | Kernel/OS            |                 248 | Alive     |             465711 |     0.99  |
-| VUE               | Web Framework        |                  85 | Alive     |               6835 |     0.99  |
-| GIMP              | Graphics             |                 337 | Alive     |              51104 |     0.989 |
-| METEOR            | Fullstack            |                 169 | Declining |              38035 |     0.988 |
-| SCIPY             | Scientific           |                 297 | Alive     |              33900 |     0.987 |
-| HTTPD_APACHE      | Server               |                 320 | Alive     |              22590 |     0.985 |
-| PHP               | Language Runtime     |                 319 | Alive     |             137298 |     0.981 |
-| OCTAVE            | Scientific           |                 383 | Alive     |              31880 |     0.98  |
-| GODOT             | Game Engine          |                 144 | Alive     |              73335 |     0.98  |
-| NODE              | Language Runtime     |                 202 | Alive     |              32193 |     0.98  |
-| FFMPEG            | Multimedia           |                 293 | Alive     |             112278 |     0.979 |
-| WIRESHARK         | Networking           |                 326 | Alive     |              94573 |     0.979 |
-| TENSORFLOW        | AI/ML                |                 122 | Alive     |             161031 |     0.979 |
-| RAILS             | Web Framework        |                 251 | Alive     |              85035 |     0.975 |
-| TSDX              | Software             |                  23 | Dead      |                603 |     0.972 |
-| CPYTHON           | Language Runtime     |                 421 | Alive     |              84819 |     0.971 |
-| POSTGRES          | Database             |                 352 | Alive     |              47838 |     0.971 |
-| GO                | Language Runtime     |                 215 | Alive     |              58587 |     0.97  |
-| LLVM              | Compiler             |                 292 | Alive     |             473373 |     0.97  |
-| MATPLOTLIB        | Scientific           |                 267 | Alive     |              43798 |     0.969 |
-| ANGULAR           | Web Framework        |                 135 | Alive     |              29236 |     0.966 |
-| GENERIC_TOOLS     | Software             |                  43 | Dead      |               3838 |     0.963 |
-| BITCOIN           | Blockchain           |                 194 | Alive     |              39116 |     0.959 |
-| GIT_SCM           | VCS                  |                 246 | Alive     |              61462 |     0.955 |
-| SQLITE            | Database             |                 308 | Alive     |              30981 |     0.939 |
-| LIBREOFFICE       | Office Suite         |                 303 | Alive     |             484359 |     0.933 |
-| RUST              | Language Runtime     |                 184 | Alive     |             285297 |     0.925 |
-| WEBKIT            | Browser              |                 290 | Alive     |             257082 |     0.918 |
-| REACT             | Web Framework        |                 151 | Alive     |              20254 |     0.909 |
-| GECKO_FIREFOX     | Browser              |                 330 | Alive     |             878408 |     0.902 |
-| VSCODE            | IDE                  |                 122 | Alive     |             127112 |     0.901 |
-| CURL              | Networking           |                 311 | Alive     |              26477 |     0.894 |
-| PY_MINI_PROJECTS  | Software             |                  15 | Dead      |                901 |     0.857 |
-| FREEBSD           | Kernel/OS            |                 388 | Alive     |             256776 |     0.833 |
-| PYTORCH           | AI/ML                |                 164 | Alive     |              87412 |     0.722 |
-| WENYAN_LANG       | Software             |                  11 | Dead      |                685 |     0.321 |
+| Project       | Domain           |   Duration (months) | Status    |   Commits analyzed |   Final Γ |
+|:--------------|:-----------------|--------------------:|:----------|-------------------:|----------:|
+| REDIS         | Database         |                 199 | Alive     |              11347 |     1     |
+| NGINX         | Server           |                 276 | Alive     |               7846 |     1     |
+| FLASK         | Software         |                 172 | Alive     |               3535 |     1     |
+| ZY_PLAYER     | Software         |                  29 | Dead      |               1384 |     1     |
+| SUBVERSION    | VCS              |                 304 | Alive     |              53519 |     1     |
+| EMACS         | IDE              |                 451 | Alive     |             169264 |     1     |
+| SNOWPACK      | Software         |                  34 | Dead      |               2693 |     0.999 |
+| DALLE_MINI    | Software         |                  19 | Dead      |                651 |     0.999 |
+| METEOR        | Fullstack        |                 169 | Declining |              38035 |     0.997 |
+| FASTAPI       | Web Framework    |                  78 | Alive     |               1519 |     0.997 |
+| OPENCV        | Software         |                 188 | Alive     |              31034 |     0.997 |
+| MEDIAWIKI     | CMS              |                 271 | Alive     |             123212 |     0.996 |
+| KUBERNETES    | Infrastructure   |                 138 | Alive     |             111344 |     0.995 |
+| GCC           | Compiler         |                 337 | Alive     |             142937 |     0.994 |
+| WORDPRESS     | CMS              |                 269 | Alive     |              48834 |     0.992 |
+| DJANGO        | Web Framework    |                 243 | Alive     |              21209 |     0.992 |
+| LINUX         | Kernel/OS        |                 248 | Alive     |             465711 |     0.991 |
+| GIMP          | Graphics         |                 337 | Alive     |              51104 |     0.991 |
+| VUE           | Web Framework    |                  85 | Alive     |               6835 |     0.99  |
+| NODE          | Language Runtime |                 202 | Alive     |              32193 |     0.989 |
+| PANDAS        | Software         |                 197 | Alive     |              29612 |     0.989 |
+| SCIPY         | Scientific       |                 297 | Alive     |              33900 |     0.987 |
+| MATPLOTLIB    | Scientific       |                 267 | Alive     |              43798 |     0.985 |
+| HTTPD_APACHE  | Server           |                 320 | Alive     |              22590 |     0.985 |
+| OCTAVE        | Scientific       |                 383 | Alive     |              31880 |     0.98  |
+| WIRESHARK     | Networking       |                 326 | Alive     |              94573 |     0.98  |
+| TENSORFLOW    | AI/ML            |                 122 | Alive     |             161031 |     0.98  |
+| FFMPEG        | Multimedia       |                 293 | Alive     |             112278 |     0.979 |
+| CPYTHON       | Language Runtime |                 421 | Alive     |              84819 |     0.975 |
+| RAILS         | Web Framework    |                 251 | Alive     |              85035 |     0.975 |
+| ANGULAR       | Web Framework    |                 135 | Alive     |              29236 |     0.974 |
+| PHP           | Language Runtime |                 319 | Alive     |             137298 |     0.974 |
+| TSDX          | Software         |                  23 | Dead      |                603 |     0.972 |
+| LLVM          | Compiler         |                 292 | Alive     |             473373 |     0.972 |
+| POSTGRES      | Database         |                 352 | Alive     |              47838 |     0.971 |
+| GIT_SCM       | VCS              |                 246 | Alive     |              61462 |     0.971 |
+| BITCOIN       | Blockchain       |                 194 | Alive     |              39116 |     0.966 |
+| GENERIC_TOOLS | Software         |                  43 | Dead      |               3838 |     0.963 |
+| RUST          | Language Runtime |                 184 | Alive     |             285297 |     0.955 |
+| WEBKIT        | Browser          |                 290 | Alive     |             257082 |     0.949 |
+| SQLITE        | Database         |                 308 | Alive     |              30981 |     0.94  |
+| LIBREOFFICE   | Office Suite     |                 303 | Alive     |             484359 |     0.933 |
+| FREEBSD       | Kernel/OS        |                 388 | Alive     |             256776 |     0.927 |
+| SCIKIT_LEARN  | Software         |                 192 | Alive     |              25066 |     0.917 |
+| REACT         | Web Framework    |                 151 | Alive     |              20254 |     0.911 |
+| VSCODE        | IDE              |                 122 | Alive     |             127112 |     0.903 |
+| ANSIBLE       | Software         |                 167 | Alive     |              46836 |     0.902 |
+| CURL          | Networking       |                 311 | Alive     |              26477 |     0.894 |
+| PYTORCH       | AI/ML            |                 164 | Alive     |              87412 |     0.729 |
+| WENYAN_LANG   | Software         |                  11 | Dead      |                685 |     0.321 |
 
 ✅ Tableau exporté : omega_v36_project_recap.csv
 
 ################################################################################
-PHASE 9 : BLINDAGE SCIENTIFIQUE (V37)
+PHASE 9 : VALIDATION SCIENTIFIQUE AVANCÉE
 ################################################################################
 
---------------------------------------------------------------------------------
-DÉMARRAGE DE LA VALIDATION SCIENTIFIQUE AVANCÉE (V40)
---------------------------------------------------------------------------------
+--- [A] VALIDATION STRUCTURELLE (V44) ---
 
-🧪 [Validation 1/3] Robustesse Mathématique de la Métrique Gamma...
-   Corrélation Gamma vs Moyenne Harmonique : r = 0.9995
-   Corrélation Gamma vs Minimum Logique    : r = 0.9898
-   Corrélation Gamma vs Moyenne Géom.      : r = 1.0000
-   ✅ SUCCÈS : Gamma capture un invariant structurel (indépendant de la formule).
+======================================================================
+DÉMARRAGE SUITE DE VALIDATION V44 (HARD SCIENCE / REVIEWER PROOF)
+======================================================================
+🛠️  Alignement temporel strict (Gamma ↔ Granger)...
 
-⏳ [Validation Temporelle] Robustesse des coupes...
-   Cut 20% : Coupling 0.88 → 0.83 (Δ=-0.04)
-   Cut 25% : Coupling 0.93 → 0.63 (Δ=-0.30)
-   Cut 33% : Coupling 0.75 → 0.82 (Δ=+0.07)
-   Cut 40% : Coupling 0.93 → 0.72 (Δ=-0.21)
-   Cut 50% : Coupling 0.86 → 0.94 (Δ=+0.08)
+🧪 [TEST 1] Détermination du Seuil Endogène (GMM)...
+   Régime 1 (Explo) : μ=0.343, σ=0.197, w=0.45
+   Régime 2 (Sedim) : μ=0.823, σ=0.134, w=0.55
+   🎯 SEUIL NATUREL : 0.5982
 
-   Deltas positifs : 2/5
-   ⚠️ MITIGÉ : Résultat sensible au point de coupe.
+🧪 [TEST 2] Robustesse Locale (Variance & Symétrie)...
+   Analyse sur 10 pas de seuils autour de 0.60 :
+   Gain moyen de Symétrie (Haut - Bas) : +0.025
+   Robustesse (Cas positifs) : 100.0%
+   ✅ ROBUSTE : Le régime haut est structurellement plus symétrique.
 
-💀 [Validation 3/3] Validité Discriminante (Viability Index)...
-   Index Viabilité Moyen (Vivants) : 0.179 (N=41)
-   Index Viabilité Moyen (Morts)   : 0.028  (N=5)
-   Delta                           : 0.151
-   P-value (Mann-Whitney)          : 0.00117
-   ✅ SUCCÈS : L'Index de Viabilité distingue significativement les projets.
+🧪 [TEST 3] Dynamique Continue (Gamma -> Symétrie)...
+   Points analysés : 9378
+   Pente globale : 0.0505
+   Progression Symétrie (Lissée) : 0.65 -> 0.72 (Δ=+0.07)
+   ✅ VALIDÉ : Tendance continue vers la symétrie causale.
+
+🧪 [TEST 4] Bootstrap Structurel (par Projet, n=100)...
+   Seuil Moyen (Bootstrap) : 0.6470
+   IC 95% : [0.5346 - 0.7904]
+   Largeur IC : 0.2558
+   ⚠️ LARGE : Le seuil dépend fortement de quelques projets clés.
+======================================================================
+
+
+--- [B] TESTS DE ROBUSTESSE COMPLÉMENTAIRES (V37) ---
 
 🔎 [Robustness] Sensitivity Analysis (Parameter Scan)...
 ✅ (Heatmap) saved in English.
 
 🎲 [Robustness 2/3] Null Model Validation (Temporal Trajectory)...
-📊 Pente Moyenne Réelle : 0.005213 (Tendance à la maturation)
-📊 Pente Moyenne Nulle  : -0.000007 (Hasard pur)
-✅ Z-Score Trajectoire  : 62.95
+📊 Pente Moyenne Réelle : 0.005082 (Tendance à la maturation)
+📊 Pente Moyenne Nulle  : -0.000017 (Hasard pur)
+✅ Z-Score Trajectoire  : 39.72
 🚀 VICTOIRE : La dynamique de maturation est statistiquement irréfutable.
 
 👥 [Robustness 3/3] Covariate Control (Team Size)...
 
 📊 Résultats Covariate Control :
-   Projets testés       : 47
-   Ratio Granger BRUT   : 0.71 (Γ→Act / Act→Γ)
-   Ratio Granger NORM   : 0.52 (Γ→Act / Act→Γ)
-   Persistance          : 74%
+   Projets testés       : 48
+   Ratio Granger BRUT   : 0.60 (Γ→Act / Act→Γ)
+   Ratio Granger NORM   : 0.62 (Γ→Act / Act→Γ)
+   Persistance          : 103%
 ✅ COVARIATE CONTROL PASSED
    → L'architecture contraint INDÉPENDAMMENT de la taille d'équipe
 
-🏁 DONE.
-
-================================================================================
-ANALYSE  TERMINÉE
-================================================================================
+🏁 PHASE 9 TERMINÉE.
 
 ################################################################################
 PHASE 10 : VALIDATION PRÉDICTIVE (HINDCASTING)
@@ -898,29 +1023,29 @@ PHASE 10 : VALIDATION PRÉDICTIVE (HINDCASTING)
 PROTOCOLE DE HINDCASTING COMPLET
 ======================================================================
    [Hindcasting] Préparation du Panel Data...
-   Panel : 10911 observations, 44 projets
-   Taux de viabilité : 99.0%
+   Panel : 11005 observations, 45 projets
+   Taux de viabilité : 99.2%
 
    [Hindcasting] Classification (Viabilité Future)...
-   Folds complétés : 12
+   Folds complétés : 11
 
    [Hindcasting] Régression (Gamma Futur)...
 
 --------------------------------------------------------------------------------
-RÉSULTATS HINDCASTING - CLASSIFICATION (12 Folds)
+RÉSULTATS HINDCASTING - CLASSIFICATION (11 Folds)
 --------------------------------------------------------------------------------
 Modèle               | AUC      | PR-AUC   | Vs Hasard
 --------------------------------------------------------------------------------
-Full Model           | 0.8750   | 0.9953   | +37.5 pts
-Activity Only        | 0.8058   | 0.9922   | +30.6 pts
-Full No Age          | 0.7565   | 0.9879   | +25.6 pts
-Gamma Residual       | 0.7295   | 0.9848   | +22.9 pts
-Gamma Only           | 0.7124   | 0.9835   | +21.2 pts
-Age Only             | 0.4657   | 0.9639   | -3.4 pts
+Full Model           | 0.8089   | 0.9907   | +30.9 pts
+Activity Only        | 0.6026   | 0.9763   | +10.3 pts
+Age Only             | 0.5618   | 0.9666   | +6.2 pts
+Gamma Residual       | 0.4301   | 0.9499   | -7.0 pts
+Gamma Only           | 0.3944   | 0.9457   | -10.6 pts
+Full No Age          | 0.3721   | 0.9426   | -12.8 pts
 
 🔬 Test Wilcoxon (Gamma Residual vs Age Only):
-   p-value = 1.3428e-02
-   ✅ SIGNIFICATIF
+   p-value = 9.6631e-01
+   ❌ NON SIGNIFICATIF
 
 ================================================================================
 
@@ -929,19 +1054,15 @@ RÉSULTATS HINDCASTING - REGRESSION (58 Folds)
 --------------------------------------------------------------------------------
 Modèle               | RMSE     | Std      | Ratio
 --------------------------------------------------------------------------------
-Gamma Only           | 0.1401   | 0.0251   | 0.57x
-Age Only             | 0.2454   | 0.0311   | 1.00x
-Gamma Residual       | 0.2606   | 0.0763   | 1.06x
+Gamma Only           | 0.1451   | 0.0248   | 0.60x
+Age Only             | 0.2425   | 0.0304   | 1.00x
+Gamma Residual       | 0.2624   | 0.0707   | 1.08x
 
 🔬 Test Wilcoxon (Gamma Residual vs Age Only):
-   p-value = 8.2458e-01
+   p-value = 8.9722e-01
    ❌ NON SIGNIFICATIF
 
 ================================================================================
-/Users/toto/repo/ontodynamique/ontodynamique/ontodynamique/src/system.py:1081: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.
-  bp = ax1.boxplot(clf_data, labels=clf_labels, patch_artist=True)
-/Users/toto/repo/ontodynamique/ontodynamique/ontodynamique/src/system.py:1105: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.
-  bp = ax2.boxplot(reg_data, labels=reg_labels, patch_artist=True)
 
 ✅ Figure sauvegardée : hindcasting_validation.png
 
@@ -957,17 +1078,17 @@ Hypothèse : L'autonomie institutionnelle nécessite une VIABILITÉ (V) élevée
 
 Niveau                    | N     | Moyenne V  | Médiane V  | Std
 ---------------------------------------------------------------------------
-1. Personnel (Fossile)    | 8     | 0.091      | 0.031      | 0.109
-2. Corporatif             | 16    | 0.216      | 0.179      | 0.090
-3. Fondation (Autonome)   | 25    | 0.246      | 0.247      | 0.128
+1. Personnel (Fossile)    | 6     | 0.117      | 0.069      | 0.119
+2. Corporatif             | 14    | 0.229      | 0.186      | 0.096
+3. Fondation (Autonome)   | 24    | 0.247      | 0.247      | 0.129
 
 📊 TESTS GLOBAUX
-   Kruskal-Wallis : H=9.51, p=8.6072e-03 ✅
+   Kruskal-Wallis : H=4.85, p=8.8322e-02 ❌
 
 🔬 COMPARAISONS PAR PAIRES (One-tailed: High > Low)
-   2. Corporatif > 1. Personnel (Fossile) : p=0.0028 (Significatif)
-   3. Fondation (Autonome) > 2. Corporatif : p=0.2478 (Non significatif)
-   3. Fondation (Autonome) > 1. Personnel (Fossile) : p=0.0015 (Significatif)
+   2. Corporatif > 1. Personnel (Fossile) : p=0.0253 (Non significatif)
+   3. Fondation (Autonome) > 2. Corporatif : p=0.3869 (Non significatif)
+   3. Fondation (Autonome) > 1. Personnel (Fossile) : p=0.0191 (Non significatif)
 ✅ Graphique V42 sauvegardé : omega_v42_viability_validation.png
 \n################################################################################
 PHASE 12 : CO-MODIFICATION COUPLING ANALYSIS (V41)
@@ -984,149 +1105,150 @@ With BIAS CONTROL (normalized by commit size)
 [REDIS] ✅ Cache loaded (1102 files)
 [SQLITE] ✅ Cache loaded (756 files)
 [HTTPD_APACHE] ✅ Cache loaded (1719 files)
-[NGINX] Γ-FanIn: r=-0.562, norm=-0.478, p=0.0000
+[NGINX] Γ-FanIn: r=-0.541, norm=-0.447, p=0.0000
 [NGINX] ✅ Done
-[REDIS] Γ-FanIn: r=0.286, norm=0.211, p=0.0217
+[REDIS] Γ-FanIn: r=0.264, norm=0.163, p=0.0348
 [REDIS] ✅ Done
-[SQLITE] Γ-FanIn: r=-0.145, norm=-0.116, p=0.1485
+[SQLITE] Γ-FanIn: r=-0.152, norm=-0.123, p=0.1279
 [SQLITE] ✅ Done
-[HTTPD_APACHE] Γ-FanIn: r=-0.365, norm=-0.293, p=0.0002
+[HTTPD_APACHE] Γ-FanIn: r=-0.369, norm=-0.299, p=0.0002
 [HTTPD_APACHE] ✅ Done
 [PHP] ✅ Cache loaded (5047 files)
 [POSTGRES] ✅ Cache loaded (5877 files)
-[PHP] Γ-FanIn: r=-0.036, norm=-0.141, p=0.7178
-[PHP] ✅ Done
 [CPYTHON] ✅ Cache loaded (8367 files)
-[POSTGRES] Γ-FanIn: r=-0.270, norm=-0.177, p=0.0033
-[POSTGRES] ✅ Done
-[GO] ✅ Cache loaded (19783 files)
-[CPYTHON] Γ-FanIn: r=0.501, norm=0.537, p=0.0000
-[CPYTHON] ✅ Done
+[PHP] Γ-FanIn: r=-0.025, norm=-0.131, p=0.7969
+[PHP] ✅ Done
 [NODE] ✅ Cache loaded (17586 files)
-[GO] Γ-FanIn: r=0.063, norm=0.097, p=0.6071
-[GO] ✅ Done
+[POSTGRES] Γ-FanIn: r=-0.276, norm=-0.182, p=0.0028
+[POSTGRES] ✅ Done
+[CPYTHON] Γ-FanIn: r=0.498, norm=0.535, p=0.0000
+[CPYTHON] ✅ Done
 [SCIPY] ✅ Cache loaded (6051 files)
-[NODE] Γ-FanIn: r=-0.302, norm=-0.274, p=0.0137
+[NODE] Γ-FanIn: r=-0.284, norm=-0.259, p=0.0208
 [NODE] ✅ Done
-[SCIPY] Γ-FanIn: r=-0.057, norm=0.114, p=0.5914
+[SCIPY] Γ-FanIn: r=-0.055, norm=0.101, p=0.6023
 [SCIPY] ✅ Done
-[TENSORFLOW] ✅ Cache loaded (22982 files)
-[GCC] ✅ Cache loaded (45666 files)
-[PYTORCH] ✅ Cache loaded (17858 files)
 [OCTAVE] ✅ Cache loaded (7721 files)
 [REACT] ✅ Cache loaded (10607 files)
+[GCC] ✅ Cache loaded (45666 files)
 [VUE] ✅ Cache loaded (1114 files)
-[OCTAVE] Γ-FanIn: r=0.151, norm=0.219, p=0.1083
+[OCTAVE] Γ-FanIn: r=0.132, norm=0.196, p=0.1617
 [OCTAVE] ✅ Done
-[VUE] Γ-FanIn: r=0.203, norm=0.471, p=0.3006
-[VUE] ✅ Done
-[REACT] Γ-FanIn: r=0.441, norm=0.256, p=0.0015
+[TENSORFLOW] ✅ Cache loaded (22982 files)
+[REACT] Γ-FanIn: r=0.435, norm=0.258, p=0.0018
 [REACT] ✅ Done
-[GCC] Γ-FanIn: r=0.047, norm=0.084, p=0.6361
-[GCC] ✅ Done
-[TENSORFLOW] Γ-FanIn: r=-0.320, norm=-0.261, p=0.0441
-[TENSORFLOW] ✅ Done
-[METEOR] ✅ Cache loaded (5219 files)
-[PYTORCH] Γ-FanIn: r=0.787, norm=0.847, p=0.0000
-[PYTORCH] ✅ Done
-[DJANGO] ✅ Cache loaded (5084 files)
+[VUE] Γ-FanIn: r=0.217, norm=0.485, p=0.2672
+[VUE] ✅ Done
+[PYTORCH] ✅ Cache loaded (17858 files)
 [RAILS] ✅ Cache loaded (8578 files)
-[METEOR] Γ-FanIn: r=0.390, norm=0.354, p=0.0033
+[TENSORFLOW] Γ-FanIn: r=-0.326, norm=-0.274, p=0.0403
+[TENSORFLOW] ✅ Done
+[GCC] Γ-FanIn: r=0.054, norm=0.088, p=0.5822
+[GCC] ✅ Done
+[RAILS] Γ-FanIn: r=-0.234, norm=-0.264, p=0.0330
+[RAILS] ✅ Done
+[METEOR] ✅ Cache loaded (5219 files)
+[ANGULAR] ✅ Cache loaded (18435 files)
+[DJANGO] ✅ Cache loaded (5084 files)
+[METEOR] Γ-FanIn: r=0.354, norm=0.327, p=0.0081
 [METEOR] ✅ Done
 [GIT_SCM] ✅ Cache loaded (3047 files)
-[DJANGO] Γ-FanIn: r=-0.432, norm=-0.429, p=0.0001
+[DJANGO] Γ-FanIn: r=-0.440, norm=-0.429, p=0.0000
 [DJANGO] ✅ Done
-[RAILS] Γ-FanIn: r=-0.224, norm=-0.252, p=0.0419
-[RAILS] ✅ Done
-[ANGULAR] ✅ Cache loaded (18435 files)
-[GIT_SCM] Γ-FanIn: r=0.109, norm=0.016, p=0.3345
+[PYTORCH] Γ-FanIn: r=0.789, norm=0.842, p=0.0000
+[PYTORCH] ✅ Done
+[GIT_SCM] Γ-FanIn: r=0.104, norm=0.015, p=0.3574
 [GIT_SCM] ✅ Done
 [BITCOIN] ✅ Cache loaded (3525 files)
-[FFMPEG] ✅ Cache loaded (6484 files)
-[BITCOIN] Γ-FanIn: r=-0.526, norm=-0.484, p=0.0000
-[BITCOIN] ✅ Done
-[FFMPEG] Γ-FanIn: r=-0.145, norm=-0.182, p=0.1597
-[FFMPEG] ✅ Done
-[ANGULAR] Γ-FanIn: r=-0.055, norm=-0.040, p=0.7230
+[ANGULAR] Γ-FanIn: r=-0.054, norm=-0.044, p=0.7278
 [ANGULAR] ✅ Done
+[BITCOIN] Γ-FanIn: r=-0.535, norm=-0.497, p=0.0000
+[BITCOIN] ✅ Done
+[FFMPEG] ✅ Cache loaded (6484 files)
 [EMACS] ✅ Cache loaded (1676 files)
 [CURL] ✅ Cache loaded (1998 files)
-[EMACS] Γ-FanIn: r=0.231, norm=0.237, p=0.0120
+[EMACS] Γ-FanIn: r=0.215, norm=0.222, p=0.0193
 [EMACS] ✅ Done
-[CURL] Γ-FanIn: r=0.332, norm=0.261, p=0.0006
+[CURL] Γ-FanIn: r=0.333, norm=0.261, p=0.0006
 [CURL] ✅ Done
-[WIRESHARK] ✅ Cache loaded (8682 files)
-[WORDPRESS] ✅ Cache loaded (5950 files)
-[WIRESHARK] Γ-FanIn: r=0.220, norm=0.163, p=0.0222
-[WIRESHARK] ✅ Done
-[WORDPRESS] Γ-FanIn: r=-0.137, norm=-0.272, p=0.2003
-[WORDPRESS] ✅ Done
-[GODOT] ✅ Cache loaded (13587 files)
+[FFMPEG] Γ-FanIn: r=-0.137, norm=-0.174, p=0.1847
+[FFMPEG] ✅ Done
 [VSCODE] ✅ Cache loaded (17216 files)
-[MATPLOTLIB] ✅ Cache loaded (3594 files)
+[WORDPRESS] ✅ Cache loaded (5950 files)
+[WIRESHARK] ✅ Cache loaded (8682 files)
+[WORDPRESS] Γ-FanIn: r=-0.131, norm=-0.266, p=0.2217
+[WORDPRESS] ✅ Done
 [GIMP] ✅ Cache loaded (7453 files)
+[MATPLOTLIB] ✅ Cache loaded (3594 files)
 [FASTAPI] ✅ Cache loaded (1550 files)
-[MATPLOTLIB] Γ-FanIn: r=0.064, norm=0.151, p=0.5542
+[MATPLOTLIB] Γ-FanIn: r=0.053, norm=0.141, p=0.6228
 [MATPLOTLIB] ✅ Done
-[FASTAPI] Γ-FanIn: r=0.016, norm=0.033, p=0.9410
+[WIRESHARK] Γ-FanIn: r=0.205, norm=0.152, p=0.0337
+[WIRESHARK] ✅ Done
+[FASTAPI] Γ-FanIn: r=-0.150, norm=-0.138, p=0.4932
 [FASTAPI] ✅ Done
 [SUBVERSION] ✅ Cache loaded (3242 files)
-[ANGULAR_JS_LEGACY] ✅ Cache loaded (991 files)
-[SUBVERSION] Γ-FanIn: r=-0.612, norm=-0.582, p=0.0000
-[SUBVERSION] ✅ Done
-[GIMP] Γ-FanIn: r=-0.329, norm=-0.206, p=0.0004
-[GIMP] ✅ Done
-[GODOT] Γ-FanIn: r=-0.089, norm=-0.048, p=0.5548
-[GODOT] ✅ Done
-[ANGULAR_JS_LEGACY] Γ-FanIn: r=-0.571, norm=-0.537, p=0.0002
-[ANGULAR_JS_LEGACY] ✅ Done
-[RUST] ✅ Cache loaded (74261 files)
-[VSCODE] Γ-FanIn: r=-0.314, norm=-0.439, p=0.0488
+[VSCODE] Γ-FanIn: r=-0.303, norm=-0.433, p=0.0575
 [VSCODE] ✅ Done
+[GIMP] Γ-FanIn: r=-0.327, norm=-0.209, p=0.0005
+[GIMP] ✅ Done
 [MEDIAWIKI] ✅ Cache loaded (14699 files)
-[LIBREOFFICE] ✅ Cache loaded (20739 files)
-[LIBREOFFICE] Γ-FanIn: r=-0.017, norm=-0.011, p=0.8675
-[LIBREOFFICE] ✅ Done
-[MEDIAWIKI] Γ-FanIn: r=-0.251, norm=-0.404, p=0.0176
+[SUBVERSION] Γ-FanIn: r=-0.606, norm=-0.585, p=0.0000
+[SUBVERSION] ✅ Done
+[SCIKIT_LEARN] ✅ Cache loaded (3341 files)
+[PANDAS] ✅ Cache loaded (3045 files)
+[OPENCV] ✅ Cache loaded (9399 files)
+[FLASK] ✅ Cache loaded (298 files)
+[SCIKIT_LEARN] Γ-FanIn: r=0.322, norm=0.197, p=0.0101
+[SCIKIT_LEARN] ✅ Done
+[FLASK] Γ-FanIn: r=-0.110, norm=-0.143, p=0.5712
+[FLASK] ✅ Done
+[PANDAS] Γ-FanIn: r=0.021, norm=-0.241, p=0.8685
+[PANDAS] ✅ Done
+[ANSIBLE] ✅ Cache loaded (26053 files)
+[OPENCV] Γ-FanIn: r=-0.514, norm=-0.560, p=0.0000
+[OPENCV] ✅ Done
+[MEDIAWIKI] Γ-FanIn: r=-0.257, norm=-0.410, p=0.0149
 [MEDIAWIKI] ✅ Done
+[RUST] ✅ Cache loaded (74261 files)
+[ANSIBLE] Γ-FanIn: r=-0.585, norm=-0.638, p=0.0000
+[ANSIBLE] ✅ Done
+[LIBREOFFICE] ✅ Cache loaded (20739 files)
+[LIBREOFFICE] Γ-FanIn: r=-0.010, norm=-0.006, p=0.9202
+[LIBREOFFICE] ✅ Done
 [KUBERNETES] ✅ Cache loaded (38607 files)
-[RUST] Γ-FanIn: r=-0.669, norm=-0.708, p=0.0000
-[RUST] ✅ Done
-[PY_MINI_PROJECTS] ✅ Cache loaded (175 files)
 [WENYAN_LANG] ✅ Cache loaded (114 files)
 [TSDX] ✅ Cache loaded (296 files)
 [ZY_PLAYER] ✅ Cache loaded (143 files)
-[KUBERNETES] Γ-FanIn: r=0.552, norm=0.490, p=0.0001
-[KUBERNETES] ✅ Done
-[PY_MINI_PROJECTS] ✅ Done
-[SNOWPACK] ✅ Cache loaded (1640 files)
+[RUST] Γ-FanIn: r=-0.661, norm=-0.702, p=0.0000
+[RUST] ✅ Done
 [WENYAN_LANG] ✅ Done
+[SNOWPACK] ✅ Cache loaded (1640 files)
 [DALLE_MINI] ✅ Cache loaded (94 files)
 [TSDX] Γ-FanIn: r=0.319, norm=0.086, p=0.5379
 [TSDX] ✅ Done
-[ZY_PLAYER] Γ-FanIn: r=-0.429, norm=-0.200, p=0.3965
+[ZY_PLAYER] Γ-FanIn: r=-0.486, norm=-0.486, p=0.3287
 [ZY_PLAYER] ✅ Done
 [SNOWPACK] Γ-FanIn: r=0.343, norm=0.267, p=0.3660
 [SNOWPACK] ✅ Done
 [DALLE_MINI] ✅ Done
 [GENERIC_TOOLS] ✅ Cache loaded (7936 files)
-[GENERIC_TOOLS] Γ-FanIn: r=0.143, norm=0.143, p=0.6415
+[GENERIC_TOOLS] Γ-FanIn: r=0.055, norm=0.060, p=0.8585
 [GENERIC_TOOLS] ✅ Done
+[KUBERNETES] Γ-FanIn: r=0.569, norm=0.509, p=0.0000
+[KUBERNETES] ✅ Done
 [FREEBSD] ✅ Cache loaded (72113 files)
-[FREEBSD] Γ-FanIn: r=-0.202, norm=-0.257, p=0.0223
+[FREEBSD] Γ-FanIn: r=-0.183, norm=-0.246, p=0.0384
 [FREEBSD] ✅ Done
 [LLVM] ✅ Cache loaded (110187 files)
-[LINUX] ✅ Cache loaded (123515 files)
 [WEBKIT] ✅ Cache loaded (90628 files)
-[LLVM] Γ-FanIn: r=0.669, norm=0.549, p=0.0000
+[LINUX] ✅ Cache loaded (123515 files)
+[LLVM] Γ-FanIn: r=0.680, norm=0.564, p=0.0000
 [LLVM] ✅ Done
-[LINUX] Γ-FanIn: r=-0.556, norm=-0.446, p=0.0000
-[LINUX] ✅ Done
-[WEBKIT] Γ-FanIn: r=0.322, norm=0.190, p=0.0014
+[WEBKIT] Γ-FanIn: r=0.304, norm=0.165, p=0.0026
 [WEBKIT] ✅ Done
-[GECKO_FIREFOX] ✅ Cache loaded (207894 files)
-[GECKO_FIREFOX] Γ-FanIn: r=0.590, norm=0.558, p=0.0000
-[GECKO_FIREFOX] ✅ Done
+[LINUX] Γ-FanIn: r=-0.573, norm=-0.468, p=0.0000
+[LINUX] ✅ Done
 
 ────────────────────────────────────────────────────────────
 Generating plots...
@@ -1137,49 +1259,49 @@ Generating plots...
 ✅ Plot saved: comod_v42_php_evolution.png
 ✅ Plot saved: comod_v42_postgres_evolution.png
 ✅ Plot saved: comod_v42_cpython_evolution.png
-✅ Plot saved: comod_v42_go_evolution.png
 ✅ Plot saved: comod_v42_node_evolution.png
 ✅ Plot saved: comod_v42_scipy_evolution.png
 ✅ Plot saved: comod_v42_octave_evolution.png
-✅ Plot saved: comod_v42_vue_evolution.png
 ✅ Plot saved: comod_v42_react_evolution.png
-✅ Plot saved: comod_v42_gcc_evolution.png
+✅ Plot saved: comod_v42_vue_evolution.png
 ✅ Plot saved: comod_v42_tensorflow_evolution.png
-✅ Plot saved: comod_v42_pytorch_evolution.png
+✅ Plot saved: comod_v42_gcc_evolution.png
+✅ Plot saved: comod_v42_rails_evolution.png
 ✅ Plot saved: comod_v42_meteor_evolution.png
 ✅ Plot saved: comod_v42_django_evolution.png
-✅ Plot saved: comod_v42_rails_evolution.png
+✅ Plot saved: comod_v42_pytorch_evolution.png
 ✅ Plot saved: comod_v42_git_scm_evolution.png
-✅ Plot saved: comod_v42_bitcoin_evolution.png
-✅ Plot saved: comod_v42_ffmpeg_evolution.png
 ✅ Plot saved: comod_v42_angular_evolution.png
+✅ Plot saved: comod_v42_bitcoin_evolution.png
 ✅ Plot saved: comod_v42_emacs_evolution.png
 ✅ Plot saved: comod_v42_curl_evolution.png
-✅ Plot saved: comod_v42_wireshark_evolution.png
+✅ Plot saved: comod_v42_ffmpeg_evolution.png
 ✅ Plot saved: comod_v42_wordpress_evolution.png
 ✅ Plot saved: comod_v42_matplotlib_evolution.png
+✅ Plot saved: comod_v42_wireshark_evolution.png
 ✅ Plot saved: comod_v42_fastapi_evolution.png
-✅ Plot saved: comod_v42_subversion_evolution.png
-✅ Plot saved: comod_v42_gimp_evolution.png
-✅ Plot saved: comod_v42_godot_evolution.png
-✅ Plot saved: comod_v42_angular_js_legacy_evolution.png
 ✅ Plot saved: comod_v42_vscode_evolution.png
-✅ Plot saved: comod_v42_libreoffice_evolution.png
+✅ Plot saved: comod_v42_gimp_evolution.png
+✅ Plot saved: comod_v42_subversion_evolution.png
+✅ Plot saved: comod_v42_scikit_learn_evolution.png
+✅ Plot saved: comod_v42_flask_evolution.png
+✅ Plot saved: comod_v42_pandas_evolution.png
+✅ Plot saved: comod_v42_opencv_evolution.png
 ✅ Plot saved: comod_v42_mediawiki_evolution.png
+✅ Plot saved: comod_v42_ansible_evolution.png
+✅ Plot saved: comod_v42_libreoffice_evolution.png
 ✅ Plot saved: comod_v42_rust_evolution.png
-✅ Plot saved: comod_v42_kubernetes_evolution.png
-✅ Plot saved: comod_v42_py_mini_projects_evolution.png
 ✅ Plot saved: comod_v42_wenyan_lang_evolution.png
 ✅ Plot saved: comod_v42_tsdx_evolution.png
 ✅ Plot saved: comod_v42_zy_player_evolution.png
 ✅ Plot saved: comod_v42_snowpack_evolution.png
 ✅ Plot saved: comod_v42_dalle_mini_evolution.png
 ✅ Plot saved: comod_v42_generic_tools_evolution.png
+✅ Plot saved: comod_v42_kubernetes_evolution.png
 ✅ Plot saved: comod_v42_freebsd_evolution.png
 ✅ Plot saved: comod_v42_llvm_evolution.png
-✅ Plot saved: comod_v42_linux_evolution.png
 ✅ Plot saved: comod_v42_webkit_evolution.png
-✅ Plot saved: comod_v42_gecko_firefox_evolution.png
+✅ Plot saved: comod_v42_linux_evolution.png
 ✅ Global summary saved: comod_v42_global_correlation_summary.png
 
 ================================================================================
@@ -1187,28 +1309,28 @@ GLOBAL CORRELATION SUMMARY
 ================================================================================
 
 --- RAW CORRELATIONS ---
-Projects analyzed: 47
-Mean r: -0.018
-Median r: -0.036
-Positive: 22/47
-Negative: 25/47
-Significant (p<0.05): 28/47
+Projects analyzed: 48
+Mean r: -0.043
+Median r: -0.055
+Positive: 21/48
+Negative: 27/48
+Significant (p<0.05): 28/48
 
 One-sample t-test (H0: mean r = 0):
-   t = -0.329, p = 0.7437
+   t = -0.815, p = 0.4191
    ⚠️ NOT SIGNIFICANT
 
 --- BIAS CONTROL (Normalized by commit size) ---
-Mean normalized r: -0.019
-Median normalized r: -0.011
-Negative: 24/47
-Positive: 23/47
+Mean normalized r: -0.063
+Median normalized r: -0.127
+Negative: 27/48
+Positive: 21/48
 
 Normalized t-test:
-   t = -0.377, p = 0.7080
+   t = -1.236, p = 0.2227
 
 --- BIAS CHECK ---
-Raw mean - Normalized mean = 0.002
+Raw mean - Normalized mean = 0.020
    ✅ LOW BIAS: Results robust to commit style
 \n================================================================================
 MECHANISM VALIDATION: Γ → Fan-In → Structural Constraint
@@ -1216,24 +1338,24 @@ MECHANISM VALIDATION: Γ → Fan-In → Structural Constraint
 
 --- Testing Mediation: Γ → Fan-In → Structural Constraint ---
 
-Projects analyzed: 43
+Projects analyzed: 44
 
 [Link 1] ΔΓ → ΔFan-In:
-         r = 0.390, p = 0.0097 ✅
+         r = 0.369, p = 0.0138 ✅
 [Link 2] ΔFan-In → ΔConstraint:
-         r = 0.122, p = 0.4351 ❌
+         r = 0.138, p = 0.3732 ❌
 [Link 3] ΔΓ → ΔConstraint (total):
-         r = 0.119, p = 0.4455 ❌
+         r = 0.264, p = 0.0837 ❌
 
 --- Mediation Analysis ---
 
 --- Mediation Analysis ---
-Indirect effect (r1 × r2): 0.048
-Mediation ratio (indirect/total): 39.9%
+Indirect effect (r1 × r2): 0.051
+Mediation ratio (indirect/total): 19.2%
 
 ❌ MEDIATION REJECTED:
-   Link 1 (ΔΓ → ΔFan-In) significant: r = 0.390
-   Link 2 (ΔFan-In → ΔConstraint) NOT significant: p = 0.4351
+   Link 1 (ΔΓ → ΔFan-In) significant: r = 0.369
+   Link 2 (ΔFan-In → ΔConstraint) NOT significant: p = 0.3732
 
    → Maturity affects coupling, but coupling does NOT predict constraint
    → The mechanism is TOPOLOGICAL, not METRIC
@@ -1250,61 +1372,62 @@ CORRÉLATION TEMPORELLE : Fan-In(t) ↔ Granger Ratio(t)
 
 Hypothèse : Si fan-in ↑ → Granger S→A ↑, alors r > 0
 
-[NGINX             ] Fan-In↔Granger: r=+0.036, p=0.7615
-[REDIS             ] Fan-In↔Granger: r=+0.091, p=0.5135
-[SQLITE            ] Fan-In↔Granger: r=+0.076, p=0.4755
-[HTTPD_APACHE      ] Fan-In↔Granger: r=+0.004, p=0.9683
-[PHP               ] Fan-In↔Granger: r=-0.087, p=0.4087
-[POSTGRES          ] Fan-In↔Granger: r=+0.137, p=0.1663
-[CPYTHON           ] Fan-In↔Granger: r=-0.167, p=0.0610
-[GO                ] Fan-In↔Granger: r=-0.147, p=0.2656
-[NODE              ] Fan-In↔Granger: r=+0.168, p=0.2255
-[SCIPY             ] Fan-In↔Granger: r=+0.084, p=0.4541
-[OCTAVE            ] Fan-In↔Granger: r=-0.006, p=0.9524
-[VUE               ] Fan-In↔Granger: r=+0.333, p=0.2081
-[REACT             ] Fan-In↔Granger: r=+0.060, p=0.7264
-[GCC               ] Fan-In↔Granger: r=+0.056, p=0.5848
-[TENSORFLOW        ] Fan-In↔Granger: r=-0.296, p=0.1260
-[PYTORCH           ] Fan-In↔Granger: r=-0.099, p=0.5330
-[METEOR            ] Fan-In↔Granger: r=+0.238, p=0.1238
-[DJANGO            ] Fan-In↔Granger: r=-0.033, p=0.7890
-[RAILS             ] Fan-In↔Granger: r=+0.148, p=0.2194
-[GIT_SCM           ] Fan-In↔Granger: r=-0.045, p=0.7160
-[BITCOIN           ] Fan-In↔Granger: r=+0.043, p=0.7615
-[FFMPEG            ] Fan-In↔Granger: r=+0.006, p=0.9536
-[ANGULAR           ] Fan-In↔Granger: r=-0.245, p=0.1700
-[EMACS             ] Fan-In↔Granger: r=+0.286, p=0.0017 ✅
-[CURL              ] Fan-In↔Granger: r=-0.353, p=0.0006 ✅
-[WIRESHARK         ] Fan-In↔Granger: r=-0.021, p=0.8393
-[WORDPRESS         ] Fan-In↔Granger: r=-0.148, p=0.1989
-[MATPLOTLIB        ] Fan-In↔Granger: r=-0.158, p=0.1731
-[FASTAPI           ] Fan-In↔Granger: r=-0.255, p=0.4007
-[SUBVERSION        ] Fan-In↔Granger: r=-0.108, p=0.3511
-[GIMP              ] Fan-In↔Granger: r=-0.089, p=0.3797
-[GODOT             ] Fan-In↔Granger: r=-0.136, p=0.4365
-[ANGULAR_JS_LEGACY ] Fan-In↔Granger: r=-0.311, p=0.1219
-[VSCODE            ] Fan-In↔Granger: r=+0.347, p=0.0704
-[LIBREOFFICE       ] Fan-In↔Granger: r=-0.156, p=0.1475
-[MEDIAWIKI         ] Fan-In↔Granger: r=+0.271, p=0.0169 ✅
-[RUST              ] Fan-In↔Granger: r=+0.440, p=0.0015 ✅
-[KUBERNETES        ] Fan-In↔Granger: r=-0.303, p=0.0815
-[FREEBSD           ] Fan-In↔Granger: r=+0.041, p=0.6590
-[LLVM              ] Fan-In↔Granger: r=-0.362, p=0.0007 ✅
-[LINUX             ] Fan-In↔Granger: r=+0.282, p=0.0182 ✅
-[WEBKIT            ] Fan-In↔Granger: r=-0.126, p=0.2519
-[GECKO_FIREFOX     ] Fan-In↔Granger: r=-0.075, p=0.4651
+[NGINX             ] Fan-In↔Granger: r=+0.019, p=0.8723
+[REDIS             ] Fan-In↔Granger: r=-0.076, p=0.5857
+[SQLITE            ] Fan-In↔Granger: r=+0.053, p=0.6197
+[HTTPD_APACHE      ] Fan-In↔Granger: r=-0.077, p=0.4724
+[PHP               ] Fan-In↔Granger: r=-0.104, p=0.3201
+[POSTGRES          ] Fan-In↔Granger: r=+0.156, p=0.1141
+[CPYTHON           ] Fan-In↔Granger: r=-0.173, p=0.0528
+[NODE              ] Fan-In↔Granger: r=+0.274, p=0.0446 ✅
+[SCIPY             ] Fan-In↔Granger: r=+0.043, p=0.6986
+[OCTAVE            ] Fan-In↔Granger: r=-0.026, p=0.7946
+[REACT             ] Fan-In↔Granger: r=+0.066, p=0.6983
+[VUE               ] Fan-In↔Granger: r=+0.353, p=0.1796
+[TENSORFLOW        ] Fan-In↔Granger: r=-0.302, p=0.1188
+[GCC               ] Fan-In↔Granger: r=+0.007, p=0.9423
+[RAILS             ] Fan-In↔Granger: r=+0.080, p=0.5075
+[METEOR            ] Fan-In↔Granger: r=+0.276, p=0.0733
+[DJANGO            ] Fan-In↔Granger: r=-0.191, p=0.1181
+[PYTORCH           ] Fan-In↔Granger: r=-0.091, p=0.5673
+[GIT_SCM           ] Fan-In↔Granger: r=-0.023, p=0.8517
+[ANGULAR           ] Fan-In↔Granger: r=-0.318, p=0.0718
+[BITCOIN           ] Fan-In↔Granger: r=+0.079, p=0.5766
+[EMACS             ] Fan-In↔Granger: r=+0.353, p=0.0001 ✅
+[CURL              ] Fan-In↔Granger: r=-0.332, p=0.0013 ✅
+[FFMPEG            ] Fan-In↔Granger: r=+0.025, p=0.8220
+[WORDPRESS         ] Fan-In↔Granger: r=-0.193, p=0.0934
+[MATPLOTLIB        ] Fan-In↔Granger: r=-0.125, p=0.2801
+[WIRESHARK         ] Fan-In↔Granger: r=-0.007, p=0.9432
+[FASTAPI           ] Fan-In↔Granger: r=-0.244, p=0.4222
+[VSCODE            ] Fan-In↔Granger: r=+0.245, p=0.2085
+[GIMP              ] Fan-In↔Granger: r=-0.076, p=0.4549
+[SUBVERSION        ] Fan-In↔Granger: r=-0.010, p=0.9336
+[SCIKIT_LEARN      ] Fan-In↔Granger: r=-0.066, p=0.6451
+[FLASK             ] Fan-In↔Granger: r=+0.199, p=0.3501
+[PANDAS            ] Fan-In↔Granger: r=+0.111, p=0.4290
+[OPENCV            ] Fan-In↔Granger: r=+0.123, p=0.3961
+[MEDIAWIKI         ] Fan-In↔Granger: r=+0.067, p=0.5655
+[ANSIBLE           ] Fan-In↔Granger: r=-0.128, p=0.4143
+[LIBREOFFICE       ] Fan-In↔Granger: r=-0.177, p=0.0986
+[RUST              ] Fan-In↔Granger: r=+0.420, p=0.0027 ✅
+[KUBERNETES        ] Fan-In↔Granger: r=-0.162, p=0.3588
+[FREEBSD           ] Fan-In↔Granger: r=-0.022, p=0.8103
+[LLVM              ] Fan-In↔Granger: r=-0.200, p=0.0659
+[WEBKIT            ] Fan-In↔Granger: r=-0.055, p=0.6171
+[LINUX             ] Fan-In↔Granger: r=+0.199, p=0.0990
 
 ------------------------------------------------------------
 SYNTHÈSE GLOBALE
 ------------------------------------------------------------
-Projets analysés     : 43
-Projets valides      : 43
-Corrélation moyenne  : r = -0.013
-Corrélation médiane  : r = -0.021
-Positives (r > 0)    : 20/43
-Significatives (p<.05): 6/43
+Projets analysés     : 44
+Projets valides      : 44
+Corrélation moyenne  : r = -0.001
+Corrélation médiane  : r = -0.016
+Positives (r > 0)    : 20/44
+Significatives (p<.05): 4/44
 
-T-test (H0: mean r = 0): t=-0.44, p=0.6603
+T-test (H0: mean r = 0): t=-0.02, p=0.9803
 ⚠️ NON SIGNIFICATIF : Pas de lien direct Fan-In → Granger
 ✅ Plot saved: comod_v42_fanin_granger_correlation.png
 
@@ -1313,27 +1436,13 @@ T-test (H0: mean r = 0): t=-0.44, p=0.6603
 ------------------------------------------------------------
 GÉNÉRATION FIGURE : Two Architectural Paths
 ------------------------------------------------------------
-/Users/toto/repo/ontodynamique/ontodynamique/ontodynamique/src/system.py:5188: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.
-  bp = ax2.boxplot(box_data, labels=['Consolidation', 'Neutral', 'Modularization'],
-/Users/toto/repo/ontodynamique/ontodynamique/ontodynamique/src/system.py:5246: UserWarning: Glyph 10007 (\N{BALLOT X}) missing from font(s) Arial.
-  plt.tight_layout()
-/Users/toto/repo/ontodynamique/ontodynamique/ontodynamique/src/system.py:5246: UserWarning: Glyph 10003 (\N{CHECK MARK}) missing from font(s) Arial.
-  plt.tight_layout()
-/Users/toto/repo/ontodynamique/ontodynamique/ontodynamique/src/system.py:5247: UserWarning: Glyph 10007 (\N{BALLOT X}) missing from font(s) Arial.
-  plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
-/Users/toto/repo/ontodynamique/ontodynamique/ontodynamique/src/system.py:5247: UserWarning: Glyph 10003 (\N{CHECK MARK}) missing from font(s) Arial.
-  plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
-/Applications/PyCharm.app/Contents/plugins/python/helpers/pycharm_matplotlib_backend/backend_interagg.py:126: UserWarning: Glyph 10007 (\N{BALLOT X}) missing from font(s) Arial.
-  FigureCanvasAgg.draw(self)
-/Applications/PyCharm.app/Contents/plugins/python/helpers/pycharm_matplotlib_backend/backend_interagg.py:126: UserWarning: Glyph 10003 (\N{CHECK MARK}) missing from font(s) Arial.
-  FigureCanvasAgg.draw(self)
 ✅ Publication figure saved: figure_architecture_paths.png
 
 --- FIGURE STATISTICS (for caption) ---
-Total projects: 47
-Consolidation (r > 0.15): 16
-Modularization (r < -0.15): 17
-Neutral: 14
+Total projects: 48
+Consolidation (r > 0.15): 15
+Modularization (r < -0.15): 20
+Neutral: 13
 Significant (p < 0.05): 28
 
 ################################################################################
@@ -1347,16 +1456,16 @@ SYNTHÈSE FINALE V36
 ║  Horizon de survie    : 6 mois                                              ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║  MÉTRIQUES GAMMA (Corrélations)                                              ║
-║  ├─ Structure vs Content : r = 0.844                                 ║
-║  ├─ Structure vs Hybrid  : r = 0.924                                 ║
-║  └─ Content vs Hybrid    : r = 0.948                                 ║
+║  ├─ Structure vs Content : r = 0.828                                 ║
+║  ├─ Structure vs Hybrid  : r = 0.917                                 ║
+║  └─ Content vs Hybrid    : r = 0.946                                 ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║  TESTS STATISTIQUES                                                          ║
 
-    ║  ├─ H_2 (Bimodalité)      : ✅ VALIDÉ (p=0.0126)              ║
+    ║  ├─ H_2 (Bimodalité)      : ✅ VALIDÉ (p=0.0014)              ║
     ║  ├─ H_4 (Universalité)    : ✅ VALIDÉ (100% reach high Γ)                ║
     ║  ├─ H_1 (Symétrie Causale): SYMMETRY_VALIDATED                           ║
-    ║  │   └─ Coupling Ratio   : 0.71 (Phase 1) → 0.94 (Phase 2)            ║
+    ║  │   └─ Coupling Ratio   : 0.81 (Phase 1) → 0.94 (Phase 2)            ║
     ╠══════════════════════════════════════════════════════════════════════════════╣
 
 ╠══════════════════════════════════════════════════════════════════════════════╣
@@ -1371,7 +1480,14 @@ SYNTHÈSE FINALE V36
 
 
 [EXPORT] Sauvegarde des données en CSV...
-   ✅ Données exportées : omega_v36_all_data.csv (11042 lignes)
+   ✅ Données exportées : omega_v36_all_data.csv (11121 lignes)
+
+================================================================================
+VÉRIFICATION : BORNAGE NATUREL DE GAMMA (SANS CLIP)
+================================================================================
+Gamma Maximum absolu observé : 0.999999
+✅ SUCCÈS : Aucun projet ne dépasse naturellement 1.0.
+   La structure est physiquement conservatrice (Operational Closure validée).
 
 ================================================================================
 ANALYSE V36 TERMINÉE
