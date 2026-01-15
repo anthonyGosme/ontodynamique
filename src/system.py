@@ -52,6 +52,29 @@ except ImportError:
         return 0, 1.0
 
 
+plt.rcParams.update({
+    'font.family': 'sans-serif',
+    'font.sans-serif': ['Arial', 'Helvetica', 'DejaVu Sans'],
+    'font.size': 12,              # Taille de base
+    'axes.labelsize': 14,         # Titres des axes (X, Y)
+    'axes.titlesize': 16,         # Titre du graphique
+    'xtick.labelsize': 12,        # Graduations X
+    'ytick.labelsize': 12,        # Graduations Y
+    'legend.fontsize': 12,        # Légende
+    'figure.titlesize': 18,       # Titre global figure
+    'figure.dpi': 300,            # Résolution écran
+    'savefig.dpi': 300,           # Résolution sauvegarde (CRITIQUE)
+    'lines.linewidth': 2.5,       # Lignes plus épaisses pour la lisibilité
+    'lines.markersize': 8,        # Points plus gros
+    'axes.linewidth': 1.5,        # Cadre du graphique plus épais
+    'grid.linewidth': 1.0,        # Grille visible mais discrète
+    'pdf.fonttype': 42,           # Permet d'éditer le texte dans Illustrator/Inkscape
+    'ps.fonttype': 42
+})
+
+# Configuration Seaborn pour "Paper" (augmente l'échelle globale)
+sns.set_context("paper", font_scale=1.6)
+sns.set_style("whitegrid", {'axes.grid': False}) # PNAS aime souvent les fonds blancs épurés
 # ==============================================================================
 # 1. CONFIGURATION
 # ==============================================================================
@@ -929,7 +952,7 @@ class ExternalMaturityValidator:
             bar_h = y_h * 1.02
             ax.plot([x1, x1, x2, x2], [y_h, bar_h, bar_h, y_h], lw=1.5, c='k')
             stars = "***" if p_val < 0.001 else "**" if p_val < 0.01 else "*" if p_val < 0.05 else "ns"
-            ax.text((x1 + x2) * 0.5, bar_h, stars, ha='center', va='bottom', fontweight='bold', fontsize=12)
+            ax.text((x1 + x2) * 0.5, bar_h, stars, ha='center', va='bottom', fontweight='bold')
 
         max_y = max([max(d) for d in data if d]) if any(data) else 1.0
 
@@ -941,13 +964,13 @@ class ExternalMaturityValidator:
         ax.set_xticks(pos)
         ax.set_xticklabels(['Personnel\n(Fragile/Inerte)', 'Corporatif\n(Sponsorisé)', 'Fondation\n(Autonome)'],
                            fontsize=11)
-        ax.set_ylabel(r'Index de Viabilité ($V = \Gamma \times A_{norm}$)', fontsize=12)
-        ax.set_title('Validation V42 : Viabilité Sociotechnique vs Gouvernance', fontsize=14, fontweight='bold')
+        ax.set_ylabel(r'Index de Viabilité ($V = \Gamma \times A_{norm}$)')
+        ax.set_title('Validation V42 : Viabilité Sociotechnique vs Gouvernance', fontsize=15, fontweight='bold')
         ax.set_ylim(0, max_y + 0.25)
 
         plt.tight_layout()
-        plt.savefig("omega_v42_viability_validation.png", dpi=300)
-        print("✅ Graphique V42 sauvegardé : omega_v42_viability_validation.png")
+        plt.savefig("omega-v42-viability-validation.pdf", format="pdf", dpi=300)
+        print("✅ Graphique V42 sauvegardé : omega_v42_viability_validation.pdf")
         plt.close()
 
 
@@ -1355,8 +1378,8 @@ class HindcastingValidator:
             ax2.tick_params(axis='x', rotation=45)
 
         plt.tight_layout()
-        plt.savefig("hindcasting_validation.png", dpi=150)
-        print(f"\n✅ Figure sauvegardée : hindcasting_validation.png")
+        plt.savefig("hindcasting-validation.pdf", format="pdf", dpi=300)
+        print(f"\n✅ Figure sauvegardée : hindcasting_validation.pdf")
         plt.close()
 
 
@@ -1500,14 +1523,14 @@ class SurvivalAsymmetryValidator:
             except Exception as e:
                 print(f"   ⚠️ Erreur lors du fit pour le groupe {name}: {e}")
 
-        plt.title(f'Survival Trajectories by Asymmetry Exposure ({method})', fontsize=12, fontweight='bold')
+        plt.title(f'Survival Trajectories by Asymmetry Exposure ({method})', fontweight='bold')
         plt.xlabel('Duration (Months)')
         plt.ylabel('Survival Probability')
         plt.grid(True, alpha=0.3)
         plt.legend()
         plt.tight_layout()
-        plt.savefig("omega_v46_kaplan_meier.png", dpi=300)
-        print("   ✅ Courbe descriptive sauvegardée : omega_v46_kaplan_meier.png")
+        plt.savefig("omega-v46-kaplan-meier.pdf", format="pdf", dpi=300)
+        print("   ✅ Courbe descriptive sauvegardée : omega_v46_kaplan_meier.pdf")
 
         # Log-rank informatif
         try:
@@ -2164,8 +2187,8 @@ def compare_gamma_metrics(all_dataframes):
         axes[1, 2].set_title(f'Content vs Composite\n(r = {corr_ch:.3f})')
 
         plt.tight_layout()
-        plt.savefig("omega_v36_gamma_comparison.png", dpi=150)
-        print(f"\n✅ Graphique de comparaison sauvegardé : omega_v36_gamma_comparison.png")
+        plt.savefig("omega-v36-gamma-comparison.pdf", format="pdf", dpi=300)
+        print(f"\n✅ Graphique de comparaison sauvegardé : omega_v36_gamma_comparison.pdf")
         plt.close()
     except Exception as e:
         print(f"Erreur lors du plot comparatif : {e}")
@@ -2187,16 +2210,16 @@ def compare_gamma_metrics(all_dataframes):
         except:
             pass
 
-        ax_iso.set_title("Distribution de l'Efficacité Métabolique (Γ Composite)", fontsize=14, fontweight='bold')
-        ax_iso.set_xlabel("Γ (Structure × Contenu)", fontsize=12)
-        ax_iso.set_ylabel("Densité de Probabilité", fontsize=12)
+        ax_iso.set_title("Distribution de l'Efficacité Métabolique (Γ Composite)", fontsize=15, fontweight='bold')
+        ax_iso.set_xlabel("Γ (Structure × Contenu)")
+        ax_iso.set_ylabel("Densité de Probabilité")
         ax_iso.set_xlim(0, 1.0)
         ax_iso.grid(True, alpha=0.3)
         ax_iso.legend()
 
         plt.tight_layout()
-        plt.savefig("omega_v36_gamma_composite_isolated.png", dpi=150)
-        print(f"✅ Histogramme isolé sauvegardé : omega_v36_gamma_composite_isolated.png")
+        plt.savefig("omega-v36-gamma-composite-isolated.pdf", format="pdf", dpi=300)
+        print(f"✅ Histogramme isolé sauvegardé : omega_v36_gamma_composite_isolated.pdf")
         plt.close(fig_iso)
     except Exception as e:
         print(f"Erreur lors du plot isolé : {e}")
@@ -2406,10 +2429,10 @@ def plot_bimodality_histogram(all_dfs):
     ax.hist(all_gamma_values, bins=50, density=True, color='#3498db', alpha=0.7, edgecolor='black', linewidth=0.5)
 
     # Titres et Labels (Anglais)
-    ax.set_title("Empirical Distribution of Metabolic Efficiency ($\\Gamma$)", fontsize=14, fontweight='bold',
+    ax.set_title("Empirical Distribution of Metabolic Efficiency ($\\Gamma$)", fontsize=15, fontweight='bold',
                  pad=15)
-    ax.set_xlabel(r"Metabolic Efficiency ($\Gamma$)", fontsize=12)
-    ax.set_ylabel("Probability Density", fontsize=12)
+    ax.set_xlabel(r"Metabolic Efficiency ($\Gamma$)")
+    ax.set_ylabel("Probability Density")
 
     # --- CORRECTION DES ZONES ---
     # Zone Rouge : De 0.0 à 0.4 (Inclut le pic à 0)
@@ -2429,8 +2452,8 @@ def plot_bimodality_histogram(all_dfs):
     ax.legend(loc='upper center', frameon=True, ncol=2)  # Légende en haut au centre
     plt.tight_layout()
 
-    filename = "omega_v34_bimodality_histogram.png"
-    plt.savefig(filename, dpi=300)
+    filename = "omega-v34-bimodality-histogram.pdf"
+    plt.savefig(filename, format="pdf", dpi=300)
     print(f"✅  (Bimodality) saved (CORRECTED ZONES): {filename}")
     plt.close(fig)
 
@@ -2469,8 +2492,8 @@ def plot_dual_view(df, name, config):
     ax2.set_ylabel(r"Efficiency Ratio ($\Gamma$)")
     ax2.set_ylim(0, 1.05)
 
-    filename = f"omega_v34_{name.lower()}_dual.png"
-    plt.savefig(filename, dpi=300)
+    filename = f"omega-v34-{name.lower()}-dual.pdf"
+    plt.savefig(filename,  format="pdf", dpi=300)
     plt.close(fig)
 
 def plot_phase_diagram(results):
@@ -2490,12 +2513,12 @@ def plot_phase_diagram(results):
         s = (1 - metrics['reactivity_index']) * 800 + 200
         ax.scatter(x, y, s=s, c=REPOS_CONFIG[name]['color'], alpha=0.8, edgecolors='k', label=name)
         ax.annotate(name, (x, y), xytext=(0, 0), textcoords='offset points', ha='center', va='center',
-                    fontweight='bold', fontsize=9)
+                    fontweight='bold')
 
     ax.set_xlim(0, 100)
     ax.set_ylim(0, 1.05)
     ax.set_title("Diagramme de Phase Global (Moyennes)")
-    plt.savefig("omega_v34_global_phase.png", dpi=150)
+    plt.savefig("omega-v34-global-phase.pdf", format="pdf", dpi=300)
     # plt.show() # Commenté pour éviter l'affichage si le script est lancé sans interface
 
 
@@ -2526,7 +2549,7 @@ def plot_dispersion_cloud(all_dfs):
         mean_x = x.mean()
         mean_y = y.mean()
         ax.scatter(mean_x, mean_y, c=color, s=200, marker='X', edgecolors='black', linewidth=1.5)
-        ax.annotate(name, (mean_x, mean_y), xytext=(0, 10), textcoords='offset points', ha='center', fontsize=8,
+        ax.annotate(name, (mean_x, mean_y), xytext=(0, 10), textcoords='offset points', ha='center',
                     fontweight='bold')
 
     ax.set_xlim(0, 100)
@@ -2540,8 +2563,8 @@ def plot_dispersion_cloud(all_dfs):
     ax.legend(by_label.values(), by_label.keys(), loc='center left', bbox_to_anchor=(1, 0.5))
 
     plt.tight_layout()
-    plt.savefig("omega_v34_dispersion_cloud.png", dpi=150)
-    print("✅ Nuage de Dispersion sauvegardé : omega_v34_dispersion_cloud.png")
+    plt.savefig("omega-v34-dispersion-cloud.pdf", format="pdf", dpi=300)
+    print("✅ Nuage de Dispersion sauvegardé : omega_v34_dispersion_cloud.pdf")
     # plt.show() # Commenté
 
 
@@ -3098,10 +3121,10 @@ def plot_residence_time(all_dataframes, residence_results):
                 ax1.plot(x_range, gaussian, style, linewidth=2.5, label=label)
 
     ax1.set_xlim(0, 1)
-    ax1.set_xlabel('Efficacite Metabolique (Gamma)', fontsize=11)
-    ax1.set_ylabel('Densite', fontsize=11)
-    ax1.set_title('Distribution du Temps de Residence\n(Chaque point = 1 mois de vie)', fontsize=12, fontweight='bold')
-    ax1.legend(loc='upper left', fontsize=8)
+    ax1.set_xlabel('Efficacite Metabolique (Gamma)')
+    ax1.set_ylabel('Densite')
+    ax1.set_title('Distribution du Temps de Residence\n(Chaque point = 1 mois de vie)', fontweight='bold')
+    ax1.legend(loc='upper left')
 
     # ===== PLOT 2 : Visualisation de l'Asymétrie =====
     ax2 = axes[0, 1]
@@ -3121,7 +3144,7 @@ def plot_residence_time(all_dataframes, residence_results):
             ax2.axhline(y=asym['sigma_haut'] * 2, color='gray', linestyle='--',
                         label=f'Seuil asymetrie (2x sigma_haut)')
 
-            ax2.set_ylabel('Ecart-type (sigma)', fontsize=11)
+            ax2.set_ylabel('Ecart-type (sigma)')
             ax2.set_title(f'Asymetrie des Modes\nRatio = {asym["concentration_ratio"]:.2f}',
                           fontsize=12, fontweight='bold')
             ax2.legend(loc='upper right')
@@ -3130,7 +3153,7 @@ def plot_residence_time(all_dataframes, residence_results):
             max_sigma = max(sigmas)
             ax2.annotate(f'Ratio: {asym["concentration_ratio"]:.1f}x',
                          xy=(0.5, max_sigma * 0.9),
-                         ha='center', fontsize=14, fontweight='bold',
+                         ha='center', fontsize=15, fontweight='bold',
                          color='#8e44ad')
 
             # Colorer selon le verdict
@@ -3138,7 +3161,7 @@ def plot_residence_time(all_dataframes, residence_results):
                 ax2.set_facecolor('#e8f8f5')
         else:
             ax2.text(0.5, 0.5, 'Asymetrie non calculable\n(GMM ne prefere pas 2 modes)',
-                     ha='center', va='center', fontsize=12, transform=ax2.transAxes)
+                     ha='center', va='center', transform=ax2.transAxes)
             ax2.set_facecolor('#fdedec')
 
     # ===== PLOT 3 : Temps de traversée =====
@@ -3172,9 +3195,9 @@ def plot_residence_time(all_dataframes, residence_results):
                         linewidth=2, label=f'Mediane: {np.median(traverse_durations):.1f} mois')
             ax3.axvline(x=6, color='green', linestyle=':',
                         linewidth=2, label='Seuil rapide (6 mois)')
-            ax3.set_xlabel('Duree dans la zone de transition (mois)', fontsize=11)
-            ax3.set_ylabel('Frequence', fontsize=11)
-            ax3.set_title('Distribution des Temps de Traversee\n(Court = attracteurs forts)', fontsize=12,
+            ax3.set_xlabel('Duree dans la zone de transition (mois)')
+            ax3.set_ylabel('Frequence')
+            ax3.set_title('Distribution des Temps de Traversee\n(Court = attracteurs forts)',
                           fontweight='bold')
             ax3.legend()
 
@@ -3235,13 +3258,13 @@ SCORE : {residence_results['evidence_score']}/4
 {'ATTRACTEURS CONFIRMES' if residence_results['evidence_score'] >= 3 else 'RESULTAT INCERTAIN'}
         """
 
-        ax4.text(0.05, 0.95, summary_text, transform=ax4.transAxes, fontsize=10,
+        ax4.text(0.05, 0.95, summary_text, transform=ax4.transAxes,
                  verticalalignment='top', fontfamily='monospace',
                  bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
     plt.tight_layout()
-    filename = "omega_v34_residence_time_analysis.png"
-    plt.savefig(filename, dpi=150)
+    filename = "omega-v34-residence-time-analysis.pdf"
+    plt.savefig(filename, format="pdf", dpi=300)
     print(f"\n[OK] Analyse Temps de Residence sauvegardee : {filename}")
     plt.close(fig)
 def calculate_and_plot_global_fit(df, project_name):
@@ -3320,13 +3343,13 @@ def calculate_and_plot_global_fit(df, project_name):
             pass
 
     # Correction du SyntaxWarning et utilisation d'une chaîne brute r"" pour LaTeX
-    ax.set_title(r"Ajustement des Modèles de Croissance sur $\Gamma$ : " + project_name, fontsize=14)
+    ax.set_title(r"Ajustement des Modèles de Croissance sur $\Gamma$ : " + project_name, fontsize=15)
     ax.set_xlabel("Temps depuis le début (Mois)")
     ax.set_ylabel(r"Ratio Gamma ($\Gamma$)")
     ax.legend(loc='lower right')
     ax.grid(True)
-    filename = f"omega_v34_{project_name.lower()}_regression_fit_ajust.png"
-    plt.savefig(filename, dpi=150)
+    filename = f"omega-v34_{project_name.lower()}-regression-fit-ajust.pdf"
+    plt.savefig(filename,  format="pdf", dpi=300)
     plt.close(fig)
 
     # Ajout de T_total pour le retour
@@ -3549,13 +3572,13 @@ def plot_growth_model_fit(df, project_name, train_window, reg_result):
             print(f"[PLOT] Échec du fit pour {name}: {e}")
             pass
 
-    ax.set_title(f"Ajustement des Modèles de Croissance sur $Gamma$ : {project_name}", fontsize=14)
+    ax.set_title(f"Ajustement des Modèles de Croissance sur $Gamma$ : {project_name}", fontsize=15)
     ax.set_xlabel("Temps depuis le début (Mois)")
     ax.set_ylabel("Ratio Gamma (Γ)")
     ax.legend(loc='lower right')
     ax.grid(True)
-    filename = f"omega_v34_{project_name.lower()}_regression_fit_ajust.png"
-    plt.savefig(filename, dpi=150)
+    filename = f"omega-v34-{project_name.lower()}-regression-fit-ajust.pdf"
+    plt.savefig(filename, format="pdf", dpi=300)
     print(f"✅ Ajustement de régression visualisé : {filename}")
     plt.close(fig)
 
@@ -3662,7 +3685,7 @@ def run_granger_for_project(name, df, max_lag=6):
     Exécute le test de Granger bidirectionnel pour un projet.
     V38: Différenciation automatique si séries non-stationnaires.
     """
-    min_obs = max_lag * 3 + 10
+    min_obs = max_lag * 3 + 6
     if len(df) < min_obs:
         print(f"[{name}] Données insuffisantes ({len(df)} < {min_obs})")
         return None
@@ -3791,9 +3814,9 @@ def plot_granger_results(granger_results):
     ax1.set_ylabel('P-value (log scale)')
     ax1.set_yscale('log')
     ax1.set_xticks(x)
-    ax1.set_xticklabels(projects, rotation=45, ha='right', fontsize=8)
+    ax1.set_xticklabels(projects, rotation=45, ha='right')
     ax1.set_title('Test de Granger par Projet\n(p < 0.05 = causalite significative)')
-    ax1.legend(loc='upper right', fontsize=8)
+    ax1.legend(loc='upper right')
     ax1.set_ylim(1e-10, 1)
 
     # ===== PLOT 2 : Scatter p-values =====
@@ -3819,8 +3842,8 @@ def plot_granger_results(granger_results):
     ax2.set_title('Direction Causale\n(Coin bas-gauche = bidirectionnel)')
 
     # Annotations des quadrants
-    ax2.text(0.001, 0.3, 'ATTENDU\nAct->Gamma', ha='center', fontsize=9, color='#27ae60', fontweight='bold')
-    ax2.text(0.3, 0.001, 'PROBLEME\nGamma->Act', ha='center', fontsize=9, color='#e74c3c', fontweight='bold')
+    ax2.text(0.001, 0.3, 'ATTENDU\nAct->Gamma', ha='center', color='#27ae60', fontweight='bold')
+    ax2.text(0.3, 0.001, 'PROBLEME\nGamma->Act', ha='center', color='#e74c3c', fontweight='bold')
 
     # Labels des projets
     for i, proj in enumerate(projects):
@@ -3873,13 +3896,13 @@ def plot_granger_results(granger_results):
     Ratio : {granger_results['ratio']:.1f}x
     """
 
-    ax3.text(0.05, 0.95, summary_text, transform=ax3.transAxes, fontsize=10,
+    ax3.text(0.05, 0.95, summary_text, transform=ax3.transAxes,
              verticalalignment='top', fontfamily='monospace',
              bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
     plt.tight_layout()
-    filename = "omega_v34_granger_causality.png"
-    plt.savefig(filename, dpi=150)
+    filename = "omega-v34-granger-causality.pdf"
+    plt.savefig(filename,  format="pdf", dpi=300)
     print(f"\n[OK] Analyse Granger sauvegardee : {filename}")
     plt.close(fig)
 
@@ -4130,11 +4153,11 @@ def plot_granger_by_phase(granger_phase_results):
     for bar, pct in zip(bars1, phase1_pcts):
         if pct > 0:
             ax1.annotate(f'{pct:.0f}%', xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
-                         ha='center', va='bottom', fontsize=10, fontweight='bold')
+                         ha='center', va='bottom', fontweight='bold')
     for bar, pct in zip(bars2, phase2_pcts):
         if pct > 0:
             ax1.annotate(f'{pct:.0f}%', xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
-                         ha='center', va='bottom', fontsize=10, fontweight='bold')
+                         ha='center', va='bottom', fontweight='bold')
 
     # ===== PLOT 2 : Résumé textuel =====
     ax2 = axes[1]
@@ -4173,13 +4196,13 @@ def plot_granger_by_phase(granger_phase_results):
     VERDICT : {verdict_symbol} {verdict}
     """
 
-    ax2.text(0.05, 0.95, summary_text, transform=ax2.transAxes, fontsize=10,
+    ax2.text(0.05, 0.95, summary_text, transform=ax2.transAxes,
              verticalalignment='top', fontfamily='monospace',
              bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
     plt.tight_layout()
-    filename = "omega_v34_granger_by_phase.png"
-    plt.savefig(filename, dpi=150)
+    filename = "omega-v34-granger-by-phase.pdf"
+    plt.savefig(filename, format="pdf", dpi=300)
     print(f"\n[OK] Analyse Granger par phase sauvegardee : {filename}")
     plt.close(fig)
 
@@ -4259,7 +4282,7 @@ def analyze_rolling_granger(name, df, window_size=30, max_lag=3):
     Calcule la causalité de Granger sur une fenêtre glissante pour détecter
     le "Point Oméga" (Inversion de la dominance causale).
     """
-    if len(df) < window_size + 10:
+    if len(df) < window_size + 4:
         return None
 
     # Préparation des séries
@@ -4360,9 +4383,9 @@ def plot_causal_crossover(name, results):
     ax1.fill_between(dates, s_ag, s_ga, where=(s_ga > s_ag), color='#e74c3c', alpha=0.1, interpolate=True)
     ax1.fill_between(dates, s_ag, s_ga, where=(s_ag > s_ga), color='#3498db', alpha=0.1, interpolate=True)
 
-    ax1.set_ylabel('Causal Strength (1 - p-value)', fontsize=11)
-    ax1.set_title(f"Causal Crossover in the {name} Ecosystem", fontsize=14, fontweight='bold')
-    ax1.legend(loc='lower left', frameon=True, fontsize=10)
+    ax1.set_ylabel('Causal Strength (1 - p-value)')
+    ax1.set_title(f"Causal Crossover in the {name} Ecosystem", fontsize=15, fontweight='bold')
+    ax1.legend(loc='lower left', frameon=True)
     ax1.grid(True, alpha=0.3)
 
     # --- PLOT 2 : Authority Index ---
@@ -4374,7 +4397,7 @@ def plot_causal_crossover(name, results):
     ax2.fill_between(dates, authority, 0, where=(authority < 0), color='#3498db', alpha=0.3, label='Creative Dominance')
 
     ax2.axhline(y=0, color='black', linestyle='-', linewidth=1)
-    ax2.set_ylabel('Causal Authority Index\n(Structure - Activity)', fontsize=11)
+    ax2.set_ylabel('Causal Authority Index\n(Structure - Activity)')
     ax2.set_ylim(-1, 1)
     ax2.legend(loc='upper left', frameon=True)
 
@@ -4392,8 +4415,8 @@ def plot_causal_crossover(name, results):
     plt.tight_layout()
 
     # On garde le nom de fichier dynamique pour supporter kubernetes ou autres
-    filename = f"omega_v35_{name.lower()}_crossover.png"
-    plt.savefig(filename, dpi=300)
+    filename = f"omega-v35-{name.lower()}-crossover.pdf"
+    plt.savefig(filename, format="pdf", dpi=300)
     plt.close(fig)
 
 # ==============================================================================
@@ -4553,13 +4576,13 @@ class RobustnessValidator:
             # Green = High Confidence (Low p-value), Red = Low Confidence.
             ax = sns.heatmap(1 - pivot, annot=True, cmap='RdYlGn', vmin=0.9, vmax=1.0, fmt=".3f")
 
-            plt.title('Robustness Landscape\n(Bimodality Confidence $1-p$)', fontsize=12, fontweight='bold',
+            plt.title('Robustness Landscape\n(Bimodality Confidence $1-p$)', fontweight='bold',
                       pad=15)
-            plt.ylabel(r'Relocation Penalty ($\lambda$)', fontsize=11)
-            plt.xlabel('High Regime Threshold', fontsize=11)
+            plt.ylabel(r'Relocation Penalty ($\lambda$)')
+            plt.xlabel('High Regime Threshold')
 
             plt.tight_layout()
-            plt.savefig("omega_v37_sensitivity_heatmap.png", dpi=300)
+            plt.savefig("omega-v37-sensitivity-heatmap.pdf", format="pdf", dpi=300)
             plt.close()
             print("✅ (Heatmap) saved in English.")
         except Exception as e:
@@ -4772,27 +4795,27 @@ def plot_phase_space_academic(all_dataframes, crossover_results):
 
     # Zone de gauche (Construction / Exploration)
     ax.text(0.15, -0.45, "PHASE 1: CONSTRUCTION\n(Exploratory / High Variance)",
-            ha='center', va='center', color='#555555', fontsize=10,
+            ha='center', va='center', color='#555555',
             bbox=dict(facecolor='white', alpha=0.8, edgecolor='none', pad=3))
 
     # Zone de droite (Attracteur Stable)
     ax.text(0.85, 0.15, "STABLE ATTRACTOR\n(Operational Closure)",
-            ha='center', va='center', color='black', fontsize=11, fontweight='bold',
+            ha='center', va='center', color='black', fontweight='bold',
             bbox=dict(facecolor='white', alpha=0.9, edgecolor='black', boxstyle='round,pad=0.5'))
 
     # E. Labels et Titre
     ax.set_xlim(0, 1.05)
     ax.set_ylim(-0.6, 0.6)
-    ax.set_xlabel(r"Structural Maturity ($\Gamma$)", fontsize=12)
-    ax.set_ylabel("Causal Authority Index\n(>0: Structure-driven | <0: Activity-driven)", fontsize=11)
+    ax.set_xlabel(r"Structural Maturity ($\Gamma$)")
+    ax.set_ylabel("Causal Authority Index\n(>0: Structure-driven | <0: Activity-driven)")
 
-    ax.set_title("Sociotechnical Phase Space & Convergence Trajectory", fontsize=14, pad=15)
+    ax.set_title("Sociotechnical Phase Space & Convergence Trajectory", fontsize=15, pad=15)
 
     ax.legend(loc='upper left', frameon=True)
 
     plt.tight_layout()
-    filename = "omega_v38_phase_academic.png"
-    plt.savefig(filename, dpi=300)
+    filename = "omega-v38-phase-academic.pdf"
+    plt.savefig(filename,  format="pdf", dpi=300)
     print(f"✅ Figure 2 (Phase Portrait) saved: {filename}")
 
 
@@ -5513,8 +5536,8 @@ def plot_fanin_granger_correlation(df_results: pd.DataFrame, correlations: list)
     ax3.grid(True, alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig("comod_v42_fanin_granger_correlation.png", dpi=150)
-    print("✅ Plot saved: comod_v42_fanin_granger_correlation.png")
+    plt.savefig("comod-v42-fanin-granger-correlation.pdf", format="pdf", dpi=300)
+    print("✅ Plot saved: comod_v42_fanin_granger_correlation.pdf")
     plt.close(fig)
 def plot_mechanism_validation(df: pd.DataFrame):
     """Visualize the mediation mechanism."""
@@ -5581,8 +5604,8 @@ def plot_mechanism_validation(df: pd.DataFrame):
         )
 
     plt.tight_layout()
-    plt.savefig("comod_v41_mechanism_validation.png", dpi=150)
-    print("✅ Mechanism plot saved: comod_v41_mechanism_validation.png")
+    plt.savefig("comod-v41-mechanism-validation.pdf", format="pdf", dpi=300)
+    print("✅ Mechanism plot saved: comod_v41_mechanism_validation.pdf")
     plt.close(fig)
 
 
@@ -5631,9 +5654,9 @@ def plot_bidirectional_architecture_patterns(
     ax1.axvline(0.15, color='green', linestyle='--', alpha=0.5)
     ax1.axvline(-0.15, color='red', linestyle='--', alpha=0.5)
 
-    ax1.set_xlabel('Spearman r (Γ vs Fan-In)', fontsize=11)
-    ax1.set_ylabel('Projects (sorted)', fontsize=11)
-    ax1.set_title('A. Two Architectural Paths', fontsize=12, fontweight='bold')
+    ax1.set_xlabel('Spearman r (Γ vs Fan-In)')
+    ax1.set_ylabel('Projects (sorted)')
+    ax1.set_title('A. Two Architectural Paths', fontweight='bold')
     ax1.set_xlim(-0.8, 0.9)
 
     # Legend
@@ -5643,7 +5666,7 @@ def plot_bidirectional_architecture_patterns(
         Patch(facecolor='#e74c3c', edgecolor='black', label=f'Modularization (n={sum(df["r_gamma_fanin"] < -0.15)})'),
         Patch(facecolor='#95a5a6', edgecolor='black', label=f'Neutral (n={sum(abs(df["r_gamma_fanin"]) <= 0.15)})')
     ]
-    ax1.legend(handles=legend_elements, loc='lower right', fontsize=9)
+    ax1.legend(handles=legend_elements, loc='lower right')
 
     ax1.set_yticks([])
 
@@ -5671,8 +5694,8 @@ def plot_bidirectional_architecture_patterns(
         patch.set_alpha(0.7)
 
     ax2.axhline(0, color='black', linestyle='--', alpha=0.5)
-    ax2.set_ylabel('Spearman r (Γ vs Fan-In)', fontsize=11)
-    ax2.set_title('B. Distinct Strategies', fontsize=12, fontweight='bold')
+    ax2.set_ylabel('Spearman r (Γ vs Fan-In)')
+    ax2.set_title('B. Distinct Strategies', fontweight='bold')
     ax2.grid(True, alpha=0.3, axis='y')
 
     # === Panel C: Conceptual diagram ===
@@ -5683,45 +5706,45 @@ def plot_bidirectional_architecture_patterns(
 
     # Draw the triangle
     # Top: Γ (Maturity)
-    ax3.text(5, 9, 'Γ (Maturity)', ha='center', va='center', fontsize=12, fontweight='bold',
+    ax3.text(5, 9, 'Γ (Maturity)', ha='center', va='center', fontweight='bold',
              bbox=dict(boxstyle='round,pad=0.3', facecolor='#3498db', edgecolor='black'))
 
     # Bottom left: Fan-In
-    ax3.text(1.5, 2, 'Fan-In\n(Coupling)', ha='center', va='center', fontsize=10,
+    ax3.text(1.5, 2, 'Fan-In\n(Coupling)', ha='center', va='center',
              bbox=dict(boxstyle='round,pad=0.3', facecolor='#f39c12', edgecolor='black'))
 
     # Bottom right: Granger
-    ax3.text(8.5, 2, 'Granger\nSymmetry', ha='center', va='center', fontsize=10,
+    ax3.text(8.5, 2, 'Granger\nSymmetry', ha='center', va='center',
              bbox=dict(boxstyle='round,pad=0.3', facecolor='#27ae60', edgecolor='black'))
 
     # Arrows
     # Edge 1: Γ → Fan-In (bidirectional result)
     ax3.annotate('', xy=(2.2, 3), xytext=(4.3, 8.2),
                  arrowprops=dict(arrowstyle='->', color='orange', lw=2))
-    ax3.text(2.3, 5.8, '±', fontsize=14, color='orange', fontweight='bold')
-    ax3.text(1.2, 5.2, 'Bidirectional\n(r = ±0.3–0.8)', fontsize=8, color='gray')
+    ax3.text(2.3, 5.8, '±', fontsize=15, color='orange', fontweight='bold')
+    ax3.text(1.2, 5.2, 'Bidirectional\n(r = ±0.3–0.8)', color='gray')
 
     # Edge 2: Fan-In → Granger (NOT significant)
     ax3.annotate('', xy=(7.5, 2), xytext=(3, 2),
                  arrowprops=dict(arrowstyle='->', color='red', lw=2, linestyle='--'))
-    ax3.text(5, 1, '✗ n.s.', fontsize=11, color='red', ha='center', fontweight='bold')
-    ax3.text(5, 0.3, '(p = 0.44)', fontsize=8, color='gray', ha='center')
+    ax3.text(5, 1, '✗ n.s.', color='red', ha='center', fontweight='bold')
+    ax3.text(5, 0.3, '(p = 0.44)', color='gray', ha='center')
 
     # Edge 3: Γ → Granger (validated elsewhere)
     ax3.annotate('', xy=(7.8, 3), xytext=(5.7, 8.2),
                  arrowprops=dict(arrowstyle='->', color='green', lw=2))
-    ax3.text(7.5, 5.8, '✓', fontsize=14, color='green', fontweight='bold')
-    ax3.text(8.2, 5.2, 'Symmetrization\n(0.60 → 0.94)', fontsize=8, color='gray')
+    ax3.text(7.5, 5.8, '✓', fontsize=15, color='green', fontweight='bold')
+    ax3.text(8.2, 5.2, 'Symmetrization\n(0.60 → 0.94)', color='gray')
 
-    ax3.set_title('C. Mechanistic Triangle', fontsize=12, fontweight='bold')
+    ax3.set_title('C. Mechanistic Triangle', fontweight='bold')
 
     # Add interpretation text at bottom
     ax3.text(5, -0.8, 'Mechanism is TOPOLOGICAL, not METRIC:\nBoth paths achieve closure',
-             ha='center', va='top', fontsize=9, style='italic',
+             ha='center', va='top', style='italic',
              bbox=dict(boxstyle='round,pad=0.3', facecolor='#ecf0f1', edgecolor='gray'))
 
     plt.tight_layout()
-    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(output_path, format="pdf", dpi=300, facecolor='white')
     print(f"✅ Publication figure saved: {output_path}")
     plt.close(fig)
 
@@ -5864,19 +5887,529 @@ def test_variance_collapse_symmetrization(crossover_results, all_dataframes):
     ax.text(0.4, 0.85, "Phase 1: High Freedom\n(Large Variance)", ha='center', color='#3498db', fontweight='bold')
     ax.text(0.85, 0.15, "Phase 2: Locked\n( collapsed)", ha='center', color='#27ae60', fontweight='bold')
 
-    ax.set_xlabel(r'Structural Maturity ($\Gamma$)', fontsize=12)
-    ax.set_ylabel('Causal Imbalance (|Act->Str - Str->Act|)', fontsize=12)
-    ax.set_title('Variance Collapse: The Emergence of Distributed Constraint', fontsize=14, fontweight='bold')
+    ax.set_xlabel(r'Structural Maturity ($\Gamma$)')
+    ax.set_ylabel('Causal Imbalance (|Act->Str - Str->Act|)')
+    ax.set_title('Variance Collapse: The Emergence of Distributed Constraint', fontsize=15, fontweight='bold')
     ax.set_xlim(0, 1.0)
     ax.set_ylim(0, 1.0)
     ax.legend(loc='upper right')
 
     plt.tight_layout()
-    plt.savefig("omega_v44_variance_collapse.png", dpi=300)
-    print(f"✅ Visualization saved: omega_v44_variance_collapse.png")
+    plt.savefig("omega-v44-variance-collapse.pdf", format="pdf", dpi=300)
+    print(f"✅ Visualization saved: omega-v44-variance-collapse.pdf")
     plt.close()
 
     return {'r_spread': r_spread, 'p_spread': p_spread}
+
+
+def test_forbidden_zone_P1(all_dataframes, crossover_results, project_status):
+    """
+    P1: Impossibility Test
+    Persistent systems cannot durably occupy "high turnover + strong asymmetry"
+    """
+    print("\n" + "=" * 70)
+    print("TEST P1 : ZONE INTERDITE (Turnover × Asymétrie)")
+    print("=" * 70)
+
+    # 1. Calculer les seuils sur le corpus entier
+    all_turnover = []
+    for df in all_dataframes.values():
+        if df is not None:
+            all_turnover.extend(df['total_weight'].values)
+
+    T_threshold = np.percentile(all_turnover, 75)  # Top 25% = "high turnover"
+    ASYM_threshold = 0.15  # |1 - R| > 0.15 = asymétrie significative
+    DWELL_threshold = 6  # Mois consécutifs max tolérés
+
+    print(f"Seuils : T* = {T_threshold:.1f} (P75), δ = {ASYM_threshold}, L = {DWELL_threshold} mois")
+
+    results = {'alive': [], 'dead': []}
+
+    for name, df in all_dataframes.items():
+        if name not in crossover_results:
+            continue
+
+        res = crossover_results[name]
+        status = project_status.get(name, 'alive')
+        if status == 'declining':
+            status = 'dead'
+
+        # Aligner turnover et coupling_ratio
+        dates = res['dates']
+        s_ag = np.array(res['strength_ag'])
+        s_ga = np.array(res['strength_ga'])
+
+        # Coupling ratio par mois
+        coupling = np.minimum(s_ag, s_ga) / (np.maximum(s_ag, s_ga) + 1e-9)
+        asymmetry = np.abs(1 - coupling)
+
+        # Turnover aligné
+        turnover = df.loc[df.index.isin(dates), 'total_weight'].values[:len(coupling)]
+
+        if len(turnover) != len(coupling):
+            continue
+
+        # Détecter les séjours dans la zone interdite
+        in_forbidden = (turnover >= T_threshold) & (asymmetry >= ASYM_threshold)
+
+        # Calculer la durée max consécutive dans la zone
+        max_dwell = 0
+        current_dwell = 0
+        for is_in in in_forbidden:
+            if is_in:
+                current_dwell += 1
+                max_dwell = max(max_dwell, current_dwell)
+            else:
+                current_dwell = 0
+
+        results[status].append({
+            'project': name,
+            'max_dwell': max_dwell,
+            'pct_in_forbidden': in_forbidden.mean() * 100
+        })
+
+    # 2. Analyse comparative
+    alive_dwells = [r['max_dwell'] for r in results['alive']]
+    dead_dwells = [r['max_dwell'] for r in results['dead']]
+
+    print(f"\n{'Statut':<12} | {'N':<5} | {'Dwell Max Moyen':<18} | {'% > {DWELL_threshold} mois'}")
+    print("-" * 60)
+
+    for status, dwells in [('Alive', alive_dwells), ('Dead', dead_dwells)]:
+        if dwells:
+            pct_long = sum(1 for d in dwells if d > DWELL_threshold) / len(dwells) * 100
+            print(f"{status:<12} | {len(dwells):<5} | {np.mean(dwells):<18.1f} | {pct_long:.1f}%")
+
+    # 3. Test statistique
+    if alive_dwells and dead_dwells:
+        from scipy.stats import mannwhitneyu
+        stat, p_val = mannwhitneyu(dead_dwells, alive_dwells, alternative='greater')
+        print(f"\nMann-Whitney (Dead > Alive): p = {p_val:.4f}")
+
+        if p_val < 0.05:
+            print("✅ P1 VALIDÉ : Les projets morts restent plus longtemps dans la zone interdite")
+        else:
+            print("⚠️ P1 NON SIGNIFICATIF")
+
+    return results
+
+
+def test_forbidden_zone_P1_relatif(all_dataframes, crossover_results, project_status):
+    """
+    VERSION CORRIGÉE : Utilise un seuil RELATIF (Z-Score) pour le turnover.
+    Compare si les projets morts passent plus de temps en surrégime (par rapport à eux-mêmes)
+    tout en étant asymétriques.
+    """
+    print("\n" + "=" * 70)
+    print("TEST P1 (CORRIGÉ) : ZONE INTERDITE (Turnover Z-Score > 1.0 × Asymétrie)")
+    print("=" * 70)
+
+    ASYM_threshold = 0.15
+    results = {'alive': [], 'dead': []}
+
+    # Pour le debug/affichage
+    long_dwellers = []
+
+    for name, df in all_dataframes.items():
+        if name not in crossover_results: continue
+
+        # 1. CALCUL DU SEUIL LOCAL (Z-SCORE)
+        # On définit la "surchauffe" par rapport à l'historique du projet lui-même
+        turnover = df['total_weight']
+        mean_t = turnover.mean()
+        std_t = turnover.std()
+
+        # Seuil : Moyenne + 1 Ecart-type (Surchauffe locale)
+        # On ajoute un plancher (ex: 5) pour éviter de flagger des projets morts-nés sans activité
+        if mean_t < 1: continue
+        threshold_local = mean_t + (1.0 * std_t)
+
+        # 2. ALIGNEMENT TEMPOREL
+        res = crossover_results[name]
+        dates = res['dates']
+        s_ag = np.array(res['strength_ag'])
+        s_ga = np.array(res['strength_ga'])
+
+        # Masque pour aligner les dates
+        mask = df.index.isin(dates)
+        # Attention à la longueur (le rolling granger réduit la taille)
+        limit = min(mask.sum(), len(s_ag))
+
+        turnover_aligned = df.loc[mask, 'total_weight'].values[:limit]
+        s_ag = s_ag[:limit]
+        s_ga = s_ga[:limit]
+
+        # 3. CALCUL ASYMÉTRIE
+        coupling = np.minimum(s_ag, s_ga) / (np.maximum(s_ag, s_ga) + 1e-9)
+        asymmetry = np.abs(1 - coupling)
+
+        # 4. DÉTECTION ZONE INTERDITE RELATIVE
+        # Turnover > Seuil Local ET Asymétrie > 0.15
+        in_forbidden = (turnover_aligned > threshold_local) & (asymmetry > ASYM_threshold)
+
+        # Calcul du Dwell Time (Temps consécutif)
+        max_dwell = 0
+        current_dwell = 0
+        for is_in in in_forbidden:
+            if is_in:
+                current_dwell += 1
+                max_dwell = max(max_dwell, current_dwell)
+            else:
+                current_dwell = 0
+        max_dwell = max(max_dwell, current_dwell)  # Cas où ça finit dans la zone
+
+        # 5. STOCKAGE
+        status = project_status.get(name, 'alive')
+        if status == 'declining': status = 'dead'
+
+        # On ignore les statuts inconnus pour le test stat
+        if status not in ['alive', 'dead']: continue
+
+        entry = {
+            'project': name,
+            'max_dwell': max_dwell,
+            'pct_in_forbidden': in_forbidden.mean() * 100
+        }
+        results[status].append(entry)
+
+        if max_dwell > 3:
+            long_dwellers.append((name, status, max_dwell))
+
+    # 6. ANALYSE ET TESTS STATISTIQUES
+    alive_dwells = [r['max_dwell'] for r in results['alive']]
+    dead_dwells = [r['max_dwell'] for r in results['dead']]
+
+    print(f"{'Statut':<10} | {'N':<5} | {'Dwell Max (Mois)':<18} | {'% Temps Zone'}")
+    print("-" * 60)
+
+    if alive_dwells:
+        print(
+            f"{'Alive':<10} | {len(alive_dwells):<5} | {np.mean(alive_dwells):<18.2f} | {np.mean([r['pct_in_forbidden'] for r in results['alive']]):.1f}%")
+    if dead_dwells:
+        print(
+            f"{'Dead':<10} | {len(dead_dwells):<5} | {np.mean(dead_dwells):<18.2f} | {np.mean([r['pct_in_forbidden'] for r in results['dead']]):.1f}%")
+
+    if alive_dwells and dead_dwells:
+        stat, p_val = stats.mannwhitneyu(dead_dwells, alive_dwells, alternative='greater')
+        print(f"\n🧪 Mann-Whitney (Dead > Alive) : p = {p_val:.4f}")
+
+        if p_val < 0.05:
+            print("✅ HYPOTHÈSE VALIDÉE : Les projets morts saturent leur capacité structurelle.")
+        else:
+            print("❌ NON SIGNIFICATIF : Pas de différence claire de saturation.")
+
+    return results
+def test_forbidden_zone_P1(all_dataframes, crossover_results, project_status):
+    """
+    P1: Impossibility Test
+    Persistent systems cannot durably occupy "high turnover + strong asymmetry"
+    """
+    print("\n" + "=" * 70)
+    print("TEST P1 : ZONE INTERDITE (Turnover × Asymétrie)")
+    print("=" * 70)
+
+    # 1. Calculer les seuils sur le corpus entier
+    all_turnover = []
+    for df in all_dataframes.values():
+        if df is not None:
+            all_turnover.extend(df['total_weight'].dropna().values)
+
+    T_threshold = np.percentile(all_turnover, 75)  # Top 25% = "high turnover"
+    ASYM_threshold = 0.15  # |1 - R| > 0.15 = asymétrie significative
+    DWELL_threshold = 6  # Mois consécutifs max tolérés
+
+    print(f"Seuils : T* = {T_threshold:.1f} (P75), δ = {ASYM_threshold}, L = {DWELL_threshold} mois")
+
+    results = {'alive': [], 'dead': []}
+
+    # Pour la visualisation
+    all_points = []  # (turnover_norm, asymmetry, status, project)
+    trajectory_data = {}  # Pour tracer les trajectoires
+
+    for name, df in all_dataframes.items():
+        if name not in crossover_results:
+            continue
+
+        res = crossover_results[name]
+        status = project_status.get(name, 'alive')
+        if status == 'declining':
+            status = 'dead'
+
+        # Aligner turnover et coupling_ratio
+        dates = res['dates']
+        s_ag = np.array(res['strength_ag'])
+        s_ga = np.array(res['strength_ga'])
+
+        # Coupling ratio par mois
+        coupling = np.minimum(s_ag, s_ga) / (np.maximum(s_ag, s_ga) + 1e-9)
+        asymmetry = np.abs(1 - coupling)
+
+        # Turnover aligné (normalisé par le max du projet pour comparabilité)
+        matched_idx = df.index.isin(dates)
+        turnover_raw = df.loc[matched_idx, 'total_weight'].values[:len(coupling)]
+
+        if len(turnover_raw) != len(coupling):
+            continue
+
+        # Normalisation du turnover (0-100 pour visualisation)
+        turnover_norm = (turnover_raw / T_threshold) * 100
+        turnover_norm = np.clip(turnover_norm, 0, 200)  # Cap à 200% du seuil
+
+        # Stocker les points pour le scatter
+        for t, a in zip(turnover_norm, asymmetry):
+            if not np.isnan(t) and not np.isnan(a):
+                all_points.append((t, a, status, name))
+
+        # Stocker la trajectoire (moyennes mobiles pour lisibilité)
+        if len(turnover_norm) > 6:
+            t_smooth = pd.Series(turnover_norm).rolling(6, min_periods=1).mean().values
+            a_smooth = pd.Series(asymmetry).rolling(6, min_periods=1).mean().values
+            trajectory_data[name] = {
+                'turnover': t_smooth,
+                'asymmetry': a_smooth,
+                'status': status
+            }
+
+        # Détecter les séjours dans la zone interdite
+        in_forbidden = (turnover_raw >= T_threshold) & (asymmetry >= ASYM_threshold)
+
+        # Calculer la durée max consécutive dans la zone
+        max_dwell = 0
+        current_dwell = 0
+        dwell_periods = []
+
+        for i, is_in in enumerate(in_forbidden):
+            if is_in:
+                current_dwell += 1
+            else:
+                if current_dwell > 0:
+                    dwell_periods.append(current_dwell)
+                    max_dwell = max(max_dwell, current_dwell)
+                current_dwell = 0
+        if current_dwell > 0:
+            dwell_periods.append(current_dwell)
+            max_dwell = max(max_dwell, current_dwell)
+
+        results[status].append({
+            'project': name,
+            'max_dwell': max_dwell,
+            'total_dwell': sum(dwell_periods),
+            'n_entries': len(dwell_periods),
+            'pct_in_forbidden': in_forbidden.mean() * 100
+        })
+
+    # 2. Analyse comparative
+    alive_dwells = [r['max_dwell'] for r in results['alive']]
+    dead_dwells = [r['max_dwell'] for r in results['dead']]
+
+    print(f"\n{'Statut':<12} | {'N':<5} | {'Dwell Max Moy':<14} | {'% Temps Zone':<12} | {'Entrées Moy'}")
+    print("-" * 70)
+
+    for status_name, data_list in [('Alive', results['alive']), ('Dead', results['dead'])]:
+        if data_list:
+            dwells = [r['max_dwell'] for r in data_list]
+            pcts = [r['pct_in_forbidden'] for r in data_list]
+            entries = [r['n_entries'] for r in data_list]
+            print(
+                f"{status_name:<12} | {len(data_list):<5} | {np.mean(dwells):<14.1f} | {np.mean(pcts):<12.1f} | {np.mean(entries):.1f}")
+
+    # 3. Test statistique
+    p_val = None
+    if alive_dwells and dead_dwells and len(dead_dwells) >= 3:
+        stat, p_val = stats.mannwhitneyu(dead_dwells, alive_dwells, alternative='greater')
+        print(f"\nMann-Whitney (Dead dwell > Alive dwell): U = {stat:.1f}, p = {p_val:.4f}")
+
+        if p_val < 0.05:
+            print("✅ P1 VALIDÉ : Les projets morts restent plus longtemps dans la zone interdite")
+        else:
+            print("⚠️ P1 NON SIGNIFICATIF (mais tendance observée)")
+    else:
+        print("\n⚠️ Pas assez de projets morts pour test statistique")
+
+    # 4. Détail par projet
+    print(f"\n--- PROJETS AVEC DWELL > {DWELL_threshold} MOIS ---")
+    all_results = results['alive'] + results['dead']
+    long_dwellers = [r for r in all_results if r['max_dwell'] > DWELL_threshold]
+
+    if long_dwellers:
+        for r in sorted(long_dwellers, key=lambda x: -x['max_dwell']):
+            status_mark = "💀" if any(r['project'] == d['project'] for d in results['dead']) else "✓"
+            print(f"  {status_mark} {r['project']:<18} : {r['max_dwell']} mois (total: {r['total_dwell']} mois)")
+    else:
+        print("  Aucun projet ne reste > 6 mois dans la zone interdite")
+
+    # 5. Visualisation
+    plot_forbidden_zone(all_points, trajectory_data, T_threshold, ASYM_threshold, DWELL_threshold, results)
+
+    return {
+        'results': results,
+        'p_value': p_val,
+        'T_threshold': T_threshold,
+        'validated': p_val < 0.05 if p_val else False
+    }
+
+
+def plot_forbidden_zone(all_points, trajectory_data, T_threshold, ASYM_threshold, DWELL_threshold, results):
+    """
+    Visualisation du test P1 : Zone Interdite
+    Figure style Nature/PNAS
+    """
+    fig = plt.figure(figsize=(16, 6))
+
+    # =========================================================================
+    # PANEL A : Scatter Plot (Densité des états)
+    # =========================================================================
+    ax1 = fig.add_subplot(131)
+
+    # Séparer par statut
+    alive_pts = [(t, a) for t, a, s, _ in all_points if s == 'alive']
+    dead_pts = [(t, a) for t, a, s, _ in all_points if s == 'dead']
+
+    # Zone interdite (rectangle rouge)
+    forbidden_rect = patches.Rectangle(
+        (100, ASYM_threshold),  # 100 = seuil T normalisé
+        100, 1.0 - ASYM_threshold,  # Largeur, Hauteur
+        linewidth=2, edgecolor='#c0392b', facecolor='#e74c3c',
+        alpha=0.15, linestyle='--', label='Forbidden Zone'
+    )
+    ax1.add_patch(forbidden_rect)
+
+    # Zone sûre (rectangle vert)
+    safe_rect = patches.Rectangle(
+        (0, 0),
+        100, ASYM_threshold,
+        linewidth=0, facecolor='#27ae60', alpha=0.08
+    )
+    ax1.add_patch(safe_rect)
+
+    # Points
+    if alive_pts:
+        t_alive, a_alive = zip(*alive_pts)
+        ax1.scatter(t_alive, a_alive, c='#3498db', s=8, alpha=0.3, label=f'Alive (n={len(alive_pts)})')
+
+    if dead_pts:
+        t_dead, a_dead = zip(*dead_pts)
+        ax1.scatter(t_dead, a_dead, c='#e74c3c', s=15, alpha=0.5, marker='x', label=f'Dead (n={len(dead_pts)})')
+
+    # Lignes de seuil
+    ax1.axvline(100, color='#c0392b', linestyle=':', alpha=0.7, linewidth=1.5)
+    ax1.axhline(ASYM_threshold, color='#c0392b', linestyle=':', alpha=0.7, linewidth=1.5)
+
+    # Annotations
+    ax1.text(150, 0.6, 'FORBIDDEN\nZONE', ha='center', va='center',
+             fontsize=12, fontweight='bold', color='#c0392b', alpha=0.7)
+    ax1.text(50, 0.05, 'Stable\nRegion', ha='center', va='center',
+             fontsize=10, color='#27ae60', alpha=0.8)
+
+    ax1.set_xlabel('Turnover (% of threshold)')
+    ax1.set_ylabel('Causal Asymmetry |1 - R|')
+    ax1.set_xlim(0, 200)
+    ax1.set_ylim(0, 0.8)
+    ax1.set_title('A. State Space Distribution', fontweight='bold')
+    ax1.legend(loc='upper left', frameon=True)
+    ax1.grid(True, alpha=0.3)
+
+    # =========================================================================
+    # PANEL B : Trajectoires (exemples sélectionnés)
+    # =========================================================================
+    ax2 = fig.add_subplot(132)
+
+    # Zone interdite
+    forbidden_rect2 = patches.Rectangle(
+        (100, ASYM_threshold), 100, 0.85 - ASYM_threshold,
+        linewidth=2, edgecolor='#c0392b', facecolor='#e74c3c',
+        alpha=0.1, linestyle='--'
+    )
+    ax2.add_patch(forbidden_rect2)
+
+    # Sélectionner quelques trajectoires représentatives
+    # 1. Projets alive avec passage dans la zone
+    # 2. Projets dead
+
+    alive_trajs = [(k, v) for k, v in trajectory_data.items() if v['status'] == 'alive']
+    dead_trajs = [(k, v) for k, v in trajectory_data.items() if v['status'] == 'dead']
+
+    # Trier par intérêt (ceux qui passent près/dans la zone)
+    def interest_score(traj):
+        t, a = traj['turnover'], traj['asymmetry']
+        in_zone = (np.array(t) > 100) & (np.array(a) > ASYM_threshold)
+        return in_zone.sum()
+
+    # Tracer 3-4 alive intéressants
+    alive_sorted = sorted(alive_trajs, key=lambda x: -interest_score(x[1]))[:4]
+    for name, traj in alive_sorted:
+        ax2.plot(traj['turnover'], traj['asymmetry'],
+                 color='#3498db', alpha=0.6, linewidth=1.5)
+        # Point final
+        ax2.scatter(traj['turnover'][-1], traj['asymmetry'][-1],
+                    c='#3498db', s=50, marker='o', edgecolors='white', zorder=5)
+        ax2.annotate(name[:8], (traj['turnover'][-1], traj['asymmetry'][-1]),
+                     fontsize=7, alpha=0.7)
+
+    # Tracer tous les dead
+    for name, traj in dead_trajs[:5]:
+        ax2.plot(traj['turnover'], traj['asymmetry'],
+                 color='#e74c3c', alpha=0.8, linewidth=2, linestyle='--')
+        ax2.scatter(traj['turnover'][-1], traj['asymmetry'][-1],
+                    c='#e74c3c', s=80, marker='X', edgecolors='white', zorder=5)
+        ax2.annotate(name[:8], (traj['turnover'][-1], traj['asymmetry'][-1]),
+                     fontsize=7, alpha=0.8, color='#c0392b')
+
+    ax2.axvline(100, color='#c0392b', linestyle=':', alpha=0.5)
+    ax2.axhline(ASYM_threshold, color='#c0392b', linestyle=':', alpha=0.5)
+
+    ax2.set_xlabel('Turnover (% of threshold)')
+    ax2.set_ylabel('Causal Asymmetry |1 - R|')
+    ax2.set_xlim(0, 200)
+    ax2.set_ylim(0, 0.7)
+    ax2.set_title('B. Evolutionary Trajectories', fontweight='bold')
+    ax2.grid(True, alpha=0.3)
+
+    # =========================================================================
+    # PANEL C : Comparaison Dwell Time
+    # =========================================================================
+    ax3 = fig.add_subplot(133)
+
+    alive_dwells = [r['max_dwell'] for r in results['alive']]
+    dead_dwells = [r['max_dwell'] for r in results['dead']]
+
+    # Boxplot
+    box_data = [alive_dwells, dead_dwells] if dead_dwells else [alive_dwells]
+    box_labels = ['Alive', 'Dead'] if dead_dwells else ['Alive']
+    box_colors = ['#3498db', '#e74c3c'] if dead_dwells else ['#3498db']
+
+    bp = ax3.boxplot(box_data, labels=box_labels, patch_artist=True, widths=0.6)
+
+    for patch, color in zip(bp['boxes'], box_colors):
+        patch.set_facecolor(color)
+        patch.set_alpha(0.6)
+
+    # Jitter points
+    for i, (dwells, color) in enumerate(zip(box_data, box_colors)):
+        x = np.random.normal(i + 1, 0.08, size=len(dwells))
+        ax3.scatter(x, dwells, c=color, alpha=0.6, s=30, edgecolors='white', zorder=3)
+
+    # Ligne seuil
+    ax3.axhline(DWELL_threshold, color='#c0392b', linestyle='--',
+                linewidth=2, label=f'Threshold ({DWELL_threshold} months)')
+
+    # Annotation
+    if alive_dwells and dead_dwells:
+        mean_alive = np.mean(alive_dwells)
+        mean_dead = np.mean(dead_dwells)
+        ax3.annotate(f'μ={mean_alive:.1f}', (1, mean_alive + 0.5), ha='center', fontsize=9)
+        ax3.annotate(f'μ={mean_dead:.1f}', (2, mean_dead + 0.5), ha='center', fontsize=9, color='#c0392b')
+
+    ax3.set_ylabel('Max Consecutive Months in Forbidden Zone')
+    ax3.set_title('C. Dwell Time Comparison', fontweight='bold')
+    ax3.legend(loc='upper right')
+    ax3.grid(True, alpha=0.3, axis='y')
+    ax3.set_ylim(0, max(max(alive_dwells, default=1), max(dead_dwells, default=1)) + 3)
+
+    plt.tight_layout()
+    plt.savefig("omega-p1-forbidden-zone.pdf", format="pdf", dpi=300)
+    print(f"\n✅ Figure P1 sauvegardée : omega-p1-forbidden-zone.pdf")
+    plt.close(fig)
 if __name__ == "__main__":
     # La méthode 'spawn' est cruciale pour la compatibilité multiprocessing sur macOS/Windows
     try:
@@ -5891,7 +6424,6 @@ if __name__ == "__main__":
     print("=" * 80)
     print(f"OMEGA V36 - PARALLEL EXECUTION ({MAX_WORKERS} Workers)")
     print("=" * 80)
-    # On ajoute quelques sauts de ligne pour laisser de la place aux barres tqdm
     print("\n" * (len(REPOS_CONFIG) + 1))
 
     global_results = {}
@@ -5922,336 +6454,152 @@ if __name__ == "__main__":
         print("\n❌ Aucun projet analysé. Vérifiez les chemins dans REPOS_CONFIG.")
         exit(1)
 
-    print(f"\n📊 Projets analysés avec succès : {len(global_results)}/{len(REPOS_CONFIG)}")
+    print(f"\n📊 TOTAL Projets extraits : {len(global_results)}")
 
     # ==========================================================================
-    # PHASE 2 : COMPARAISON DES MÉTRIQUES GAMMA (NOUVEAU V36)
-    # ==========================================================================
-    print("\n" + "#" * 80)
-    print("PHASE 2 : COMPARAISON DES MÉTRIQUES GAMMA (V36)")
-    print("#" * 80)
-
-    gamma_comparison = compare_gamma_metrics(all_dataframes)
-
-    # ==========================================================================
-    # PHASE 3 : VISUALISATIONS DE BASE
+    # PHASE 1.5 : TRI STRATÉGIQUE DES CORPUS (DIVIDE & CONQUER)
     # ==========================================================================
     print("\n" + "#" * 80)
-    print("PHASE 3 : GÉNÉRATION DES VISUALISATIONS")
+    print("PHASE 1.5 : SÉPARATION DES CORPUS (THÉORIE vs SURVIE)")
     print("#" * 80)
 
-    # 3.1 Diagramme de Phase Global (Moyennes)
-    print("\n[3.1] Diagramme de Phase Global...")
-    plot_phase_diagram(global_results)
+    # 1. CORPUS THÉORIQUE (Vivants & Matures > 36 mois)
+    # Utilisé pour prouver l'émergence de la structure (Gamma, Granger, Attracteurs)
+    dfs_theory = {
+        name: df for name, df in all_dataframes.items()
+        if PROJECT_STATUS.get(name) == 'alive' and len(df) >= 36
+    }
 
-    # 3.2 Nuage de Dispersion
-    print("\n[3.2] Nuage de Dispersion Ontologique...")
-    plot_dispersion_cloud(all_dataframes)
+    # Calcul Crossover spécifique pour la théorie
+    crossover_theory = {}
+    for name, df in dfs_theory.items():
+        res = analyze_rolling_granger(name, df)
+        if res: crossover_theory[name] = res
 
-    # 3.3 Histogramme de Bimodalité
-    print("\n[3.3] Histogramme de Bimodalité...")
-    plot_bimodality_histogram(all_dataframes)
-
-    # 3.4 Vues Duales par projet
-    print("\n[3.4] Génération des vues duales par projet...")
+    # 2. CORPUS GLOBAL (Pour Risque & Survie)
+    # On garde tout ce qui a plus de 12 mois pour comparer Vivants vs Morts
+    crossover_all = {}
     for name, df in all_dataframes.items():
-        if df is not None and not df.empty:
-            plot_dual_view(df, name, REPOS_CONFIG[name])
+        if len(df) > 12:
+            res = analyze_rolling_granger(name, df, window_size=min(12, len(df)//3))
+            if res: crossover_all[name] = res
+
+    print(f"📉 Corpus THÉORIE (Alive > 36m) : {len(dfs_theory)} projets")
+    print(f"💀 Corpus GLOBAL (Pour Survie)  : {len(all_dataframes)} projets")
 
     # ==========================================================================
-    # PHASE 4 : TESTS STATISTIQUES PRINCIPAUX
-    # ==========================================================================
-    print("\n" + "#" * 80)
-    print("PHASE 4 : TESTS STATISTIQUES (HYPOTHÈSES H_2-H_5)")
-    print("#" * 80)
-
-    # 4.1 Test H_2 : Bimodalité (Hartigan Dip Test)
-    print("\n[4.1] TEST H_2 : Bimodalité...")
-    bimodality_results = run_statistical_tests(all_dataframes)
-
-    # 4.2 Test A : Temps de Résidence (Attracteurs)
-    print("\n[4.2] TEST A : Temps de Résidence...")
-    residence_results = run_residence_time_test(all_dataframes)
-
-    # ==========================================================================
-    # PHASE 5 : ANALYSE DE RÉGRESSION (COURBES DE CROISSANCE)
+    # PHASE 2-6 : PREUVES STRUCTURELLES (SUR CORPUS THÉORIQUE)
     # ==========================================================================
     print("\n" + "#" * 80)
-    print("PHASE 5 : RÉGRESSION - MODÈLES DE CROISSANCE")
+    print("PHASE A : PREUVES STRUCTURELLES (Sur Corpus Théorique)")
     print("#" * 80)
 
-    logistic_results = run_regression_analysis_on_gamma(
-        all_dataframes=all_dataframes,
-        train_window=24,
-        hold_out=2
-    )
+    # Phase 2 : Gamma Metrics
+    gamma_comparison = compare_gamma_metrics(dfs_theory)
 
-    # ==========================================================================
-    # PHASE 6 : TESTS DE CAUSALITÉ DE GRANGER
-    # ==========================================================================
-    print("\n" + "#" * 80)
-    print("PHASE 6 : CAUSALITÉ DE GRANGER")
-    print("#" * 80)
+    # Phase 3 : Visualisations
+    plot_phase_diagram({k: global_results[k] for k in dfs_theory if k in global_results})
+    plot_dispersion_cloud(dfs_theory)
+    plot_bimodality_histogram(dfs_theory)
+    plot_phase_space_academic(dfs_theory, crossover_theory)
 
-    # 6.1 Test K : Granger simple
-    print("\n[6.1] TEST K : Causalité de Granger (global)...")
-    granger_results = run_granger_test(all_dataframes, max_lag=6)
+    # Phase 4 : Tests Statistiques (H2, Attracteurs)
+    bimodality_results = run_statistical_tests(dfs_theory)
+    residence_results = run_residence_time_test(dfs_theory)
 
-    # 6.2 Test K-bis : Granger segmenté par phase
-    print("\n[6.2] TEST K-BIS : Granger segmenté par phase...")
-    granger_phase_results = test_granger_by_phase(all_dataframes, max_lag=4)
+    # Phase 5 : Régression
+    logistic_results = run_regression_analysis_on_gamma(dfs_theory, train_window=24, hold_out=2)
+
+    # Phase 6 : Granger
+    run_granger_test(dfs_theory, max_lag=6)
+    granger_phase_results = test_granger_by_phase(dfs_theory, max_lag=4)
     plot_granger_by_phase(granger_phase_results)
 
+    # Phase 7B : Variance Collapse
+    test_variance_collapse_symmetrization(crossover_theory, dfs_theory)
+
     # ==========================================================================
-    # PHASE 7 : DÉTECTION DE LA SINGULARITÉ (CROSSOVER)
+    # PHASE 7C & T4 : ANALYSE DE RISQUE (SUR CORPUS GLOBAL)
     # ==========================================================================
     print("\n" + "#" * 80)
-    print("PHASE 7 : DÉTECTION DU POINT Ω (ROLLING GRANGER)")
+    print("PHASE B : PREUVES DE RISQUE (Alive vs Dead - Sur Corpus Global)")
     print("#" * 80)
 
-    crossover_results = {}
-    for name, df in all_dataframes.items():
-        if len(df) > 60:  # Minimum 5 ans d'historique
+    # TEST 7C CORRIGÉ : Zone Interdite avec Z-Score Relatif
+    # Utilise all_dataframes et crossover_all pour comparer tout le monde
+    p1_results = test_forbidden_zone_P1_relatif(all_dataframes, crossover_all, PROJECT_STATUS)
 
-            crossover_res = analyze_rolling_granger(name, df, window_size=36, max_lag=3)
-            if crossover_res:
-                plot_causal_crossover(name, crossover_res)
-                crossover_results[name] = crossover_res
-        else:
-            print(f"[{name}] Historique trop court ({len(df)} mois < 60)")
-
-    # ==========================================================================
-    # VISUALISATION FINALE : LA CONVERGENCE UNIVERSELLE (FIGURE 3)
-    # ==========================================================================
-    print("\n" + "-" * 60)
-    print("GÉNÉRATION DE LA FIGURE UNIVERSELLE ")
-    print("-" * 60)
-
-    # Appel de la nouvelle fonction
-    # Note : crossover_results doit être un dictionnaire {nom_projet: resultat_rolling}
-    # Il est rempli dans la boucle Phase 7 ci-dessus
-    if crossover_results:
-        # On passe aussi all_dataframes pour avoir les Gamma
-        plot_phase_space_academic(all_dataframes, crossover_results)
+    # Analyse de Survie (Kaplan-Meier)
+    try:
+        survival_val = SurvivalAsymmetryValidator(all_dataframes, crossover_all, PROJECT_STATUS)
+        survival_val.prepare_data()
+        survival_val.run_kaplan_meier()
+        # survival_val.run_cox_model() # Activer si assez d'événements
+    except Exception as e:
+        print(f"⚠️ Erreur Survie: {e}")
 
     # ==========================================================================
-    # PHASE 7B : TESTS continuous symmetrization
+    # PHASE 9 : VALIDATION SCIENTIFIQUE AVANCÉE (SUR CORPUS THÉORIQUE)
     # ==========================================================================
     print("\n" + "#" * 80)
-    print("PHASE 7B : TESTS continuous symmetrization")
+    print("PHASE 9 : VALIDATION SCIENTIFIQUE (Robustesse sur Théorie)")
     print("#" * 80)
-    if crossover_results and all_dataframes:
-        test_variance_collapse_symmetrization(crossover_results, all_dataframes)
 
-        # ==========================================================================
-        # PHASE 7-TER : ANALYSE DE SURVIE (NATURE-READY)
-        # ==========================================================================
-        print("\n" + "#" * 80)
-        print("PHASE 7-TER : ANALYSE DE SURVIE (Asymmetry Exposure vs Survival)")
-        print("#" * 80)
+    # Validation Structurelle V44
+    if crossover_theory:
+        print("\n--- [A] VALIDATION STRUCTURELLE (V44) ---")
+        sci_validator = ScientificValidator(dfs_theory)
+        sci_validator.run_full_suite(crossover_theory)
 
-        if crossover_results and all_dataframes:
-            # On passe PROJECT_STATUS juste pour info, mais le calcul est indépendant
-            try:
-                survival_val = SurvivalAsymmetryValidator(all_dataframes, crossover_results, PROJECT_STATUS)
-                survival_val.prepare_data()  # Etape cruciale ajoutée
-                survival_val.run_kaplan_meier()
-                survival_val.run_cox_model()
-            except NameError:
-                print("⚠️ Erreur : SurvivalAsymmetryValidator ou lifelines manquant.")
-            except Exception as e:
-                print(f"⚠️ Erreur lors de l'analyse de survie : {e}")
-        else:
-            print("⚠️ Données insuffisantes pour l'analyse de survie (manque Granger ou Dataframes).")
+    # Tests Robustesse V37
+    print("\n--- [B] TESTS DE ROBUSTESSE COMPLÉMENTAIRES (V37) ---")
+    validator = RobustnessValidator(dfs_theory)
+    validator.run_sensitivity_analysis()
+    validator.run_null_model(n_permutations=200)
+    validator.run_covariate_control()
+
+    # ==========================================================================
+    # PHASE 10-12 : ANALYSES COMPLÉMENTAIRES
+    # ==========================================================================
     print("\n" + "#" * 80)
-    print("PHASE 8A :causal_symmetry_diagnostic")
+    print("PHASES FINALES : Validation Externe & Mécanismes")
     print("#" * 80)
-    # ==========================================================================
-    # PHASE 8A : CASUAL SIMETRY
-    # ==========================================================================
-    from causal_sim import run_causal_symmetry_diagnostic
-    diagnostic_results = run_causal_symmetry_diagnostic(
-        all_dataframes,
-        crossover_results
+
+    # Hindcasting (Sur Global pour voir la puissance prédictive)
+    hind_validator = HindcastingValidator(all_dataframes, PROJECT_STATUS)
+    hind_validator.run_full_validation()
+
+    # Validation Externe (Gouvernance)
+    ext_validator = ExternalMaturityValidator(all_dataframes, GOVERNANCE_TIER)
+    ext_validator.validate_governance()
+
+    # Co-modification (Sur Théorie pour le mécanisme)
+    print("\n[PHASE 12] Co-modification Analysis (Mechanism)...")
+    comod_results = run_comodification_analysis(
+        repos_config={k: v for k, v in REPOS_CONFIG.items() if k in dfs_theory}, # Filtrer la config
+        gamma_dataframes=dfs_theory,
+        cache_dir=CACHE_DIR + "comod/",
+        max_workers=MAX_WORKERS
     )
+
+    if comod_results.get('correlations') and crossover_theory:
+        validate_comod_granger_link(comod_results, granger_phase_results, dfs_theory)
+        plot_bidirectional_architecture_patterns(comod_results['correlations'], crossover_theory)
+
+    # Causal Symmetry Diagnostic
+    from causal_sim import run_causal_symmetry_diagnostic
+    run_causal_symmetry_diagnostic(dfs_theory, crossover_theory)
+
     # ==========================================================================
-    # PHASE 8 : TESTS COMPLÉMENTAIRES
+    # EXPORT FINAL
     # ==========================================================================
     print("\n" + "#" * 80)
-    print("PHASE 8 : TESTS COMPLÉMENTAIRES (IRRÉVERSIBILITÉ, VARIANCE)")
+    print("FIN : EXPORT DES DONNÉES")
     print("#" * 80)
-
-    pct_universal = run_complementary_tests(all_dataframes, logistic_results)
 
     generate_project_recap(all_dataframes, global_results)
 
-    # ==========================================================================
-    # PHASE 9 : BLINDAGE SCIENTIFIQUE COMPLET (V44 + V37)
-    # ==========================================================================
-    print("\n" + "#" * 80)
-    print("PHASE 9 : VALIDATION SCIENTIFIQUE AVANCÉE")
-    print("#" * 80)
-
-    # --- PARTIE 1 : Validation "Reviewer-Proof" (Classe ScientificValidator V44) ---
-    # Remplace les anciens tests V40 (gamma_robustness, temporal_cut) qui plantaient
-    if crossover_results:
-        print("\n--- [A] VALIDATION STRUCTURELLE (V44) ---")
-        sci_validator = ScientificValidator(all_dataframes)
-        sci_validator.run_full_suite(crossover_results)
-    else:
-        print("⚠️ Crossover results manquants. Validation V44 ignorée.")
-
-    # --- PARTIE 2 : Tests de Robustesse Complémentaires (Classe RobustnessValidator V37) ---
-    # On conserve ces tests car ils apportent des infos différentes (Heatmap, Z-Score)
-    print("\n--- [B] TESTS DE ROBUSTESSE COMPLÉMENTAIRES (V37) ---")
-    validator = RobustnessValidator(all_dataframes)
-
-    # 1. Sensitivity Analysis (Heatmap) -> Toujours utile pour voir l'impact des paramètres
-    validator.run_sensitivity_analysis()
-
-    # 2. Null Model (Z-Score) -> Preuve que la trajectoire n'est pas aléatoire
-    validator.run_null_model(n_permutations=200)
-
-    # 3. Covariate Control -> Vérifie que ce n'est pas juste la taille de l'équipe
-    validator.run_covariate_control()
-
-    # Note : On ne lance plus run_predictive_validation ici car la PHASE 10 (Hindcasting)
-    # fait exactement la même chose en beaucoup plus complet juste après.
-
-    print("\n🏁 PHASE 9 TERMINÉE.")
-    # ==========================================================================
-    # PHASE 10 : HINDCASTING
-    # ==========================================================================
-    print("\n" + "#" * 80)
-    print("PHASE 10 : VALIDATION PRÉDICTIVE (HINDCASTING)")
-    print("#" * 80)
-
-    print("\n" + "#" * 80)
-    print("PHASE 10 : VALIDATION PRÉDICTIVE (HINDCASTING)")
-    print("#" * 80)
-
-    validator = HindcastingValidator(all_dataframes, PROJECT_STATUS)
-    results = validator.run_full_validation()
-    # ==========================================================================
-    # PHASE 11 : VALIDATION EXTERNE (ANTI-CIRCULARITÉ)
-    # ==========================================================================
-    print("\n" + "#" * 80)
-    print("PHASE 11 : VALIDATION EXTERNE (Gouvernance & Institutionnalisation)")
-    print("#" * 80)
-
-    # Cette fonction lance les calculs ET génère le graphique annoté
-    validator = ExternalMaturityValidator(all_dataframes, GOVERNANCE_TIER)
-    gov_results = validator.validate_governance()
-
-    # ==========================================================================
-    # PHASE 12: CO-MODIFICATION COUPLING ANALYSIS (V41)
-    # ==========================================================================
-    print("\\n" + "#" * 80)
-    print("PHASE 12 : CO-MODIFICATION COUPLING ANALYSIS (V41)")
-    print("#" * 80)
-    print("\\nHypothesis: Γ ↑ → fan-in ↑ → Granger S→A ↑")
-    print("Testing if structural maturity correlates with file interdependence...\\n")
-
-    # Run the analysis
-    comod_results = run_comodification_analysis(
-        repos_config=REPOS_CONFIG,
-        gamma_dataframes=all_dataframes,
-        cache_dir=CACHE_DIR + "comod/",
-        max_workers=6
-          # Use 0.5 for faster analysis on large repos
-    )
-
-    # ==========================================================================
-    # PHASE 12-BIS: VALIDATE THE MECHANISM (Γ → Fan-In → Granger)
-    # ==========================================================================
-
-    if comod_results['correlations']:
-        print("\\n" + "=" * 80)
-        print("MECHANISM VALIDATION: Γ → Fan-In → Structural Constraint")
-        print("=" * 80)
-
-        # Merge co-modification metrics with Granger results
-        validate_comod_granger_link(
-            comod_results=comod_results,
-            granger_phase_results=granger_phase_results,
-            all_dataframes=all_dataframes
-        )
-
-    # ==========================================================================
-    # PHASE 12-TER: CORRÉLATION TEMPORELLE Fan-In ↔ Granger
-    # ==========================================================================
-
-    if comod_results['temporal_metrics'] and crossover_results:
-        print("\n" + "=" * 80)
-        print("PHASE 12-TER : CORRÉLATION TEMPORELLE Fan-In(t) ↔ Granger(t)")
-        print("=" * 80)
-
-        fanin_granger_results = correlate_fanin_with_granger_temporal(
-            comod_temporal_metrics=comod_results['temporal_metrics'],
-            crossover_results=crossover_results,
-            all_dataframes=all_dataframes
-        )
-
-    if comod_results.get('correlations'):
-        print("\n" + "-" * 60)
-        print("GÉNÉRATION FIGURE : Two Architectural Paths")
-        print("-" * 60)
-
-        plot_bidirectional_architecture_patterns(
-            correlations=comod_results['correlations'],
-            crossover_results=crossover_results,
-            output_path="figure_architecture_paths.png"
-        )
-    # ==========================================================================
-    # PHASE 13: SYNTHÈSE FINALE
-    # ==========================================================================
-    print("\n" + "#" * 80)
-    print("SYNTHÈSE FINALE V36")
-    print("#" * 80)
-
-    print(f"""
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                           RÉSULTATS OMEGA V36                                ║
-╠══════════════════════════════════════════════════════════════════════════════╣
-║  Projets analysés     : {len(global_results):>3} / {len(REPOS_CONFIG):<3}                                        ║
-║  Horizon de survie    : {SURVIVAL_HORIZON_MONTHS} mois                                              ║
-╠══════════════════════════════════════════════════════════════════════════════╣
-║  MÉTRIQUES GAMMA (Corrélations)                                              ║
-║  ├─ Structure vs Content : r = {gamma_comparison['corr_structure_content']:.3f}                                 ║
-║  ├─ Structure vs Hybrid  : r = {gamma_comparison['corr_structure_hybrid']:.3f}                                 ║
-║  └─ Content vs Hybrid    : r = {gamma_comparison['corr_content_hybrid']:.3f}                                 ║
-╠══════════════════════════════════════════════════════════════════════════════╣
-║  TESTS STATISTIQUES                                                          ║""")
-    granger_coupling = granger_phase_results.get('shift_result', {})
-    cp1 = granger_coupling.get('coupling_p1', 0)
-    cp2 = granger_coupling.get('coupling_p2', 0)
-
-    print(f"""
-    ║  ├─ H_2 (Bimodalité)      : {"✅ VALIDÉ" if bimodality_results['p_value'] < 0.05 else "⚠️  PARTIEL"} (p={bimodality_results['p_value']:.4f})              ║
-    ║  ├─ H_4 (Universalité)    : {"✅ VALIDÉ" if pct_universal >= 90 else "❌ NON"} ({pct_universal:.0f}% reach high Γ)                ║
-    ║  ├─ H_1 (Symétrie Causale): {granger_coupling.get('verdict', 'N/A')}                           ║
-    ║  │   └─ Coupling Ratio   : {cp1:.2f} (Phase 1) → {cp2:.2f} (Phase 2)            ║
-    ╠══════════════════════════════════════════════════════════════════════════════╣
-    """)
-
-
-    print(f"""╠══════════════════════════════════════════════════════════════════════════════╣
-║  FICHIERS GÉNÉRÉS                                                            ║
-║  ├─ omega_v36_gamma_comparison.png     (Comparaison des Γ)                   ║
-║  ├─ omega_v34_bimodality_histogram.png (Distribution)                        ║
-║  ├─ omega_v34_residence_time_analysis.png (Attracteurs)                      ║
-║  ├─ omega_v34_granger_by_phase.png     (Causalité)                           ║
-║  ├─ omega_v34_dispersion_cloud.png     (Dispersion)                          ║
-║  └─ omega_v35_*_crossover.png          (Singularités par projet)             ║
-╚══════════════════════════════════════════════════════════════════════════════╝
-""")
-
-    # ==========================================================================
-    # EXPORT CSV (optionnel, pour analyse externe)
-    # ==========================================================================
-    print("\n[EXPORT] Sauvegarde des données en CSV...")
-
-    # Concaténer tous les DataFrames avec le nom du projet
+    # Export CSV Global
     all_data = []
     for name, df in all_dataframes.items():
         if df is not None and not df.empty:
@@ -6261,51 +6609,7 @@ if __name__ == "__main__":
             all_data.append(df_export)
 
     if all_data:
-        combined_df = pd.concat(all_data, ignore_index=False)
+        pd.concat(all_data).to_csv("omega_v36_all_data.csv")
+        print("✅ Données exportées : omega_v36_all_data.csv")
 
-        # Sélectionner les colonnes pertinentes
-        export_cols = [
-            'project', 'project_status',
-            'total_weight', 'sedimented_weight',
-            'monthly_gamma', 'gamma_s', 'gamma_c',
-            'v2_lines', 'v3_lines', 'files_touched', 'files_survived',
-            'temps_depuis_debut', 'n_contributors', 'intensity_per_dev'
-        ]
-
-        # Filtrer les colonnes qui existent
-        export_cols = [c for c in export_cols if c in combined_df.columns]
-
-        combined_df[export_cols].to_csv("omega_v36_all_data.csv")
-        print(f"   ✅ Données exportées : omega_v36_all_data.csv ({len(combined_df)} lignes)")
-        # ==========================================================================
-        # TEST DE VALIDITÉ PHYSIQUE (GAMMA <= 1.0)
-        # ==========================================================================
-        print("\n" + "=" * 80)
-        print("VÉRIFICATION : BORNAGE NATUREL DE GAMMA (SANS CLIP)")
-        print("=" * 80)
-
-        max_gamma_found = 0
-        projects_exceeding = []
-
-        for name, df in all_dataframes.items():
-            if df is not None and not df.empty:
-                local_max = df['monthly_gamma'].max()
-                if local_max > max_gamma_found:
-                    max_gamma_found = local_max
-
-                # On tolère une infime erreur de virgule flottante (1.00000001)
-                if local_max > 1.00001:
-                    projects_exceeding.append((name, local_max))
-
-        print(f"Gamma Maximum absolu observé : {max_gamma_found:.6f}")
-
-        if not projects_exceeding:
-            print("✅ SUCCÈS : Aucun projet ne dépasse naturellement 1.0.")
-            print("   La structure est physiquement conservatrice (Operational Closure validée).")
-        else:
-            print(f"⚠️ ATTENTION : {len(projects_exceeding)} projet(s) dépassent 1.0 :")
-            for p, v in projects_exceeding:
-                print(f"   - {p}: {v:.4f}")
-    print("\n" + "=" * 80)
-    print("ANALYSE V36 TERMINÉE")
-    print("=" * 80)
+    print("\n✅ ANALYSE TERMINÉE.")
