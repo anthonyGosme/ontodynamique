@@ -28,6 +28,8 @@ import bisect
 import random
 import warnings
 
+from ontodynamique.src.hysteresisValidator import HysteresisValidator
+
 warnings.filterwarnings("ignore", category=FutureWarning, module="statsmodels")
 
 from collections import defaultdict
@@ -7804,7 +7806,21 @@ if __name__ == "__main__":
     # Causal Symmetry Diagnostic
     from causal_sim import run_causal_symmetry_diagnostic
     run_causal_symmetry_diagnostic(dfs_theory, crossover_theory)
+    # ==========================================================================
+    # PHASE 14: HYSTERESIS & IRREVERSIBILITY TEST (V47.2 FINAL)
+    # ==========================================================================
+    print("\n" + "#" * 80)
+    print("PHASE 14: HYSTERESIS TEST (Dwell-Time Asymmetry)")
+    print("#" * 80)
 
+    # Utilisez all_dataframes pour capturer aussi les projets potentiellement morts/revertés
+    hysteresis_val = HysteresisValidator(all_dataframes)
+
+    # 1. Main Run
+    hysteresis_results = hysteresis_val.run_main_test(g_high=0.7, g_low=0.5, durable=6)
+
+    # 2. Sensitivity Analysis
+    hysteresis_val.run_sensitivity_analysis()
     # ==========================================================================
     # EXPORT FINAL
     # ==========================================================================
