@@ -19,7 +19,7 @@ from concurrent.futures import ProcessPoolExecutor
 from tqdm import tqdm
 from scipy import stats
 from sklearn.utils import resample
-
+import subprocess
 # Import PyGit2 pour la performance
 try:
     import pygit2
@@ -54,130 +54,149 @@ class CoreTouchExtractor:
         self.repo = None
 
     def process_repo(self):
-        """
-        Parcourt le repo chronologiquement pour calculer l'âge des fichiers.
-
-        Returns:
-            DataFrame avec colonnes: CTR_6, CTR_12, CTR_24, project
-            Index: date mensuelle
-        """
-        if pygit2 is None:
-            print(f"⚠️ PyGit2 requis pour {self.project_name}")
-            return None
+        # COMMANDE GIT "LOSSLESS"
+        # --reverse : Du début à la fin (pour suivre la naissance des fichiers)
+        # --name-status : Affiche A (Add), M (Modify), R (Rename)
+        # -M : Détecte les renommages (CRITIQUE pour ne pas perdre l'âge)
+        # --date=unix : Timestamp précis
+        cmd = [
+            "git", "-C", self.repo_path, "log",
+            "--reverse",
+            "--no-merges",
+            "--date=unix",
+            "--pretty=format:COMMIT::%ct",
+            "--name-status",
+            "-M"  # Active la détection des renommages
+        ]
 
         try:
-            self.repo = pygit2.Repository(self.repo_path)
-        except Exception as e:
-            print(f"⚠️ Erreur ouverture repo {self.project_name}: {e}")
-            return None
-
-        # Dictionnaire: filepath -> timestamp de création
-        file_birthdays = {}
-
-        # Liste des données par commit
-        commit_data = []
-
-        # Walker chronologique (OLDEST -> NEWEST)
-        # GIT_SORT_REVERSE inverse l'ordre par défaut (newest first)
-        try:
-            walker = self.repo.walk(
-                self.repo.head.target,
-                pygit2.GIT_SORT_TOPOLOGICAL | pygit2.GIT_SORT_REVERSE
+            # bufsize large pour éviter les I/O fréquents
+            process = subprocess.Popen(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                text=True, encoding='utf-8', errors='replace', bufsize=1024 * 1024
             )
         except Exception as e:
-            print(f"⚠️ Erreur walker {self.project_name}: {e}")
+            print(f"⚠️ Erreur git CLI {self.project_name}: {e}")
             return None
 
-        for commit in walker:
-            try:
-                # Calcul du diff
-                if not commit.parents:
-                    # Premier commit: diff avec arbre vide
-                    diff = commit.tree.diff_to_tree(swap=True)
-                else:
-                    # Diff avec le parent
-                    diff = self.repo.diff(commit.parents[0], commit)
+        # Memoire : chemin_fichier -> date_creation (timestamp)
+        file_birthdays = {}
 
-                current_ts = commit.commit_time
-                modified_files_ages = []
+        # Accumulateurs pour les stats mensuelles
+        monthly_stats = defaultdict(lambda: {
+            'n_files': 0,
+            'weighted_age_sum': 0,
+            'ctr_counts': {t: 0 for t in self.thresholds},
+            'n_commits': 0
+        })
 
-                # Parcours des fichiers modifiés
-                for patch in diff:
-                    delta = patch.delta
-                    path = delta.new_file.path
+        current_ts = 0
+        current_month = None
 
-                    # Mise à jour de la date de naissance si nouveau fichier
-                    if delta.status == pygit2.GIT_DELTA_ADDED or path not in file_birthdays:
-                        file_birthdays[path] = current_ts
+        # Buffer pour le commit en cours
+        commit_ages = []
 
-                    # Calcul de l'âge en mois
-                    age_seconds = current_ts - file_birthdays[path]
-                    age_months = age_seconds / (3600 * 24 * 30.44)  # Mois moyen
-                    modified_files_ages.append(max(0, age_months))  # Âge >= 0
+        for line in process.stdout:
+            line = line.strip()
+            if not line:
+                continue
 
-                if not modified_files_ages:
+            if line.startswith("COMMIT::"):
+                # --- FIN DU COMMIT PRÉCÉDENT ---
+                if commit_ages:
+                    # On enregistre les données agrégées (aucune perte de précision mathématique)
+                    m_stat = monthly_stats[current_month]
+                    m_stat['n_files'] += len(commit_ages)
+                    m_stat['n_commits'] += 1
+                    m_stat['weighted_age_sum'] += sum(commit_ages)
+
+                    for t in self.thresholds:
+                        count = sum(1 for age in commit_ages if age >= t)
+                        m_stat['ctr_counts'][t] += count
+
+                # --- DÉBUT DU NOUVEAU COMMIT ---
+                try:
+                    current_ts = int(line.split("::")[1])
+                    dt = datetime.utcfromtimestamp(current_ts)
+                    current_month = dt.strftime('%Y-%m-01')
+                    commit_ages = []  # Reset buffer
+                except ValueError:
                     continue
 
-                # Calcul des CTR pour chaque seuil
-                ages_arr = np.array(modified_files_ages)
-                row = {
-                    'timestamp': current_ts,
-                    'n_files': len(ages_arr),
-                    'mean_age': np.mean(ages_arr)
-                }
+            else:
+                # --- ANALYSE DES FICHIERS ---
+                parts = line.split('\t')
 
-                for t in self.thresholds:
-                    # CTR = proportion de fichiers avec âge >= t mois
-                    ctr = np.mean(ages_arr >= t)
-                    row[f'CTR_{t}'] = ctr
+                # Format: STATUS  PATH  (ou STATUS OLD_PATH NEW_PATH pour Rename)
+                if len(parts) < 2: continue
 
-                commit_data.append(row)
+                status_char = parts[0][0]  # 'A', 'M', 'R', 'D'
 
-            except Exception:
-                continue
+                # Gestion des cas
+                if status_char == 'A':  # Added
+                    path = parts[1]
+                    file_birthdays[path] = current_ts
+                    # Un fichier ajouté a un âge de 0, on le compte
+                    commit_ages.append(0.0)
 
-        if not commit_data:
-            return None
+                elif status_char == 'M':  # Modified
+                    path = parts[1]
+                    # Si on ne connait pas le fichier (cas rare d'un repo partiel), on le "crée" maintenant
+                    if path not in file_birthdays:
+                        file_birthdays[path] = current_ts
 
-        # Conversion en DataFrame
-        df = pd.DataFrame(commit_data)
+                    birth = file_birthdays[path]
+                    age_months = (current_ts - birth) / 2629743.0  # 1 mois en secondes
+                    commit_ages.append(max(0, age_months))
 
-        # Conversion timestamp -> datetime
-        df['date'] = pd.to_datetime(df['timestamp'], unit='s')
-        df['month'] = df['date'].dt.to_period('M').dt.to_timestamp()
+                elif status_char == 'R':  # Renamed
+                    # Format: R100  old_path  new_path
+                    if len(parts) >= 3:
+                        old_path = parts[1]
+                        new_path = parts[2]
+                        # On transfère la date de naissance (CRITIQUE pour préserver la donnée)
+                        if old_path in file_birthdays:
+                            birth = file_birthdays.pop(old_path)  # On enlève l'ancien
+                            file_birthdays[new_path] = birth  # On assigne au nouveau
 
-        # Agrégation mensuelle (moyenne pondérée par nombre de fichiers)
-        monthly_data = []
+                            # Un renommage est aussi une modification
+                            age_months = (current_ts - birth) / 2629743.0
+                            commit_ages.append(max(0, age_months))
+                        else:
+                            # Fichier inconnu renommé -> considéré comme nouveau
+                            file_birthdays[new_path] = current_ts
+                            commit_ages.append(0.0)
 
-        for month, group in df.groupby('month'):
-            row = {'month': month, 'project': self.project_name}
+                elif status_char == 'D':  # Deleted
+                    path = parts[1]
+                    if path in file_birthdays:
+                        del file_birthdays[path]  # Nettoyage mémoire
 
-            # Poids = nombre de fichiers dans chaque commit
-            weights = group['n_files'].values
-            total_weight = weights.sum()
+        process.wait()
 
-            if total_weight == 0:
-                continue
+        # --- CONSTRUCTION DATAFRAME FINAL ---
+        final_data = []
+        for month_str, stats in monthly_stats.items():
+            total_weight = stats['n_files']
+            if total_weight == 0: continue
+
+            row = {
+                'month': pd.to_datetime(month_str),
+                'project': self.project_name,
+                'n_commits': stats['n_commits'],
+                'n_files_total': total_weight,
+                'mean_age_weighted': stats['weighted_age_sum'] / total_weight
+            }
 
             for t in self.thresholds:
-                col = f'CTR_{t}'
-                # Moyenne pondérée
-                weighted_avg = np.average(group[col].values, weights=weights)
-                row[col] = weighted_avg
+                row[f'CTR_{t}'] = stats['ctr_counts'][t] / total_weight
 
-            row['mean_age_weighted'] = np.average(group['mean_age'].values, weights=weights)
-            row['n_commits'] = len(group)
-            row['n_files_total'] = total_weight
+            final_data.append(row)
 
-            monthly_data.append(row)
+        if not final_data: return None
 
-        if not monthly_data:
-            return None
-
-        result_df = pd.DataFrame(monthly_data)
-        result_df = result_df.set_index('month').sort_index()
-
-        return result_df
+        df = pd.DataFrame(final_data)
+        return df.set_index('month').sort_index()
 
 
 def _ctr_worker(args):

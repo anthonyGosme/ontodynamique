@@ -478,7 +478,7 @@ class CoModificationAnalyzer:
             self.commit_sizes = cache_data.get('commit_sizes', [])
             self.temporal_metrics = cache_data.get('temporal_metrics', [])
 
-            print(f"[{self.name}] ✅ Cache loaded ({len(self.file_to_idx)} files)")
+            print(f"{self.name} Cache {len(self.file_to_idx)} files")
             return True
 
         except Exception as e:
@@ -722,7 +722,8 @@ def plot_comodification_evolution(
     plt.tight_layout()
     filename = f"comod_v42_{project_name.lower()}_evolution.png"
     plt.savefig(filename, dpi=150)
-    print(f"✅ Plot saved: {filename}")
+
+    #print(f"{project_name.lower()} ")
     plt.close(fig)
 
 

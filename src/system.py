@@ -28,10 +28,15 @@ import bisect
 import random
 import warnings
 
+from ontodynamique.src.CrashTestAnalyzer import CrashTestAnalyzer
+from ontodynamique.src.hysteresisValidator import HysteresisValidator
+
 warnings.filterwarnings("ignore", category=FutureWarning, module="statsmodels")
 
 from collections import defaultdict
+import subprocess
 import concurrent.futures
+import null_model_validation as nmv
 import multiprocessing
 import os
 import pygit2
@@ -463,36 +468,58 @@ REPOS_CONFIGTOT = {
     },
 
 }
-
 REPOS_CONFIGCACHE = {
+    # --- INFRASTRUCTURE & BASES DE DONNÉES ---
+    'POSTGRES': REPOS_CONFIGTOT['POSTGRES'],
+    'REDIS': REPOS_CONFIGTOT['REDIS'],
+    'SQLITE': REPOS_CONFIGTOT['SQLITE'],
+    'NGINX': REPOS_CONFIGTOT['NGINX'],
+    'HTTPD_APACHE': REPOS_CONFIGTOT['HTTPD_APACHE'],
 
-    'ANSIBLE': {'path': BASE_PATH + 'ansible', 'branch': 'devel', 'core_paths': ['lib/ansible/'],
-                'ignore_paths': ['docs/', 'test/', 'tests/', 'examples/', 'packaging/', 'changelogs/'],
-                'color': '#EE0000'  # Rouge Ansible
-                },
+    # --- COMPILATEURS & LANGAGES ---
+    'GCC': REPOS_CONFIGTOT['GCC'],
+    'CPYTHON': REPOS_CONFIGTOT['CPYTHON'],
+    'RUST': REPOS_CONFIGTOT['RUST'],
+    'PHP': REPOS_CONFIGTOT['PHP'],
+    'NODE': REPOS_CONFIGTOT['NODE'],
 
-    'OPENCV': {'path': BASE_PATH + 'opencv', 'branch': '4.x',
-               'core_paths': ['modules/core/', 'modules/imgproc/', 'modules/features2d/', 'modules/calib3d/'],
-               'ignore_paths': ['samples/', 'doc/', 'data/', '3rdparty/', 'apps/', 'platforms/'], 'color': '#0000FF'
-               # Bleu OpenCV
-               },
+    # --- LIBRARIES IA & SCIENCE ---
+    'PYTORCH': REPOS_CONFIGTOT['PYTORCH'],
+    'TENSORFLOW': REPOS_CONFIGTOT['TENSORFLOW'],
+    'SCIPY': REPOS_CONFIGTOT['SCIPY'],
+    'OCTAVE': REPOS_CONFIGTOT['OCTAVE'],
+    'MATPLOTLIB': REPOS_CONFIGTOT['MATPLOTLIB'],
+    'PANDAS': REPOS_CONFIGTOT['PANDAS'],
+    'SCIKIT_LEARN': REPOS_CONFIGTOT['SCIKIT_LEARN'],
+    'OPENCV': REPOS_CONFIGTOT['OPENCV'],
 
-    'PANDAS': {'path': BASE_PATH + 'pandas', 'branch': 'main', 'core_paths': ['pandas/core/', 'pandas/_libs/'],
-               'ignore_paths': ['pandas/tests/', 'doc/', 'examples/', 'web/', 'ci/'], 'color': '#150458'
-               # Bleu foncé Pandas
-               },
+    # --- WEB FRAMEWORKS & TOOLS ---
+    'REACT': REPOS_CONFIGTOT['REACT'],
+    'VUE': REPOS_CONFIGTOT['VUE'],
+    'ANGULAR': REPOS_CONFIGTOT['ANGULAR'],
+    'RAILS': REPOS_CONFIGTOT['RAILS'],
+    'DJANGO': REPOS_CONFIGTOT['DJANGO'],
+    'FASTAPI': REPOS_CONFIGTOT['FASTAPI'],
+    'FLASK': REPOS_CONFIGTOT['FLASK'],
+    'VSCODE': REPOS_CONFIGTOT['VSCODE'],
+    'GIT_SCM': REPOS_CONFIGTOT['GIT_SCM'],
+    'FFMPEG': REPOS_CONFIGTOT['FFMPEG'],
+    'BITCOIN': REPOS_CONFIGTOT['BITCOIN'],
+    'WIRESHARK': REPOS_CONFIGTOT['WIRESHARK'],
+    'EMACS': REPOS_CONFIGTOT['EMACS'],
+    'CURL': REPOS_CONFIGTOT['CURL'],
+    'GIMP': REPOS_CONFIGTOT['GIMP'],
+    'WORDPRESS': REPOS_CONFIGTOT['WORDPRESS'],
+    'MEDIAWIKI': REPOS_CONFIGTOT['MEDIAWIKI'],
+    'SUBVERSION': REPOS_CONFIGTOT['SUBVERSION'],
+    'ANSIBLE': REPOS_CONFIGTOT['ANSIBLE'],
 
-    'SCIKIT_LEARN': {'path': BASE_PATH + 'scikit-learn', 'branch': 'main', 'core_paths': ['sklearn/'],
-                     'ignore_paths': ['examples/', 'doc/', 'build_tools/', 'benchmarks/', 'sklearn/datasets/data/'],
-                     'color': '#F7931E'
-                     },
-
-    'FLASK': {'path': BASE_PATH + 'flask', 'branch': 'main', 'core_paths': ['src/flask/'],
-              'ignore_paths': ['docs/', 'examples/', 'tests/', 'artwork/'], 'color': '#7f8c8d'  # Gris (Logo Noir/Blanc)
-              },
+    # --- OS & KERNELS ---
+    'KUBERNETES': REPOS_CONFIGTOT['KUBERNETES'],
+    'FREEBSD': REPOS_CONFIGTOT['FREEBSD'],
 }
 
-REPOS_CONFIG =REPOS_CONFIGTOT
+REPOS_CONFIG = REPOS_CONFIGTOT
 SAMPLE_RATE = 1
 BLAME_SAMPLE_SIZE = 50
 MAX_WORKERS = 6
@@ -2019,11 +2046,12 @@ class OmegaV34Engine:
         """Charge les résultats depuis le cache s'il existe."""
         if os.path.exists(self.cache_file):
             try:
+
                 with open(self.cache_file, 'rb') as f:
                     cached_data = pickle.load(f)
                     self.time_data = cached_data.get('time_data', self.time_data)
                     self.global_metrics = cached_data.get('global_metrics', {})
-                    print(f"[{self.name}] ✅ Cache chargé")
+                    print(f"{self.name} -")
                     return cached_data.get('dataframe')
             except Exception as e:
                 print(f"[{self.name}] ⚠️ Cache corrompu: {e}")
@@ -3452,8 +3480,8 @@ def run_regression_analysis_on_gamma(all_dataframes, train_window=24, hold_out=2
 
         print("\n" + "=" * 70)
         print("SYNTHÈSE GLOBALE DES R² D'AJUSTEMENT (Meilleur ajustement = R² max)")
-        print("=" * 70)
-        print(r2_summary.round(3).to_string())
+        #print("=" * 70)
+        #print(r2_summary.round(3).to_string())
         print(f"\nConclusion R² : Le modèle **{best_r2_model}** a la meilleure performance descriptive moyenne.")
 
         # 2. SYNTHÈSE AIC (Somme)
@@ -3463,8 +3491,8 @@ def run_regression_analysis_on_gamma(all_dataframes, train_window=24, hold_out=2
 
         print("\n" + "=" * 70)
         print("SYNTHÈSE GLOBALE AIC (Akaike) (Meilleur modèle = AIC min)")
-        print("=" * 70)
-        print(aic_summary.round(1).to_string())
+        ####print("=" * 70)
+        ####print(aic_summary.round(1).to_string())
         print(f"\nConclusion AIC : Le modèle **{best_aic_model}** est préféré (pénalité de parcimonie).")
 
         # 3. SYNTHÈSE BIC (Somme)
@@ -3474,8 +3502,8 @@ def run_regression_analysis_on_gamma(all_dataframes, train_window=24, hold_out=2
 
         print("\n" + "=" * 70)
         print("SYNTHÈSE GLOBALE BIC (Bayesian) (Meilleur modèle = BIC min)")
-        print("=" * 70)
-        print(bic_summary.round(1).to_string())
+        ###print("=" * 70)
+        ###print(bic_summary.round(1).to_string())
         print(f"\nConclusion BIC : Le modèle **{best_bic_model}** est préféré (pénalité plus stricte).")
 
     # --- SYNTHÈSE DES PARAMÈTRES DU MODÈLE LOGISTIQUE ---
@@ -3501,7 +3529,7 @@ def run_regression_analysis_on_gamma(all_dataframes, train_window=24, hold_out=2
         # Réorganiser les colonnes pour l'affichage final (v est fixe à 1.0 ou ignoré par le fit)
         cols = ['L', 'k', 't0', 't0/T', 'v', 'Interprétation']
 
-        print(params_summary[cols].to_string())
+        ######print(params_summary[cols].to_string())
 
         print(
             f"\nL : Asymptote max de Gamma (Maturité finale). t₀/T : Proportion de la vie du projet pour atteindre l'inflexion.")
@@ -4367,6 +4395,8 @@ def evaluate_granger_shift(results_phase1, results_phase2):
     """
     print(f"\n" + "-" * 70)
     print("CRITÈRE V38 : SYMÉTRIE DU COUPLAGE CAUSAL")
+    print ("⚠     NOTE: Ce    calcul     est    agrégé(N=1).Pour    un    test    statistique,    voir    TEST    H1(paired    bootstrap, p = 0.24, NON    SIGNIFICATIF).")
+
     print("-" * 70)
 
     if results_phase1['total'] < 3 or results_phase2['total'] < 3:
@@ -4537,7 +4567,7 @@ def plot_causal_crossover(name, results):
     ax1.fill_between(dates, s_ag, s_ga, where=(s_ag > s_ga), color='#3498db', alpha=0.1, interpolate=True)
 
     ax1.set_ylabel('Causal Strength (1 - p-value)')
-    ax1.set_title(f"Causal Crossover in the {name} Ecosystem", fontsize=15, fontweight='bold')
+    ax1.set_title(f"Directional Dynamics in the {name} Ecosystem", fontsize=15, fontweight='bold')
     ax1.legend(loc='lower left', frameon=True)
     ax1.grid(True, alpha=0.3)
 
@@ -4563,7 +4593,7 @@ def plot_causal_crossover(name, results):
 
     if omega_date:
         ax2.axvline(x=omega_date, color='purple', linestyle='--', linewidth=2)
-        ax2.text(omega_date, 0.8, r' $\Omega$ Point (Inversion)', color='purple', fontweight='bold', ha='left')
+        ax2.text(omega_date, 0.8, r' Sign reversal', color='purple', fontweight='bold', ha='left')
 
     plt.tight_layout()
 
@@ -4572,9 +4602,68 @@ def plot_causal_crossover(name, results):
     plt.savefig(filename, format="pdf", dpi=300)
     plt.close(fig)
 
-# ==============================================================================
-# MAIN V36
-# ==============================================================================
+
+def analyze_predictive_power_final(all_dataframes, project_status, n_bootstrap=1000):
+    rows = []
+    for name, df in all_dataframes.items():
+        if df is None or df.empty: continue
+        status_raw = project_status.get(name, 'unknown')
+        if status_raw not in ['alive', 'dead', 'declining']: continue
+
+        label = 1 if status_raw == 'alive' else 0
+        recent = df.iloc[-12:] if len(df) > 12 else df
+
+        rows.append({
+            'project': name,
+            'gamma': recent['monthly_gamma'].mean(),
+            'activity_raw': recent['total_weight'].mean(),
+            'target': label
+        })
+
+    data = pd.DataFrame(rows)
+    print(f"Distribution: {data['target'].value_counts().to_dict()}")
+    # Normalisation
+    a_min, a_max = data['activity_raw'].min(), data['activity_raw'].max()
+    data['activity_norm'] = (data['activity_raw'] - a_min) / (a_max - a_min + 1e-9)
+    data['viability_v'] = data['gamma'] * data['activity_norm']
+
+    # On utilise des clés SIMPLES pour éviter les KeyError
+    metrics_to_test = {
+        'activity': 'activity_norm',
+        'gamma': 'gamma',
+        'viability': 'viability_v'
+    }
+
+    # Pour l'affichage uniquement
+    pretty_names = {
+        'activity': 'Activité seule (A_norm)',
+        'gamma': 'Gamma seul (Γ)',
+        'viability': 'Index V (Γ × A_norm)'
+    }
+
+    print("\n" + "=" * 65)
+    print(f"{'Métrique':<25} | {'AUC-ROC':<10} | {'IC 95% (Bootstrap)':<15}")
+    print("-" * 65)
+
+    auc_results = {}
+    for key, col in metrics_to_test.items():
+        auc_val = roc_auc_score(data['target'], data[col])
+
+        boot_scores = []
+        for i in range(n_bootstrap):
+            sample = resample(data, replace=True, random_state=i)
+            if len(sample['target'].unique()) < 2: continue
+            boot_scores.append(roc_auc_score(sample['target'], sample[col]))
+
+        if len(boot_scores) >= 100:
+            ci_low, ci_high = np.percentile(boot_scores, [2.5, 97.5])
+        else:
+            ci_low, ci_high = np.nan, np.nan
+        auc_results[key] = auc_val  # On stocke avec la clé simple ('activity', etc.)
+
+        print(f"{pretty_names[key]:<25} | {auc_val:<10.3f} | [{ci_low:.3f} - {ci_high:.3f}]")
+
+    return data, auc_results
 def generate_project_recap(all_dataframes, global_results):
     """
     Génère un tableau récapitulatif complet des projets.
@@ -5015,17 +5104,17 @@ def plot_phase_space_academic(all_dataframes, crossover_results):
 
     # C. Lignes de référence
     ax.axhline(0, color='black', linestyle='-', linewidth=0.8, alpha=0.6)
-    ax.axvline(0.7, color='black', linestyle=':', linewidth=1.5, label='Maturity Threshold')
+    ax.axvline(0.7, color='black', linestyle=':', linewidth=1.5, label='Regime Transition Zone')
 
     # D. Annotations ACADÉMIQUES (Sobres et Précises)
 
     # Zone de gauche (Construction / Exploration)
-    ax.text(0.15, -0.45, "PHASE 1: CONSTRUCTION\n(Exploratory / High Variance)",
+    ax.text(0.15, -0.45, "Exploratory Regime (High Variance)",
             ha='center', va='center', color='#555555',
             bbox=dict(facecolor='white', alpha=0.8, edgecolor='none', pad=3))
 
     # Zone de droite (Attracteur Stable)
-    ax.text(0.85, 0.15, "STABLE ATTRACTOR\n(Operational Closure)",
+    ax.text(0.85, 0.15, "BOUNDED REGIME\n(Non-Accumulating Dynamics)",
             ha='center', va='center', color='black', fontweight='bold',
             bbox=dict(facecolor='white', alpha=0.9, edgecolor='black', boxstyle='round,pad=0.5'))
 
@@ -5035,7 +5124,7 @@ def plot_phase_space_academic(all_dataframes, crossover_results):
     ax.set_xlabel(r"Structural Maturity ($\Gamma$)")
     ax.set_ylabel("Causal Authority Index\n(>0: Structure-driven | <0: Activity-driven)")
 
-    ax.set_title("Sociotechnical Phase Space & Convergence Trajectory", fontsize=15, pad=15)
+    ax.set_title("Sociotechnical Phase Space & Mean Evolutionary Trajectory", fontsize=15, pad=15)
 
     ax.legend(loc='upper left', frameon=True)
 
@@ -7484,7 +7573,134 @@ def plot_homeodynamic_diagnostic(df_res, crossover_results, band_width):
     plt.close()
 
 
+def prepare_data_for_null_model(all_dataframes, crossover_results, gamma_threshold=0.6, min_consecutive=3):
+    """
+    Transforme les résultats en format compatible pour le Null Model.
+    VERSION CORRIGÉE : Définit le régime par BLOCS TEMPORELS CONTIGUS.
 
+    Logique :
+    1. Trouve le premier moment où Gamma >= seuil pendant 'min_consecutive' mois.
+    2. Tout ce qui est avant = Early.
+    3. Tout ce qui est après (inclus) = Mature.
+    """
+    print("   [Null Model] Préparation des données (Détection de Transition)...")
+    all_rows = []
+
+    for name, res in crossover_results.items():
+        if name not in all_dataframes:
+            continue
+
+        df_proj = all_dataframes[name]
+        dates = res['dates']
+        authority = res['authority']  # Votre AI
+
+        # 1. Construction de la série alignée
+        records = []
+        for i, date in enumerate(dates):
+            if date in df_proj.index:
+                gamma_val = df_proj.loc[date, 'monthly_gamma']
+                ai_val = authority[i]
+                if pd.notna(gamma_val) and pd.notna(ai_val):
+                    records.append({'month': i, 'AI': ai_val, 'gamma': gamma_val})
+
+        # Filtre global de longueur (au moins 2 ans de données)
+        if len(records) < 24:
+            continue
+
+        df_temp = pd.DataFrame(records)
+
+        # 2. Identification du moment de transition
+        # On cherche une séquence contiguë de 1 (valides)
+        above_threshold = (df_temp['gamma'] >= gamma_threshold).astype(int)
+
+        transition_index = None
+        run_start = None
+        current_run = 0
+
+        # Algorithme de détection de run
+        for idx, val in enumerate(above_threshold):
+            if val == 1:
+                if run_start is None:
+                    run_start = idx
+                current_run += 1
+
+                # Si on atteint la persistance requise, on valide la transition
+                if current_run >= min_consecutive:
+                    transition_index = run_start
+                    break  # On prend la PREMIÈRE transition durable (histoire unique)
+            else:
+                run_start = None
+                current_run = 0
+
+        # Si le projet n'a jamais transitionné durablement, on l'exclut du test
+        # (Car on ne peut pas comparer Early vs Mature s'il n'y a pas de Mature stable)
+        if transition_index is None:
+            # Optionnel : Vous pouvez logger les projets exclus ici
+            continue
+
+        # Sécurité : Il faut qu'il reste assez de données dans les deux phases
+        # Le Null Model requiert MIN_MONTHS (12 par défaut)
+        n_total = len(df_temp)
+        if transition_index < 12 or (n_total - transition_index) < 12:
+            continue
+
+        # 3. Assignation des régimes par bloc
+        df_temp['regime'] = 'early'  # Par défaut
+        df_temp.loc[transition_index:, 'regime'] = 'mature'  # Basculement définitif
+
+        df_temp['project'] = name
+
+        # On ne garde que les colonnes nécessaires
+        all_rows.append(df_temp[['project', 'month', 'AI', 'regime']])
+
+    if not all_rows:
+        return pd.DataFrame()
+
+    return pd.concat(all_rows, ignore_index=True)
+
+
+def prepare_perturbation_data(name, df, crossover_res):
+    """
+    ADAPTATEUR V2 (ROBUSTE) :
+    1. Normalise toutes les dates au 1er du mois.
+    2. Fusionne Gamma et Authority.
+    3. Garantit une grille temporelle propre.
+    """
+    # 1. Extraction Gamma
+    if df is None or df.empty:
+        return None
+
+    # Copie et normalisation de l'index Gamma au 1er du mois
+    metrics = df[['monthly_gamma']].copy()
+    metrics.columns = ['gamma']
+    # Force l'index en datetime, puis en période mensuelle, puis revient au timestamp (1er du mois)
+    metrics.index = pd.to_datetime(metrics.index).to_period('M').to_timestamp()
+
+    # 2. Extraction Authority Index
+    if not crossover_res or 'authority' not in crossover_res:
+        return None
+
+    # Normalisation des dates Granger au 1er du mois
+    raw_dates = pd.to_datetime(crossover_res['dates'])
+    norm_dates = raw_dates.to_period('M').to_timestamp()
+
+    # Gestion des doublons potentiels (si Granger a plusieurs points par mois, on moyenne)
+    s_auth = pd.Series(crossover_res['authority'], index=norm_dates, name='authority_index')
+    s_auth = s_auth.groupby(level=0).mean()
+
+    # 3. Fusion (Join) sur l'index temporel normalisé
+    combined = metrics.join(s_auth, how='inner')
+
+    # 4. Nettoyage final
+    combined = combined.dropna()
+
+    # On trie par date pour être sûr
+    combined = combined.sort_index()
+
+    if len(combined) < 24:  # Filtre de sécurité
+        return None
+
+    return combined
 if __name__ == "__main__":
     # La méthode 'spawn' est cruciale pour la compatibilité multiprocessing sur macOS/Windows
     try:
@@ -7499,7 +7715,6 @@ if __name__ == "__main__":
     print("=" * 80)
     print(f"OMEGA V36 - PARALLEL EXECUTION ({MAX_WORKERS} Workers)")
     print("=" * 80)
-    print("\n" * (len(REPOS_CONFIG) + 1))
 
     global_results = {}
     all_dataframes = {}
@@ -7521,7 +7736,7 @@ if __name__ == "__main__":
                     name, metrics, df = result
                     global_results[name] = metrics
                     all_dataframes[name] = df
-                    tqdm.write(f"✅ {name} terminé ({len(df)} mois)")
+                    tqdm.write(f"{name} {len(df)}mo")
             except Exception as e:
                 tqdm.write(f"❌ Erreur {name}: {e}")
 
@@ -7572,7 +7787,7 @@ if __name__ == "__main__":
     # PHASE MECANISTE : CORE TOUCH RATIO (NOUVEAU TEST)
     # ==========================================================================
 
-    from ctr_mechanistic_test import run_ctr_mechanistic_test, CoreTouchExtractor
+    from ctr_mechanistic_test import run_ctr_mechanistic_test, CoreTouchExtractor, generate_ctr_si_figure
 
     print("\n" + "#" * 80)
     print("PHASE MECANISTE : HYPOTHÈSE DU NOYAU STRUCTUREL (Core Touch)")
@@ -7580,9 +7795,11 @@ if __name__ == "__main__":
 ############ commenté pour accélerer
     ctr_results = run_ctr_mechanistic_test(        gamma_dataframes=dfs_theory,        repos_config=REPOS_CONFIG,        cache_dir=CACHE_DIR + "ctr_v2/",max_workers=MAX_WORKERS,        n_boot=10000    )
     if ctr_results and ctr_results['robustness'] is not None:
-        # Export pour l'article
-        ctr_results['robustness'].to_csv("ctr_robustness_results.csv", index=False)
-
+       ctr_results['robustness'].to_csv("ctr_robustness_results.csv", index=False)
+    generate_ctr_si_figure(
+        merged_data=ctr_results['validator'].merged_data,
+        output_path="figure_si_ctr_mechanism.pdf"
+    )
     # ==========================================================================
     # PHASE 2-6 : PREUVES STRUCTURELLES (SUR CORPUS THÉORIQUE)
     # ==========================================================================
@@ -7668,7 +7885,26 @@ if __name__ == "__main__":
     validator.run_null_model(n_permutations=200)
     validator.run_null_model_phase_transition(n_permutations=500)
     validator.run_covariate_control()
+    # ==========================================================================
+    # PHASE 9.5 : TEST DE CONTRIBUTION RELATIVE (Γ vs ACTIVITÉ)
+    # ==========================================================================
+    print("\n" + "#" * 80)
+    print("PHASE 9.5 : POUVOIR PRÉDICTIF COMPARÉ (AUC-ROC)")
+    print("#" * 80)
 
+    # Appel de la fonction
+    df_auc_comparison, final_aucs = analyze_predictive_power_final(all_dataframes, PROJECT_STATUS)
+
+    # ACCÈS SÉCURISÉ : On utilise les clés simples définies dans la fonction
+    a_auc = final_aucs['activity']
+    g_auc = final_aucs['gamma']
+    v_auc = final_aucs['viability']
+
+    print("\n💡 ANALYSE DES CONTRIBUTIONS :")
+    if g_auc > a_auc + 0.15:
+        print(f"-> La persistance structurelle (Γ={g_auc:.3f}) est le moteur principal.")
+    elif v_auc > g_auc + 0.05:
+        print(f"-> La survie est synergique (V={v_auc:.3f}). Γ et A sont indissociables.")
     # ==========================================================================
     # PHASE 10-12 : ANALYSES COMPLÉMENTAIRES
     # ==========================================================================
@@ -7700,6 +7936,170 @@ if __name__ == "__main__":
     # Causal Symmetry Diagnostic
     from causal_sim import run_causal_symmetry_diagnostic
     run_causal_symmetry_diagnostic(dfs_theory, crossover_theory)
+    # ==========================================================================
+    # PHASE 14: HYSTERESIS & IRREVERSIBILITY TEST (V47.2 FINAL)
+    # ==========================================================================
+    print("\n" + "#" * 80)
+    print("PHASE 14: HYSTERESIS TEST (Dwell-Time Asymmetry)")
+    print("#" * 80)
+
+    # Utilisez all_dataframes pour capturer aussi les projets potentiellement morts/revertés
+    hysteresis_val = HysteresisValidator(all_dataframes)
+
+    # 1. Main Run
+    hysteresis_results = hysteresis_val.run_main_test(g_high=0.7, g_low=0.5, durable=6)
+
+    # 2. Sensitivity Analysis
+    hysteresis_val.run_sensitivity_analysis()
+
+    # ==========================================================================
+    # PHASE 15 : ANALYSE DE PERTURBATION ("CRASH TEST") - VERSION ROBUSTE
+    # ==========================================================================
+    print("\n" + "#" * 80)
+    print("PHASE 15 : CRASH TEST (Turnover vs Réponse Structurelle)")
+    print("#" * 80)
+
+    all_crash_traces = []
+
+    for name in dfs_theory.keys():
+        if name not in crossover_theory: continue
+
+        repo_path = REPOS_CONFIG[name]['path']
+        df_proj = dfs_theory[name]
+        crossover_res = crossover_theory[name]
+
+        # 1. Adaptateur V2
+        input_metrics = prepare_perturbation_data(name, df_proj, crossover_res)
+
+        if input_metrics is None: continue
+
+        try:
+            # 2. Analyse
+            analyzer = CrashTestAnalyzer(repo_path, input_metrics)
+
+            # Calcul Churn sur grille continue
+            active_sets = analyzer.compute_contributor_sets()
+            churn_df = analyzer.compute_churn_metrics(active_sets)
+
+            if churn_df.empty: continue
+
+            # Détection crashs dé-clusterisés
+
+            crash_dict = analyzer.detect_crashes_by_regime(churn_df, min_separation_months=6, q=0.95)
+            print(f"   -> crashes exploratory: {len(crash_dict['exploratory'])}, mature: {len(crash_dict['mature'])}")
+
+            crashes = crash_dict['exploratory'] + crash_dict['mature']
+            #print(f"DEBUG [{name}] crashes by regime:")
+            #print(f"  exploratory: {len(crash_dict['exploratory'])}")
+            #print(f"  mature: {len(crash_dict['mature'])}")
+            traces = analyzer.extract_event_windows(crashes)
+            if not crashes: continue
+
+            # Extraction
+            traces = analyzer.extract_event_windows(crashes)
+
+            if traces.empty:
+                print(f"DEBUG [{name}] traces EMPTY after extraction")
+            else:
+               # print(f"DEBUG [{name}] traces by regime after extraction:")
+               # print(traces['regime'].value_counts())
+               # print(f"DEBUG [{name}] delta_t coverage by regime:")
+               # print(traces.groupby('regime')['delta_t'].agg(['min', 'max', 'count']))
+                all_crash_traces.append(traces)
+
+        except Exception as e:
+            print(f"   ⚠️ Erreur Crash Test sur {name}: {e}")
+
+    # ==========================================================================
+    # AGRÉGATION ET PLOT
+    # ==========================================================================
+
+    if all_crash_traces:
+        print("\n📊 Agrégation des résultats globaux...")
+        global_traces = pd.concat(all_crash_traces, ignore_index=True)
+        #print("DEBUG [GLOBAL] regimes before aggregation:")
+        #print(global_traces['regime'].value_counts())
+        #print("DEBUG [GLOBAL] delta_t coverage by regime:")
+        #print(global_traces.groupby('regime')['delta_t'].agg(['min', 'max', 'count']))
+        # Utilisation d'une instance dummy pour l'agrégation
+        dummy_analyzer = CrashTestAnalyzer(".", pd.DataFrame())
+
+        # On réutilise les méthodes de la réponse précédente (aggregate_events, plot...)
+        # Assurez-vous d'avoir bien copié ces méthodes dans la classe CrashTestAnalyzer
+        agg_results = dummy_analyzer.aggregate_events(global_traces)
+        #print("DEBUG [AGG] regimes in aggregated results:")
+        #print(agg_results['regime'].value_counts())
+        print("\nRÉSULTATS DU CRASH TEST (Moyennes Globales) :")
+        print(agg_results[['regime', 'delta_t', 'mean_delta_gamma', 'mean_delta_auth']].to_string())
+
+        # Plot (Mise en avant de l'Authority Index comme conseillé)
+        dummy_analyzer.plot_crash_test_response(agg_results)
+
+        agg_results.to_csv("omega_v36_crash_test_results.csv", index=False)
+    else:
+        print("⚠️ Aucune donnée de crash exploitable trouvée.")
+    # ==========================================================================
+    # AGRÉGATION GLOBALE ET VISUALISATION
+    # ==========================================================================
+
+    if all_crash_traces:
+        print("\n📊 Agrégation des résultats globaux...")
+
+        # Fusion de toutes les traces de tous les projets
+        global_traces = pd.concat(all_crash_traces, ignore_index=True)
+
+        # On utilise une instance générique pour l'agrégation et le plot
+        # (Peu importe le repo_path ici, on utilise juste les méthodes statiques)
+        dummy_analyzer = CrashTestAnalyzer(".", pd.DataFrame())
+
+        # Calcul des moyennes et intervalles de confiance globaux
+        agg_results = dummy_analyzer.aggregate_events(global_traces)
+
+        print("\nRÉSULTATS DU CRASH TEST (Moyennes Globales) :")
+        print(agg_results[['regime', 'delta_t', 'mean_delta_gamma', 'mean_delta_auth']].head(10))
+
+        # Génération du graphique final
+        dummy_analyzer.plot_crash_test_response(agg_results)
+
+        # Sauvegarde
+        agg_results.to_csv("omega_v36_crash_test_results.csv", index=False)
+        print("✅ Résultats sauvegardés : omega_v36_crash_test_results.csv")
+    else:
+        print("⚠️ Aucune donnée de crash exploitable trouvée.")
+
+    # ==========================================================================
+    # PHASE NULL MODEL VALIDATION
+    # ==========================================================================
+    print("\n" + "#" * 80)
+    print("PHASE FINALE : VALIDATION NULL MODEL (AR1)")
+    print("#" * 80)
+
+    # 1. Préparation des données (Pont corrigé avec Transition Temporelle)
+    df_null_model_input = prepare_data_for_null_model(
+        dfs_theory,
+        crossover_theory,
+        gamma_threshold=0.6,  # Seuil de régime (ajuster selon résultats précédents)
+        min_consecutive=3  # Persistance requise pour valider la transition
+    )
+
+    if not df_null_model_input.empty:
+        print(f"   -> {df_null_model_input['project'].nunique()} projets qualifiés pour le Null Model.")
+
+        # 2. Exécution de l'analyse
+        results_nm, diag_nm = nmv.run_null_model_analysis(df_null_model_input)
+
+        # 3. Génération des sorties
+        if not results_nm.empty:
+            nmv.plot_main_comparison_panel(results_nm)
+            nmv.plot_diagnostic_spaghetti(diag_nm)
+            nmv.generate_reports(results_nm)
+        else:
+            print("⚠️ Aucun résultat statistique généré.")
+    else:
+        print("⚠️ Aucun projet n'a de transition 'Early -> Mature' assez longue pour le test.")
+    print(f"   -> {results_nm['project'].nunique()} projets effectivement analysés.")
+    print("\n✅ Script terminé.")
+
 
     # ==========================================================================
     # EXPORT FINAL
