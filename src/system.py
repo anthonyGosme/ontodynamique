@@ -29,6 +29,7 @@ import random
 import warnings
 
 from ontodynamique.src.CrashTestAnalyzer import CrashTestAnalyzer
+from ontodynamique.src.GrangerRobustnessValidator import GrangerRobustnessValidator
 from ontodynamique.src.hysteresisValidator import HysteresisValidator
 
 warnings.filterwarnings("ignore", category=FutureWarning, module="statsmodels")
@@ -1378,8 +1379,7 @@ class HindcastingValidator:
         if clf_data:
             colors = ['#e74c3c' if 'Age' in l else '#27ae60' if 'Gamma' in l
             else '#3498db' for l in clf_labels]
-
-            bp = ax1.boxplot(clf_data, labels=clf_labels, patch_artist=True)
+            bp = ax1.boxplot(clf_data, tick_labels=clf_labels, patch_artist=True)
             for patch, color in zip(bp['boxes'], colors):
                 patch.set_facecolor(color)
                 patch.set_alpha(0.7)
@@ -4460,79 +4460,103 @@ def evaluate_granger_shift(results_phase1, results_phase2):
 # TEST L (V35) : ROLLING GRANGER & THE CAUSAL CROSSOVER
 # ==============================================================================
 
-def analyze_rolling_granger(name, df, window_size=30, max_lag=3):
+def analyze_rolling_granger(
+    name,
+    df,
+    window_size=30,
+    max_lag=3,
+    lag_mode="min",      # "min" | "fixed" | "best_pair"
+    fixed_lag=2,
+    strength_mode="1-p", # "1-p" | "neglogp"
+    eps=1e-12,
+):
     """
-    Calcule la causalité de Granger sur une fenêtre glissante pour détecter
-    le "Point Oméga" (Inversion de la dominance causale).
+    Rolling Granger (SSR F-test p-values) with configurable lag selection.
+
+    authority = strength_ga - strength_ag
+      - strength_ag : Activity -> Gamma
+      - strength_ga : Gamma -> Activity
     """
     if len(df) < window_size + 4:
         return None
 
-    # Préparation des séries
-    activity = df['total_weight'].values
-    gamma = df['monthly_gamma'].values
+    activity = df["total_weight"].values
+    gamma = df["monthly_gamma"].values
     dates = df.index.values
 
-    # Lissage léger pour stabiliser Granger sur petites fenêtres
+    # smoothing (same as your original)
     activity = pd.Series(activity).rolling(3).mean().fillna(0).values
     gamma = pd.Series(gamma).rolling(3).mean().fillna(0).values
 
-    timeline = []
-    p_act_to_gamma = []
-    p_gamma_to_act = []
-    authority_index = [] # > 0 si Structure domine, < 0 si Activité domine
+    timeline, strength_ag_list, strength_ga_list, authority_index = [], [], [], []
 
-   # print(f"[{name}] Calcul du Rolling Granger (Fenêtre={window_size} mois)...")
+    def to_strength(p):
+        p = float(p)
+        if strength_mode == "neglogp":
+            return -np.log10(p + eps)
+        return 1.0 - p  # original
 
     for i in range(len(df) - window_size):
-        # Segment courant
-        act_seg = activity[i : i + window_size]
-        gam_seg = gamma[i : i + window_size]
+        act_seg = activity[i:i + window_size]
+        gam_seg = gamma[i:i + window_size]
         current_date = dates[i + window_size]
 
-        # Normalisation locale (Crucial pour Granger local)
         if np.std(act_seg) == 0 or np.std(gam_seg) == 0:
             continue
 
-        # Création DataFrame temporaire
         data_seg = pd.DataFrame({
-            'act': (act_seg - np.mean(act_seg)) / np.std(act_seg),
-            'gam': (gam_seg - np.mean(gam_seg)) / np.std(gam_seg)
+            "act": (act_seg - np.mean(act_seg)) / np.std(act_seg),
+            "gam": (gam_seg - np.mean(gam_seg)) / np.std(gam_seg)
         })
 
         try:
-            # Test 1: Act -> Gamma
-            g1 = grangercausalitytests(data_seg[['gam', 'act']], maxlag=max_lag, verbose=False)
-            # On prend la meilleure p-value parmi les lags
-            p_ag = min([g1[lag][0]['ssr_ftest'][1] for lag in range(1, max_lag+1)])
+            g1 = grangercausalitytests(data_seg[["gam", "act"]], maxlag=max_lag, verbose=False)
+            g2 = grangercausalitytests(data_seg[["act", "gam"]], maxlag=max_lag, verbose=False)
 
-            # Test 2: Gamma -> Act
-            g2 = grangercausalitytests(data_seg[['act', 'gam']], maxlag=max_lag, verbose=False)
-            p_ga = min([g2[lag][0]['ssr_ftest'][1] for lag in range(1, max_lag+1)])
+            p_ag_by_lag = {L: g1[L][0]["ssr_ftest"][1] for L in range(1, max_lag + 1)}
+            p_ga_by_lag = {L: g2[L][0]["ssr_ftest"][1] for L in range(1, max_lag + 1)}
 
-            # Métrique de "Force Causale" (Probabilité de causalité = 1 - p)
-            # Plus c'est proche de 1, plus c'est causal.
-            strength_ag = 1.0 - p_ag
-            strength_ga = 1.0 - p_ga
+            if lag_mode == "min":
+                p_ag = min(p_ag_by_lag.values())
+                p_ga = min(p_ga_by_lag.values())
 
-            # Calcul de l'Indice d'Autorité (-1 à 1)
-            # Si Act->Gamma domine (0.9 vs 0.1) => Index négatif (Liberté)
-            # Si Gamma->Act domine (0.1 vs 0.9) => Index positif (Structure)
+            elif lag_mode == "fixed":
+                L = int(fixed_lag)
+                if L < 1 or L > max_lag:
+                    continue
+                p_ag = p_ag_by_lag[L]
+                p_ga = p_ga_by_lag[L]
+
+            elif lag_mode == "best_pair":
+                # choose lag minimizing joint p-values (more balanced than independent min)
+                L = min(range(1, max_lag + 1), key=lambda k: p_ag_by_lag[k] + p_ga_by_lag[k])
+                p_ag = p_ag_by_lag[L]
+                p_ga = p_ga_by_lag[L]
+
+            else:
+                raise ValueError("lag_mode must be: 'min', 'fixed', 'best_pair'")
+
+            strength_ag = to_strength(p_ag)
+            strength_ga = to_strength(p_ga)
+
             index = strength_ga - strength_ag
 
             timeline.append(current_date)
-            p_act_to_gamma.append(strength_ag)
-            p_gamma_to_act.append(strength_ga)
+            strength_ag_list.append(strength_ag)
+            strength_ga_list.append(strength_ga)
             authority_index.append(index)
 
-        except:
+        except Exception:
             continue
 
+    if len(authority_index) == 0:
+        return None
+
     return {
-        'dates': timeline,
-        'strength_ag': p_act_to_gamma, # Force Activité -> Structure
-        'strength_ga': p_gamma_to_act, # Force Structure -> Activité
-        'authority': authority_index
+        "dates": timeline,
+        "strength_ag": strength_ag_list,
+        "strength_ga": strength_ga_list,
+        "authority": authority_index
     }
 
 
@@ -7886,7 +7910,7 @@ if __name__ == "__main__":
     validator.run_null_model_phase_transition(n_permutations=500)
     validator.run_covariate_control()
     # ==========================================================================
-    # PHASE 9.5 : TEST DE CONTRIBUTION RELATIVE (Γ vs ACTIVITÉ)
+    # PHASE 10 : TEST DE CONTRIBUTION RELATIVE (Γ vs ACTIVITÉ)
     # ==========================================================================
     print("\n" + "#" * 80)
     print("PHASE 9.5 : POUVOIR PRÉDICTIF COMPARÉ (AUC-ROC)")
@@ -7905,8 +7929,23 @@ if __name__ == "__main__":
         print(f"-> La persistance structurelle (Γ={g_auc:.3f}) est le moteur principal.")
     elif v_auc > g_auc + 0.05:
         print(f"-> La survie est synergique (V={v_auc:.3f}). Γ et A sont indissociables.")
+        # ==========================================================================
+        # PHASE 11 : TESTS SI (REVIEWER PROOF vFINAL)
+        # ==========================================================================
+        print("\n" + "#" * 80)
+        print("PHASE 9.6 : GÉNÉRATION DU SI (ROBUSTESSE NAC)")
+        print("#" * 80)
+
+        # Paramètres identiques au main pour cohérence
+        si_validator = GrangerRobustnessValidator(
+            dfs_theory,
+            output_dir="figures/SI/",
+            window_size=30,  # Vérifiez que c'est bien 30 dans votre analyze_rolling_granger
+            confinement_band=0.3
+        )
+        si_validator.run_full_suite()
     # ==========================================================================
-    # PHASE 10-12 : ANALYSES COMPLÉMENTAIRES
+    # PHASE 12 : ANALYSES COMPLÉMENTAIRES
     # ==========================================================================
     print("\n" + "#" * 80)
     print("PHASES FINALES : Validation Externe & Mécanismes")
@@ -7921,7 +7960,7 @@ if __name__ == "__main__":
     ext_validator.validate_governance()
 
     # Co-modification (Sur Théorie pour le mécanisme)
-    print("\n[PHASE 12] Co-modification Analysis (Mechanism)...")
+    print("\n[PHASE 13] Co-modification Analysis (Mechanism)...")
     comod_results = run_comodification_analysis(
         repos_config={k: v for k, v in REPOS_CONFIG.items() if k in dfs_theory}, # Filtrer la config
         gamma_dataframes=dfs_theory,
