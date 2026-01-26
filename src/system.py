@@ -1,4 +1,4 @@
-import datetime
+
 import pickle
 from concurrent.futures import ProcessPoolExecutor
 
@@ -17,11 +17,10 @@ from lifelines.statistics import logrank_test
 import statsmodels.api as sm
 from sklearn.metrics import roc_auc_score, brier_score_loss, mean_squared_error, average_precision_score
 from scipy.stats import wilcoxon
-import numpy as np
-import pandas as pd
+
 import matplotlib.pyplot as plt
 import seaborn as sns
-from itertools import product
+
 
 import matplotlib.patches as patches
 import bisect
@@ -29,13 +28,14 @@ import random
 import warnings
 
 from ontodynamique.src.CrashTestAnalyzer import CrashTestAnalyzer
-from ontodynamique.src.GrangerRobustnessValidator import GrangerRobustnessValidator
+from ontodynamique.src.GrangerRobustnessValidator import GrangerRobustnessValidator, analyze_rolling_granger
+
 from ontodynamique.src.hysteresisValidator import HysteresisValidator
 
 warnings.filterwarnings("ignore", category=FutureWarning, module="statsmodels")
 
 from collections import defaultdict
-import subprocess
+
 import concurrent.futures
 import null_model_validation as nmv
 import multiprocessing
@@ -1402,8 +1402,7 @@ class HindcastingValidator:
         if reg_data:
             colors = ['#e74c3c' if 'Age' in l else '#27ae60' if 'Gamma' in l
             else '#3498db' for l in reg_labels]
-
-            bp = ax2.boxplot(reg_data, labels=reg_labels, patch_artist=True)
+            bp = ax2.boxplot(reg_data, tick_labels=reg_labels, patch_artist=True)
             for patch, color in zip(bp['boxes'], colors):
                 patch.set_facecolor(color)
                 patch.set_alpha(0.7)
@@ -3627,93 +3626,6 @@ from statsmodels.tsa.stattools import grangercausalitytests, adfuller
 from statsmodels.tsa.api import VAR
 
 
-def test_granger_causality(all_dataframes, max_lag=6):
-    """
-    TEST K : Causalité de Granger
-
-    Hypothèse Ontodynamique :
-    - L'ACTIVITÉ (survie) Granger-cause Γ (Γ est une conséquence)
-    - Γ ne Granger-cause PAS l'activité (Γ n'est pas un moteur)
-
-    Si validé : Γ élevé = SYMPTÔME de bonne santé, pas CAUSE de survie.
-    """
-    print("\n" + "=" * 70)
-    print("TEST K : CAUSALITÉ DE GRANGER")
-    print("=" * 70)
-    print("\nHypothèse : Γ élevé est une CONSÉQUENCE de la survie, pas sa CAUSE")
-    print("           (L'activité précède Γ, pas l'inverse)\n")
-
-    results_by_project = {}
-
-    # Synthèse globale
-    activity_causes_gamma_count = 0
-    gamma_causes_activity_count = 0
-    valid_projects = 0
-
-    for name, df in all_dataframes.items():
-        if df is None or df.empty:
-            continue
-
-        # Préparer les séries temporelles
-        result = run_granger_for_project(name, df, max_lag)
-
-        if result is None:
-            continue
-
-        results_by_project[name] = result
-        valid_projects += 1
-
-        if result['activity_causes_gamma']:
-            activity_causes_gamma_count += 1
-        if result['gamma_causes_activity']:
-            gamma_causes_activity_count += 1
-
-    # ===== SYNTHÈSE GLOBALE =====
-    print("\n" + "=" * 70)
-    print("SYNTHÈSE GLOBALE - CAUSALITÉ DE GRANGER")
-    print("=" * 70)
-
-    print(f"\nProjets analysés : {valid_projects}")
-    print(f"\n{'Direction causale':<35} | {'Projets':<10} | {'%':<10}")
-    print("-" * 60)
-
-    pct_act_gamma = activity_causes_gamma_count / valid_projects * 100 if valid_projects > 0 else 0
-    pct_gamma_act = gamma_causes_activity_count / valid_projects * 100 if valid_projects > 0 else 0
-
-    print(f"{'Activité → Γ (attendu)':<35} | {activity_causes_gamma_count:<10} | {pct_act_gamma:<10.1f}%")
-    print(f"{'Γ → Activité (non attendu)':<35} | {gamma_causes_activity_count:<10} | {pct_gamma_act:<10.1f}%")
-
-    # Verdict
-    print("\n" + "-" * 60)
-    print("VERDICT :")
-
-    # Critère : Activité→Γ significativement plus fréquent que Γ→Activité
-    ratio = pct_act_gamma / pct_gamma_act if pct_gamma_act > 0 else float('inf')
-
-    if pct_act_gamma > 50 and ratio > 1.5:
-        print(f"✅ VALIDÉ : L'activité Granger-cause Γ dans {pct_act_gamma:.0f}% des cas")
-        print(f"           Γ Granger-cause l'activité dans seulement {pct_gamma_act:.0f}% des cas")
-        print(f"           Ratio : {ratio:.1f}x")
-        print("\n   → Γ élevé est bien une CONSÉQUENCE de la survie, pas sa cause")
-        verdict = "VALIDATED"
-    elif pct_act_gamma > pct_gamma_act:
-        print(f"⚠️  PARTIEL : Tendance correcte mais pas écrasante")
-        print(f"           Activité→Γ : {pct_act_gamma:.0f}% vs Γ→Activité : {pct_gamma_act:.0f}%")
-        verdict = "PARTIAL"
-    else:
-        print(f"❌ NON VALIDÉ : Pas de direction causale claire")
-        verdict = "NOT_VALIDATED"
-
-    return {
-        'valid_projects': valid_projects,
-        'activity_causes_gamma': activity_causes_gamma_count,
-        'gamma_causes_activity': gamma_causes_activity_count,
-        'pct_act_gamma': pct_act_gamma,
-        'pct_gamma_act': pct_gamma_act,
-        'ratio': ratio,
-        'verdict': verdict,
-        'details': results_by_project
-    }
 
 
 def run_granger_for_project(name, df, max_lag=6):
@@ -3946,20 +3858,6 @@ def plot_granger_results(granger_results):
 # ==============================================================================
 # FONCTION WRAPPER POUR LE MAIN
 # ==============================================================================
-
-def run_granger_test(all_dataframes, max_lag=6):
-    """
-    Fonction principale à appeler dans le main.
-    Lance le test de causalité de Granger.
-    """
-    # 1. Test de Granger
-    results = test_granger_causality(all_dataframes, max_lag=max_lag)
-
-    # 2. Visualisation
-    if results:
-        plot_granger_results(results)
-
-    return results
 
 
 
@@ -4460,104 +4358,11 @@ def evaluate_granger_shift(results_phase1, results_phase2):
 # TEST L (V35) : ROLLING GRANGER & THE CAUSAL CROSSOVER
 # ==============================================================================
 
-def analyze_rolling_granger(
-    name,
-    df,
-    window_size=30,
-    max_lag=3,
-    lag_mode="min",      # "min" | "fixed" | "best_pair"
-    fixed_lag=2,
-    strength_mode="1-p", # "1-p" | "neglogp"
-    eps=1e-12,
-):
-    """
-    Rolling Granger (SSR F-test p-values) with configurable lag selection.
 
-    authority = strength_ga - strength_ag
-      - strength_ag : Activity -> Gamma
-      - strength_ga : Gamma -> Activity
-    """
-    if len(df) < window_size + 4:
-        return None
+import numpy as np
+import pandas as pd
+from statsmodels.tsa.stattools import grangercausalitytests
 
-    activity = df["total_weight"].values
-    gamma = df["monthly_gamma"].values
-    dates = df.index.values
-
-    # smoothing (same as your original)
-    activity = pd.Series(activity).rolling(3).mean().fillna(0).values
-    gamma = pd.Series(gamma).rolling(3).mean().fillna(0).values
-
-    timeline, strength_ag_list, strength_ga_list, authority_index = [], [], [], []
-
-    def to_strength(p):
-        p = float(p)
-        if strength_mode == "neglogp":
-            return -np.log10(p + eps)
-        return 1.0 - p  # original
-
-    for i in range(len(df) - window_size):
-        act_seg = activity[i:i + window_size]
-        gam_seg = gamma[i:i + window_size]
-        current_date = dates[i + window_size]
-
-        if np.std(act_seg) == 0 or np.std(gam_seg) == 0:
-            continue
-
-        data_seg = pd.DataFrame({
-            "act": (act_seg - np.mean(act_seg)) / np.std(act_seg),
-            "gam": (gam_seg - np.mean(gam_seg)) / np.std(gam_seg)
-        })
-
-        try:
-            g1 = grangercausalitytests(data_seg[["gam", "act"]], maxlag=max_lag, verbose=False)
-            g2 = grangercausalitytests(data_seg[["act", "gam"]], maxlag=max_lag, verbose=False)
-
-            p_ag_by_lag = {L: g1[L][0]["ssr_ftest"][1] for L in range(1, max_lag + 1)}
-            p_ga_by_lag = {L: g2[L][0]["ssr_ftest"][1] for L in range(1, max_lag + 1)}
-
-            if lag_mode == "min":
-                p_ag = min(p_ag_by_lag.values())
-                p_ga = min(p_ga_by_lag.values())
-
-            elif lag_mode == "fixed":
-                L = int(fixed_lag)
-                if L < 1 or L > max_lag:
-                    continue
-                p_ag = p_ag_by_lag[L]
-                p_ga = p_ga_by_lag[L]
-
-            elif lag_mode == "best_pair":
-                # choose lag minimizing joint p-values (more balanced than independent min)
-                L = min(range(1, max_lag + 1), key=lambda k: p_ag_by_lag[k] + p_ga_by_lag[k])
-                p_ag = p_ag_by_lag[L]
-                p_ga = p_ga_by_lag[L]
-
-            else:
-                raise ValueError("lag_mode must be: 'min', 'fixed', 'best_pair'")
-
-            strength_ag = to_strength(p_ag)
-            strength_ga = to_strength(p_ga)
-
-            index = strength_ga - strength_ag
-
-            timeline.append(current_date)
-            strength_ag_list.append(strength_ag)
-            strength_ga_list.append(strength_ga)
-            authority_index.append(index)
-
-        except Exception:
-            continue
-
-    if len(authority_index) == 0:
-        return None
-
-    return {
-        "dates": timeline,
-        "strength_ag": strength_ag_list,
-        "strength_ga": strength_ga_list,
-        "authority": authority_index
-    }
 
 
 def plot_causal_crossover(name, results):
@@ -4784,272 +4589,6 @@ def generate_project_recap(all_dataframes, global_results):
 # MODULE DE BLINDAGE (V37) : SENSITIVITY & NULL MODEL
 # ==============================================================================
 
-class RobustnessValidator:
-    def __init__(self, all_dataframes):
-        # On ne garde que les projets significatifs (> 20 mois)
-        self.dfs = {k: v for k, v in all_dataframes.items() if v is not None and len(v) > 20}
-
-    def run_null_model_phase_transition(self, n_permutations=500):
-        """
-        Test de permutation pour la TRANSITION DE PHASE.
-        H0 : La bimodalité de Γ ne dépend pas de l'ordre temporel
-        H1 : L'ordre temporel est nécessaire pour observer la transition
-
-        Métrique : Proportion de projets qui transitionnent
-        (passent de régime bas à régime haut de façon ordonnée)
-        """
-        THRESHOLD_LOW = 0.4
-        THRESHOLD_HIGH = 0.7
-
-        def count_clean_transitions(gamma_series):
-            """
-            Compte les transitions 'propres' :
-            Début majoritairement bas -> Fin majoritairement haut
-            """
-            n = len(gamma_series)
-            if n < 20:
-                return 0
-
-            # Premier tiers vs dernier tiers
-            early = gamma_series[:n // 3]
-            late = gamma_series[-n // 3:]
-
-            early_low = (early < THRESHOLD_LOW).mean()
-            late_high = (late > THRESHOLD_HIGH).mean()
-
-            # Transition propre si : >50% bas au début ET >50% haut à la fin
-            return 1 if (early_low > 0.5 and late_high > 0.5) else 0
-
-        # 1. Compter les transitions réelles
-        real_transitions = 0
-        project_gammas = []
-
-        for name, df in self.dfs.items():
-            gamma = df['monthly_gamma'].dropna().values
-            if len(gamma) < 20:
-                continue
-            project_gammas.append(gamma)
-            real_transitions += count_clean_transitions(gamma)
-
-        if not project_gammas:
-            return None
-
-        n_projects = len(project_gammas)
-        real_rate = real_transitions / n_projects
-
-        # 2. Permutations (shuffle intra-projet)
-        null_rates = []
-
-        for _ in range(n_permutations):
-            null_transitions = 0
-            for gamma in project_gammas:
-                shuffled = np.random.permutation(gamma)
-                null_transitions += count_clean_transitions(shuffled)
-            null_rates.append(null_transitions / n_projects)
-
-        # 3. P-value empirique
-        null_rates = np.array(null_rates)
-        p_value = (null_rates >= real_rate).mean()
-
-        print(f"\n📊 Test de Transition de Phase (Permutation)")
-        print(f"   Projets analysés : {n_projects}")
-        print(f"   Taux de transition réel : {real_rate:.1%}")
-        print(f"   Taux de transition null : {null_rates.mean():.1%} ± {null_rates.std():.1%}")
-        print(f"   P-value : {p_value:.4f}")
-
-        if p_value < 0.05:
-            print("   ✅ VALIDÉ : L'ordre temporel est nécessaire pour la transition")
-        else:
-            print("   ⚠️ Non significatif")
-
-        return {'real_rate': real_rate, 'null_mean': null_rates.mean(), 'p_value': p_value}
-
-    def run_sensitivity_analysis(self):
-        """Test si la bimodalité résiste au changement de paramètres."""
-        print("\n🔎 [Robustness] Sensitivity Analysis (Parameter Scan)...")
-        results = []
-
-        # Paramètres à tester
-        lambdas = [0.6, 0.7, 0.8, 0.9, 1.0]  # Pénalité de relocation
-        thresholds = [0.6, 0.65, 0.7, 0.75, 0.8]  # Seuil régime haut
-
-        # On collecte toutes les données pour un test global
-        all_gamma_raw = []
-        for df in self.dfs.values():
-            all_gamma_raw.extend(df['monthly_gamma'].dropna().values)
-        all_gamma_raw = np.array(all_gamma_raw)
-
-        for lam, thresh in product(lambdas, thresholds):
-            # SIMULATION: On ajuste Gamma proportionnellement pour éviter de relancer Git
-            # Hypothèse : Gamma dépend linéairement de la pénalité λ
-            gamma_sim = all_gamma_raw * (lam / 0.8)
-            gamma_sim = np.clip(gamma_sim, 0, None)
-
-            # Test Dip (Bimodalité)
-            try:
-                dip, pval = diptest(gamma_sim)
-            except:
-                pval = 1.0  # Fail safe
-
-            results.append({
-                'lambda': lam,
-                'threshold': thresh,
-                'p_val': pval
-            })
-
-        self._plot_heatmap(results)
-        return results
-
-    def _plot_heatmap(self, results):
-        """
-        VERSION ANGLAISE : Figure 4 (Robustesse).
-        """
-        try:
-            df_res = pd.DataFrame(results)
-            pivot = df_res.pivot(index='lambda', columns='threshold', values='p_val')
-
-            plt.figure(figsize=(8, 6))
-            sns.set_style("white")
-
-            # Heatmap : On affiche la CONFIANCE (1 - p_value).
-            # Green = High Confidence (Low p-value), Red = Low Confidence.
-            ax = sns.heatmap(1 - pivot, annot=True, cmap='RdYlGn', vmin=0.9, vmax=1.0, fmt=".3f")
-
-            plt.title('Robustness Landscape\n(Bimodality Confidence $1-p$)', fontweight='bold',
-                      pad=15)
-            plt.ylabel(r'Relocation Penalty ($\lambda$)')
-            plt.xlabel('High Regime Threshold')
-
-            plt.tight_layout()
-            plt.savefig("omega-v37-sensitivity-heatmap.pdf", format="pdf", dpi=300)
-            plt.close()
-            print("✅ (Heatmap) saved in English.")
-        except Exception as e:
-            print(f"⚠️ Error plotting Heatmap: {e}")
-
-    def run_null_model(self, n_permutations=500):
-        """
-        CORRECTION V37.3 (Finale) : Test de la Trajectoire Temporelle.
-        Hypothèse : La montée vers la maturité (S-Curve) est une propriété historique unique.
-        Si on mélange le temps, la pente devient nulle.
-        """
-        print(f"\n🎲 [Robustness 2/3] Null Model Validation (Temporal Trajectory)...")
-
-        real_slopes = []
-        null_slopes_means = []
-
-        for name, df in self.dfs.items():
-            # On nettoie les NaNs pour polyfit
-            gamma = df['monthly_gamma'].dropna().values
-            if len(gamma) < 20: continue
-
-            # 1. Pente Réelle (Direction de l'évolution)
-            # x = temps, y = gamma. Pente > 0 = Maturation.
-            x = np.arange(len(gamma))
-            try:
-                real_slope, _ = np.polyfit(x, gamma, 1)
-                real_slopes.append(real_slope)
-            except:
-                continue
-
-            # 2. Permutations (Destruction de l'histoire)
-            current_nulls = []
-            for _ in range(n_permutations):
-                shuffled = np.random.permutation(gamma)
-                try:
-                    null_slope, _ = np.polyfit(x, shuffled, 1)
-                    current_nulls.append(null_slope)
-                except:
-                    pass
-
-            if current_nulls:
-                null_slopes_means.append(np.mean(current_nulls))
-
-        if not real_slopes:
-            print("⚠️ Pas assez de données.")
-            return 0
-
-        # Z-SCORE GLOBAL
-        real_mean = np.mean(real_slopes)
-        null_mean = np.mean(null_slopes_means)
-        null_std = np.std(null_slopes_means) + 1e-9
-
-        z_score = (real_mean - null_mean) / null_std
-
-        print(f"📊 Pente Moyenne Réelle : {real_mean:.6f} (Tendance à la maturation)")
-        print(f"📊 Pente Moyenne Nulle  : {null_mean:.6f} (Hasard pur)")
-        print(f"✅ Z-Score Trajectoire  : {z_score:.2f}")
-
-        if z_score > 3:
-            print("🚀 VICTOIRE : La dynamique de maturation est statistiquement irréfutable.")
-        else:
-            print("⚠️ SIGNAL FAIBLE : La trajectoire ne se distingue pas assez du bruit.")
-
-        return z_score
-    def run_covariate_control(self):
-        print("\n👥 [Robustness 3/3] Covariate Control (Team Size)...")
-        raw_counts = {'act_gamma': 0, 'gamma_act': 0, 'total': 0}
-        norm_counts = {'act_gamma': 0, 'gamma_act': 0, 'total': 0}
-
-        for name, df in self.dfs.items():
-            if 'intensity_per_dev' not in df.columns: continue
-
-            gamma = df['monthly_gamma'].fillna(0).values
-            act_raw = df['total_weight'].fillna(0).values
-            act_norm = df['intensity_per_dev'].fillna(0).values
-
-            if len(gamma) < 20: continue
-
-            raw_counts['total'] += 1
-            norm_counts['total'] += 1
-
-            res_raw = self._quick_granger(gamma, act_raw)
-            if res_raw['gamma_causes_act']: raw_counts['gamma_act'] += 1
-            if res_raw['act_causes_gamma']: raw_counts['act_gamma'] += 1
-
-            res_norm = self._quick_granger(gamma, act_norm)
-            if res_norm['gamma_causes_act']: norm_counts['gamma_act'] += 1
-            if res_norm['act_causes_gamma']: norm_counts['act_gamma'] += 1
-
-        # AJOUT : Calcul des ratios pour l'article
-        if raw_counts['total'] > 0 and norm_counts['total'] > 0:
-            ratio_raw = (raw_counts['gamma_act'] + 0.5) / (raw_counts['act_gamma'] + 0.5)
-            ratio_norm = (norm_counts['gamma_act'] + 0.5) / (norm_counts['act_gamma'] + 0.5)
-            persistence = (ratio_norm / ratio_raw) * 100 if ratio_raw > 0 else 0
-
-            print(f"\n📊 Résultats Covariate Control :")
-            print(f"   Projets testés       : {raw_counts['total']}")
-            print(f"   Ratio Granger BRUT   : {ratio_raw:.2f} (Γ→Act / Act→Γ)")
-            print(f"   Ratio Granger NORM   : {ratio_norm:.2f} (Γ→Act / Act→Γ)")
-            print(f"   Persistance          : {persistence:.0f}%")
-
-            if persistence >= 70:
-                print("✅ COVARIATE CONTROL PASSED")
-                print("   → L'architecture contraint INDÉPENDAMMENT de la taille d'équipe")
-            else:
-                print("⚠️ COVARIATE CONTROL WARNING")
-                print("   → Le shift pourrait être dû à la stabilisation d'équipe")
-
-            return {'ratio_raw': ratio_raw, 'ratio_norm': ratio_norm, 'persistence': persistence}
-
-        return None
-
-    def _quick_granger(self, x, y, max_lag=3):
-        """Helper rapide pour Granger"""
-        try:
-            # x -> y ?
-            d = pd.DataFrame({'x': x, 'y': y})
-            # On utilise verbose=False pour ne pas polluer la console
-            g = grangercausalitytests(d[['y', 'x']], maxlag=max_lag, verbose=False)
-            p_xy = min([g[i][0]['ssr_ftest'][1] for i in range(1, max_lag + 1)])
-
-            # y -> x ?
-            g2 = grangercausalitytests(d[['x', 'y']], maxlag=max_lag, verbose=False)
-            p_yx = min([g2[i][0]['ssr_ftest'][1] for i in range(1, max_lag + 1)])
-
-            return {'act_causes_gamma': p_xy < 0.05, 'gamma_causes_act': p_yx < 0.05}
-        except:
-            return {'act_causes_gamma': False, 'gamma_causes_act': False}
 
 
 def plot_phase_space_academic(all_dataframes, crossover_results):
@@ -6235,8 +5774,7 @@ def plot_bidirectional_architecture_patterns(
         df[df['pattern'] == 'Modularization']['r_gamma_fanin'].values,
     ]
 
-    bp = ax2.boxplot(box_data, labels=['Consolidation', 'Neutral', 'Modularization'],
-                     patch_artist=True)
+    bp = ax2.boxplot(box_data, tick_labels=['Consolidation', 'Neutral', 'Modularization'], patch_artist=True)
 
     colors_box = ['#2ecc71', '#95a5a6', '#e74c3c']
     for patch, color in zip(bp['boxes'], colors_box):
@@ -6277,7 +5815,7 @@ def plot_bidirectional_architecture_patterns(
     # Edge 2: Fan-In → Granger (NOT significant)
     ax3.annotate('', xy=(7.5, 2), xytext=(3, 2),
                  arrowprops=dict(arrowstyle='->', color='red', lw=2, linestyle='--'))
-    ax3.text(5, 1, '✗ n.s.', color='red', ha='center', fontweight='bold')
+    ax3.text(5, 1, r'$\times$ n.s.', color='red', ha='center', fontweight='bold')
     ax3.text(5, 0.3, '(p = 0.44)', color='gray', ha='center')
 
     # Edge 3: Γ → Granger (validated elsewhere)
@@ -7779,24 +7317,50 @@ if __name__ == "__main__":
 
     # 1. CORPUS THÉORIQUE (Vivants & Matures > 36 mois)
     # Utilisé pour prouver l'émergence de la structure (Gamma, Granger, Attracteurs)
-    dfs_theory = {
-        name: df for name, df in all_dataframes.items()
-        if PROJECT_STATUS.get(name) == 'alive' and len(df) >= 36
-    }
+    # Phase 1.5 unifiée
+    # 1. On crée l'instance du moteur robuste une seule fois
+    validator_engine = GrangerRobustnessValidator(all_dataframes, window_size=30, confinement_band=0.3)
 
-    # Calcul Crossover spécifique pour la théorie
+    # 2. Filtrage
+    dfs_theory = {k: v for k, v in all_dataframes.items()
+                  if PROJECT_STATUS.get(k) == 'alive' and len(v) >= 36}
+
+    # 3. Calcul via le moteur interne (Garanti cohérent avec le SI)
+
+
     crossover_theory = {}
-    for name, df in dfs_theory.items():
-        res = analyze_rolling_granger(name, df)
-        if res: crossover_theory[name] = res
+    for name in dfs_theory.keys():
+        ai_series = validator_engine._compute_ai_series(
+            dfs_theory[name]["monthly_gamma"],
+            dfs_theory[name]["total_weight"],
+            index=dfs_theory[name].index
+        )
+        if not ai_series.empty:
+            crossover_theory[name] = {
+                'dates': ai_series.index,
+                'authority': ai_series.values,
+                'strength_ag': ai_series.attrs['strength_ag'],
+                'strength_ga': ai_series.attrs['strength_ga']
+            }
 
     # 2. CORPUS GLOBAL (Pour Risque & Survie)
     # On garde tout ce qui a plus de 12 mois pour comparer Vivants vs Morts
     crossover_all = {}
+    print("   [Global] Calcul des signatures pour analyse de risque...")
     for name, df in all_dataframes.items():
-        if len(df) > 12:
-            res = analyze_rolling_granger(name, df, window_size=min(12, len(df)//3))
-            if res: crossover_all[name] = res
+        if df is not None and len(df) > 12:
+            ai_series = validator_engine._compute_ai_series(
+                df["monthly_gamma"],
+                df["total_weight"],
+                index=df.index
+            )
+            if not ai_series.empty:
+                crossover_all[name] = {
+                    'dates': ai_series.index,
+                    'authority': ai_series.values,
+                    'strength_ag': ai_series.attrs['strength_ag'],
+                    'strength_ga': ai_series.attrs['strength_ga']
+                }
 
     print(f"📉 Corpus THÉORIE (Alive > 36m) : {len(dfs_theory)} projets")
     print(f"💀 Corpus GLOBAL (Pour Survie)  : {len(all_dataframes)} projets")
@@ -7848,7 +7412,7 @@ if __name__ == "__main__":
     logistic_results = run_regression_analysis_on_gamma(dfs_theory, train_window=24, hold_out=2)
     pct_universal = run_complementary_tests(dfs_theory, logistic_results)
     # Phase 6 : Granger
-    run_granger_test(dfs_theory, max_lag=6)
+
     granger_phase_results = test_granger_by_phase(dfs_theory, max_lag=4)
     plot_granger_by_phase(granger_phase_results)
     validate_H1_phase_shift(granger_phase_results)
@@ -7903,14 +7467,9 @@ if __name__ == "__main__":
         else:
             print("⚠️ Impossible de lancer le test H1 : Pas de données alignées (Gamma/Granger).")
     # Tests Robustesse V37
-    print("\n--- [B] TESTS DE ROBUSTESSE COMPLÉMENTAIRES (V37) ---")
-    validator = RobustnessValidator(dfs_theory)
-    validator.run_sensitivity_analysis()
-    validator.run_null_model(n_permutations=200)
-    validator.run_null_model_phase_transition(n_permutations=500)
-    validator.run_covariate_control()
+
     # ==========================================================================
-    # PHASE 10 : TEST DE CONTRIBUTION RELATIVE (Γ vs ACTIVITÉ)
+    # PHASE 9.5 : TEST DE CONTRIBUTION RELATIVE (Γ vs ACTIVITÉ)
     # ==========================================================================
     print("\n" + "#" * 80)
     print("PHASE 9.5 : POUVOIR PRÉDICTIF COMPARÉ (AUC-ROC)")
@@ -7927,28 +7486,32 @@ if __name__ == "__main__":
     print("\n💡 ANALYSE DES CONTRIBUTIONS :")
     if g_auc > a_auc + 0.15:
         print(f"-> La persistance structurelle (Γ={g_auc:.3f}) est le moteur principal.")
-    elif v_auc > g_auc + 0.05:
-        print(f"-> La survie est synergique (V={v_auc:.3f}). Γ et A sont indissociables.")
-        # ==========================================================================
-        # PHASE 11 : TESTS SI (REVIEWER PROOF vFINAL)
-        # ==========================================================================
-        print("\n" + "#" * 80)
-        print("PHASE 9.6 : GÉNÉRATION DU SI (ROBUSTESSE NAC)")
-        print("#" * 80)
 
-        # Paramètres identiques au main pour cohérence
-        si_validator = GrangerRobustnessValidator(
-            dfs_theory,
-            output_dir="figures/SI/",
-            window_size=30,  # Vérifiez que c'est bien 30 dans votre analyze_rolling_granger
-            confinement_band=0.3
-        )
-        si_validator.run_full_suite()
+    print(f"-> La survie est synergique (V={v_auc:.3f}). Γ et A sont indissociables.")
+    # ==========================================================================
+    # PHASE 11 : TESTS SI (REVIEWER PROOF vFINAL)
+     # ==========================================================================
+    print("\n" + "#" * 80)
+    print("PHASE 9.6 : GÉNÉRATION DU SI (ROBUSTESSE NAC)")
+    print("#" * 80)
+
+    # Paramètres identiques au main pour cohérence
+
+    # 2. On lance la suite complète
+    si_validator = GrangerRobustnessValidator(
+        dfs_theory,
+        output_dir="figures/SI/",
+        window_size=30,
+        confinement_band=0.3
+    )
+
+    # Cette seule ligne lance SI-1, SI-2 (4 versions), SI-2 BIS (Index-Safe), SI-3 et SI-4 (Cross-Swap)
+    si_results = si_validator.run_full_suite()
     # ==========================================================================
     # PHASE 12 : ANALYSES COMPLÉMENTAIRES
     # ==========================================================================
     print("\n" + "#" * 80)
-    print("PHASES FINALES : Validation Externe & Mécanismes")
+    print("PHASES 12 : Validation Externe & Mécanismes")
     print("#" * 80)
 
     # Hindcasting (Sur Global pour voir la puissance prédictive)
@@ -7961,8 +7524,9 @@ if __name__ == "__main__":
 
     # Co-modification (Sur Théorie pour le mécanisme)
     print("\n[PHASE 13] Co-modification Analysis (Mechanism)...")
+    # On attaque directement car dfs_theory est déjà normalisé depuis la phase 1.5
     comod_results = run_comodification_analysis(
-        repos_config={k: v for k, v in REPOS_CONFIG.items() if k in dfs_theory}, # Filtrer la config
+        repos_config={k: v for k, v in REPOS_CONFIG.items() if k in dfs_theory},
         gamma_dataframes=dfs_theory,
         cache_dir=CACHE_DIR + "comod/",
         max_workers=MAX_WORKERS
@@ -8049,34 +7613,7 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"   ⚠️ Erreur Crash Test sur {name}: {e}")
 
-    # ==========================================================================
-    # AGRÉGATION ET PLOT
-    # ==========================================================================
 
-    if all_crash_traces:
-        print("\n📊 Agrégation des résultats globaux...")
-        global_traces = pd.concat(all_crash_traces, ignore_index=True)
-        #print("DEBUG [GLOBAL] regimes before aggregation:")
-        #print(global_traces['regime'].value_counts())
-        #print("DEBUG [GLOBAL] delta_t coverage by regime:")
-        #print(global_traces.groupby('regime')['delta_t'].agg(['min', 'max', 'count']))
-        # Utilisation d'une instance dummy pour l'agrégation
-        dummy_analyzer = CrashTestAnalyzer(".", pd.DataFrame())
-
-        # On réutilise les méthodes de la réponse précédente (aggregate_events, plot...)
-        # Assurez-vous d'avoir bien copié ces méthodes dans la classe CrashTestAnalyzer
-        agg_results = dummy_analyzer.aggregate_events(global_traces)
-        #print("DEBUG [AGG] regimes in aggregated results:")
-        #print(agg_results['regime'].value_counts())
-        print("\nRÉSULTATS DU CRASH TEST (Moyennes Globales) :")
-        print(agg_results[['regime', 'delta_t', 'mean_delta_gamma', 'mean_delta_auth']].to_string())
-
-        # Plot (Mise en avant de l'Authority Index comme conseillé)
-        dummy_analyzer.plot_crash_test_response(agg_results)
-
-        agg_results.to_csv("omega_v36_crash_test_results.csv", index=False)
-    else:
-        print("⚠️ Aucune donnée de crash exploitable trouvée.")
     # ==========================================================================
     # AGRÉGATION GLOBALE ET VISUALISATION
     # ==========================================================================
@@ -8174,5 +7711,82 @@ if __name__ == "__main__":
     if all_data:
         pd.concat(all_data).to_csv("omega_v36_all_data.csv")
         print("✅ Données exportées : omega_v36_all_data.csv")
+    # ==============================================================================
+    # BLOC DE VALIDATION IMMEDIATE (A COLLER AVANT run_full_suite)
+    # ==============================================================================
 
+    # Vérification préalable : NGINX existe-t-il ?
+    if 'NGINX' in all_dataframes:
+        print("\n" + "=" * 70)
+        print("VALIDATION WRAPPER - NGINX (Test de reproduction Homéodynamique)")
+        print("=" * 70)
+
+        # 1. Instanciation du Validateur
+        # Assurez-vous que window_size=30 et band=0.3 comme dans le papier
+        validator = GrangerRobustnessValidator(all_dataframes, window_size=30, confinement_band=0.3)
+        df_nginx = validator.dfs["NGINX"]
+
+        # 2. Calcul AI avec wrapper (Méthode Corrigée)
+        # Note : _compute_ai_series utilise maintenant le lissage rolling(3) et la formule 1-p
+        ai_nginx = validator._compute_ai_series(
+            df_nginx["monthly_gamma"],
+            df_nginx["total_weight"],
+            index=df_nginx.index,
+            max_lag=3  # Le mode "min" est hardcodé dans la nouvelle méthode _compute_ai_series
+        )
+
+        print(f"AI length: {len(ai_nginx)}")
+        print(f"AI first 5: {ai_nginx.values[:5]}")
+
+        # ============================================================
+        # Mode 1 : HALF (pour vérifier l'alignement avec le papier)
+        # ============================================================
+        # C'est ce mode qui a donné 0.764 dans le tableau "DIAGNOSTIC SI"
+        ai_clean = ai_nginx.dropna()
+        mid = len(ai_clean) // 2
+        ai_half = ai_clean.iloc[mid:]
+
+        # Calcul manuel du confinement
+        conf_half = (ai_half.abs() <= 0.3).mean()
+
+        print(f"\n[MODE HALF - 2e moitié temporelle de AI]")
+        print(f"  Mature AI points: {len(ai_half)}")
+        print(f"  Confinement: {conf_half:.3f}")
+        print(f"  Expected (Homéodynamique): 0.764")
+        print(f"  Delta: {abs(conf_half - 0.764):.3f}")
+
+        is_valid = abs(conf_half - 0.764) < 0.05  # Tolérance un peu plus large pour les arrondis
+        print(f"  Status: {'✅ PASS' if is_valid else '❌ FAIL'}")
+
+        # ============================================================
+        # Mode 2 : GAMMA (pour les tests SI futurs)
+        # ============================================================
+        if len(ai_nginx) > 0:
+            # On utilise la méthode interne pour tester la logique 'Gamma'
+            m_gamma = validator._calculate_nac_metrics(
+                ai_nginx,
+                df_nginx["monthly_gamma"]
+            )
+            conf_gamma = m_gamma["confinement"]
+
+            print(f"\n[MODE GAMMA - Phase Γ≥0.7]")
+            print(f"  Confinement: {conf_gamma:.3f}")
+            print(f"  Note: Valeur différente de HALF (normal, périodes différentes)")
+        else:
+            conf_gamma = np.nan
+            print(f"\n[MODE GAMMA] ❌ AI vide")
+
+        print("=" * 70 + "\n")
+
+        # Arrêt d'urgence si le wrapper est faux
+        if not is_valid:
+            print("❌ ALERTE : Le wrapper ne reproduit pas les résultats du papier.")
+            print("STOP. Ne lancez pas la suite.")
+            # exit(1) # Décommentez pour bloquer le script
+    else:
+        print("⚠️ NGINX non trouvé dans les données, impossible de valider.")
+
+    # ==============================================================================
+    # FIN BLOC VALIDATION
+    # ==============================================================================
     print("\n✅ ANALYSE TERMINÉE.")

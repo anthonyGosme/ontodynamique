@@ -27,10 +27,10 @@ OCTAVE,Scientific,383,Alive,31880,0.98
 WIRESHARK,Networking,326,Alive,94573,0.98
 TENSORFLOW,AI/ML,122,Alive,161031,0.98
 FFMPEG,Multimedia,293,Alive,112278,0.979
-RAILS,Web Framework,251,Alive,85035,0.975
 CPYTHON,Language Runtime,421,Alive,84819,0.975
-PHP,Language Runtime,319,Alive,137298,0.974
+RAILS,Web Framework,251,Alive,85035,0.975
 ANGULAR,Web Framework,135,Alive,29236,0.974
+PHP,Language Runtime,319,Alive,137298,0.974
 TSDX,Software,23,Dead,603,0.972
 LLVM,Compiler,292,Alive,473373,0.972
 POSTGRES,Database,352,Alive,47838,0.971
